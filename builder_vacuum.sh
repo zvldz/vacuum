@@ -593,6 +593,9 @@ chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh
 sed -i -r 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
 sed -i -r 's/.*reject.*/supersede domain-name-servers 8.8.8.8, 114.114.114.114;/' $IMG_DIR/etc/dhcp/dhclient.conf
 
+# Disable Chinese New Year
+install -m 0644 silent.wav $IMG_DIR/opt/rockrobo/resources/sounds/start_greeting.wav
+
 #### CUSTOM END ####
 
 if [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
