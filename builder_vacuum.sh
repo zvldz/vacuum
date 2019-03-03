@@ -352,7 +352,7 @@ else
     mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
 fi
 
-exit 111
+#exit 111
 
 echo "Replace ssh host keys"
 cat ssh_host_rsa_key > $IMG_DIR/etc/ssh/ssh_host_rsa_key
