@@ -352,6 +352,8 @@ else
     mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
 fi
 
+exit 111
+
 echo "Replace ssh host keys"
 cat ssh_host_rsa_key > $IMG_DIR/etc/ssh/ssh_host_rsa_key
 cat ssh_host_rsa_key.pub > $IMG_DIR/etc/ssh/ssh_host_rsa_key.pub
@@ -525,8 +527,7 @@ echo "( (   ) )|  ___  || |      | |   | || |   | || |(_)| |"
 echo " \ \_/ / | (   ) || |      | |   | || |   | || |   | |"
 echo "  \   /  | )   ( || (____/\| (___) || (___) || )   ( |"
 echo "   \_/   |/     \|(_______/(_______)(_______)|/     \|"
-echo "                                              $VERSION"
-echo
+printf "                                              \033[1;91m20190302\033[0m\n"
 echo "======================================================"
 printf "\033[1;36mMODEL\033[0m.........: \$MODEL\n"
 printf "\033[1;36mFIRMWARE\033[0m......: \$FIRMWARE\n"
