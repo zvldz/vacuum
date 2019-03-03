@@ -29,7 +29,7 @@ function print_usage()
 {
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-xiaomi|--dummycloud-path=PATH
---adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|--2prc|--help]"
+--adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
 function print_help()
@@ -55,6 +55,8 @@ Options:
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
   --2prc                     Convert to mainland China
+  --2eu                      Convert to EU
+  --unpack-and-mount         Only unpack and mount
   -h, --help                 Prints this message
 
 Each parameter that takes a file as an argument accepts path in any form
@@ -103,6 +105,8 @@ ENABLE_DUMMYCLOUD=0
 ENABLE_VALETUDO=0
 PATCH_RRLOGD=0
 CONVERT_2_PRC=0
+CONVERT_2_EU=0
+UNPACK_AND_MOUNT=0
 
 while test -n "$1"; do
     PARAM="$1"
@@ -157,7 +161,13 @@ while test -n "$1"; do
         *-2prc)
             CONVERT_2_PRC=1
             ;;
-        *--rrlogd-patcher)
+        *-2eu)
+            CONVERT_2_EU=1
+            ;;
+        *-unpack-and-mount)
+            UNPACK_AND_MOUNT=1
+            ;;
+        *-rrlogd-patcher)
             PATCH_RRLOGD=1
             RRLOGD_PATCHER="$ARG"
             shift
@@ -352,7 +362,11 @@ else
     mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
 fi
 
-#exit 111
+if [ $UNPACK_AND_MOUNT -eq 1 ]; then
+    echo "Image mounted to $IMG_DIR"
+    echo "umount $IMG_DIR for unmount"
+    exit 0
+fi
 
 echo "Replace ssh host keys"
 cat ssh_host_rsa_key > $IMG_DIR/etc/ssh/ssh_host_rsa_key
@@ -572,7 +586,7 @@ EOF
 
 if [ $CONVERT_2_PRC -eq 1 ]; then
     mkdir -p $IMG_DIR/root/run.d
-    cat <<EOF > $IMG_DIR/root/run.d/prc.sh
+    cat <<EOF > $IMG_DIR/root/run.d/2prc.sh
 #!/bin/sh
 
 if [ -f /mnt/default/roborock.conf ]; then
@@ -587,7 +601,25 @@ if [ -f /mnt/default/roborock.conf ]; then
     fi
 fi
 EOF
-    chmod +x $IMG_DIR/root/run.d/prc.sh
+    chmod +x $IMG_DIR/root/run.d/2prc.sh
+elif [ $CONVERT_2_EU -eq 1 ]; then
+    mkdir -p $IMG_DIR/root/run.d
+    cat <<EOF > $IMG_DIR/root/run.d/2eu.sh
+#!/bin/sh
+
+if [ -f /mnt/default/roborock.conf ]; then
+    cat /mnt/default/roborock.conf | grep 'location=de' > /dev/null 2>&1
+    if [ "\$?" -ne 0 ]; then
+        mount -o remount,rw /mnt/default
+        if [ -w /mnt/default/roborock.conf ]; then
+            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\`date "+%Y-%m-%d_%H-%M"\`
+            sed -i 's/location.*/location=de/' /mnt/default/roborock.conf
+        fi
+        mount -o remount,ro /mnt/default
+    fi
+fi
+EOF
+    chmod +x $IMG_DIR/root/run.d/2eu.sh
 fi
 
 chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh
@@ -664,12 +696,15 @@ done
 echo "Pack new firmware"
 pushd $FW_DIR
 
-if [ $CONVERT_2_PRC -eq  0 ]; then
-    PATCHED="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
-    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
-else
+if [ $CONVERT_2_PRC -eq 1 ]; then
     PATCHED="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
     FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
+elif [ $CONVERT_2_EU -eq 1 ]; then
+    PATCHED="${FIRMWARE_FILENAME}_vacuum_2euc_${VERSION}.pkg"
+    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2euc_${VERSION}.pkg"
+else
+    PATCHED="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
+    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
 fi
 
 tar -I pigz -cf "$PATCHED" disk.img
