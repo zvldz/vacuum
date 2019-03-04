@@ -30,7 +30,7 @@ function print_usage()
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-xiaomi|--dummycloud-path=PATH|
 --adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|
---2prc|--2eu|--unpack-and-mount|--help]"
+--dnsserver=ADDRESS|--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
 function print_help()
@@ -55,6 +55,7 @@ Options:
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
+  --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
   --2prc                     Convert to mainland China
   --2eu                      Convert to EU
   --unpack-and-mount         Only unpack and mount
@@ -101,7 +102,6 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
-VERSION=`date "+%Y%m%d"`
 PUBLIC_KEYS=()
 RESTORE_RUBY=0
 PATCH_ADBD=0
@@ -111,11 +111,12 @@ DISABLE_LOGS=0
 ENABLE_DUMMYCLOUD=0
 ENABLE_VALETUDO=0
 PATCH_RRLOGD=0
+VERSION=`date "+%Y%m%d"`
 CONVERT_2_PRC=0
 CONVERT_2_EU=0
 UNPACK_AND_MOUNT=0
 
-while test -n "$1"; do
+while [ -n "$1" ]; do
     PARAM="$1"
     ARG="$2"
     shift
@@ -165,15 +166,6 @@ while test -n "$1"; do
         *-enable-ruby)
             RESTORE_RUBY=1
             ;;
-        *-2prc)
-            CONVERT_2_PRC=1
-            ;;
-        *-2eu)
-            CONVERT_2_EU=1
-            ;;
-        *-unpack-and-mount)
-            UNPACK_AND_MOUNT=1
-            ;;
         *-rrlogd-patcher)
             PATCH_RRLOGD=1
             RRLOGD_PATCHER="$ARG"
@@ -218,6 +210,19 @@ while test -n "$1"; do
             PSK="$ARG"
             shift
             ;;
+        *-2prc)
+            CONVERT_2_PRC=1
+            ;;
+        *-2eu)
+            CONVERT_2_EU=1
+            ;;
+        *-unpack-and-mount)
+            UNPACK_AND_MOUNT=1
+            ;;
+        *-dnsserver)
+            DNSSERVER="$ARG"
+            shift
+            ;;
         ----noarg)
             echo "$ARG does not take an argument"
             cleanup_and_exit
@@ -231,6 +236,7 @@ while test -n "$1"; do
             ;;
     esac
 done
+
 
 SCRIPT="$0"
 SCRIPTDIR=$(dirname "${0}")
@@ -637,7 +643,6 @@ fi
 
 chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh $IMG_DIR/etc/profile.d/readline.sh
 sed -i -r 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
-sed -i -r 's/.*reject.*/supersede domain-name-servers 8.8.8.8, 114.114.114.114;/' $IMG_DIR/etc/dhcp/dhclient.conf
 
 # Disable Chinese New Year
 install -m 0644 silent.wav $IMG_DIR/opt/rockrobo/resources/sounds/start_greeting.wav
@@ -691,6 +696,10 @@ else
 fi
 echo "0.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 echo "1.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
+
+if [ -n "$DNSSERVER" ]; then
+    sed -i -r "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" $IMG_DIR/etc/dhcp/dhclient.conf
+fi
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
 
