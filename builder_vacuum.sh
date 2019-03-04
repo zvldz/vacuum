@@ -28,8 +28,9 @@ function cleanup_and_exit ()
 function print_usage()
 {
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
---public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-xiaomi|--dummycloud-path=PATH
---adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|--2prc|--2eu|--unpack-and-mount|--help]"
+--public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-xiaomi|--dummycloud-path=PATH|
+--adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|
+--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
 function print_help()
@@ -93,6 +94,12 @@ readlink_f() (
     printf >&2 'Loop detected\n'
     exit 1
 )
+
+if [ -z "$1" ]; then
+    print_usage
+    print_help
+    exit 0
+fi
 
 VERSION=`date "+%Y%m%d"`
 PUBLIC_KEYS=()
@@ -682,8 +689,8 @@ if [ -n "$NTPSERVER" ]; then
 else
     echo "# you can add your server line by line" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 fi
-echo "pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 echo "0.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
+echo "1.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
 
