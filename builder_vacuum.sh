@@ -580,7 +580,7 @@ cat <<EOF > $IMG_DIR/root/run_once.sh
 date >> /root/vacuum.txt
 echo START >> /root/vacuum.txt
 
-echo "MODIFY USERS" >> /root/vacuum.txt
+echo "MODIFYING USERS" >> /root/vacuum.txt
 echo "root:cleaner" | chpasswd
 echo "cleaner:cleaner::::/home/cleaner:/bin/bash" | newusers
 usermod -G sudo cleaner
@@ -597,7 +597,7 @@ if [ -d /root/run.d ]; then
     unset FILE
 fi
 
-echo "EDIT rc.local AND REMOVE SCRIPTS" >> /root/vacuum.txt
+echo "EDITING rc.local AND DELETE SCRIPTS" >> /root/vacuum.txt
 sed -i -r 's/.*run_once.*//' /etc/rc.local
 rm -rf /root/run_once.sh /root/run.d
 echo "END" >> /root/vacuum.txt
