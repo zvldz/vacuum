@@ -520,6 +520,12 @@ fi
 
 tar -C $IMG_DIR -xzf soft.tgz
 
+cat <<EOF > $IMG_DIR/etc/profile.d/readline.sh
+#!/bin/sh
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+EOF
+
 cat <<EOF > $IMG_DIR/etc/profile.d/motd.sh
 #!/bin/sh
 
@@ -622,7 +628,7 @@ EOF
     chmod +x $IMG_DIR/root/run.d/2eu.sh
 fi
 
-chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh
+chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh $IMG_DIR/etc/profile.d/readline.sh
 sed -i -r 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
 sed -i -r 's/.*reject.*/supersede domain-name-servers 8.8.8.8, 114.114.114.114;/' $IMG_DIR/etc/dhcp/dhclient.conf
 
@@ -700,8 +706,8 @@ if [ $CONVERT_2_PRC -eq 1 ]; then
     PATCHED="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
     FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
 elif [ $CONVERT_2_EU -eq 1 ]; then
-    PATCHED="${FIRMWARE_FILENAME}_vacuum_2euc_${VERSION}.pkg"
-    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2euc_${VERSION}.pkg"
+    PATCHED="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
+    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
 else
     PATCHED="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
     FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
