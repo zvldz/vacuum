@@ -11,7 +11,7 @@
 * Firmware with suffix 2eu  converts to EU version
 * Disabled Chinese greetings Happy New Year
 
-Script based on imagebuilder.sh from https://github.com/dgiese/dustcloud
+Script builder_vacuum.sh based on imagebuilder.sh from https://github.com/dgiese/dustcloud
 
 ### Thanks
 * https://github.com/dgiese/dustcloud
