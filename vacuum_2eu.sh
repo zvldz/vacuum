@@ -5,4 +5,4 @@ if [ ! -r "$1" ]; then
     exit 1
 fi
 
-./builder_vacuum.sh --ntpserver=pool.ntp.org --replace-adbd --rrlogd-patcher=./patcher.py -valetudo-path=../Valetudo --2eu -f $1
+./builder_vacuum.sh --ntpserver=pool.ntp.org --dnsserver="8.8.8.8, 114.114.114.114" --replace-adbd --rrlogd-patcher=./patcher.py -valetudo-path=../Valetudo --2eu -f $1
