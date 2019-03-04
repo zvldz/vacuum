@@ -10,6 +10,7 @@
 * Firmware with suffix 2prc converts to Chinese version
 * Firmware with suffix 2eu  converts to EU version
 * Disabled Chinese greetings Happy New Year
+* Disabled log upload to the cloud (but not map)
 
 Script builder_vacuum.sh based on imagebuilder.sh from https://github.com/dgiese/dustcloud
 
