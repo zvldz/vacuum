@@ -2,7 +2,7 @@
 
 ### Features:
 * Added ssh banner (with ip, token, firmware version and etc)
-* Added wget, nano, htop, bbe, mini_snmpd
+* Added wget, nano, htop, bbe, mini_snmpd(https://github.com/troglobit/mini-snmpd)
 * Password has been set for users of root and cleaner (pass: cleaner)
 * Installed Valetudo (https://github.com/Hypfer/Valetudo)
 * Patched rrlogd to disable map encryption (https://github.com/JohnRev/rrlogd-patcher)
