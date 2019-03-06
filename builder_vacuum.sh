@@ -531,7 +531,9 @@ fi
 
 #### CUSTOM START ####
 
-tar -C $IMG_DIR -xzf soft.tgz
+SSH_PASSWORD="cleaner"
+
+tar -C $IMG_DIR -xzf addon.tgz
 
 cat <<EOF > $IMG_DIR/etc/profile.d/readline.sh
 #!/bin/sh
@@ -581,8 +583,8 @@ date >> /root/vacuum.txt
 echo START >> /root/vacuum.txt
 
 echo "MODIFYING USERS" >> /root/vacuum.txt
-echo "root:cleaner" | chpasswd
-echo "cleaner:cleaner::::/home/cleaner:/bin/bash" | newusers
+echo "root:$SSH_PASSWORD" | chpasswd
+echo "cleaner:$SSH_PASSWORD::::/home/cleaner:/bin/bash" | newusers
 usermod -G sudo cleaner
 
 echo "RUN SCRIPTS" >> /root/vacuum.txt
