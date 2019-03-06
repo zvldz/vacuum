@@ -29,7 +29,7 @@ function print_usage()
 {
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-firmware-updates|--dummycloud-path=PATH|
---adbd|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|
+--adbd|--valetudo-path=PATH|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|
 --dnsserver=ADDRESS|--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
@@ -757,3 +757,4 @@ rm -rf $FW_TMPDIR
 echo "FINISHED"
 cat "output/${FIRMWARE_BASENAME}.md5"
 exit 0
+
