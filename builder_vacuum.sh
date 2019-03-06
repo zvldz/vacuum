@@ -29,7 +29,7 @@ function print_usage()
 {
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-firmware-updates|--dummycloud-path=PATH|
---adbd|--valetudo-path=PATH|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=IP|--unprovisioned|
+--adbd|--valetudo-path=PATH|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=ADDRESS|--unprovisioned|
 --dnsserver=ADDRESS|--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
@@ -47,17 +47,18 @@ Options:
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
   --dummycloud-path=PATH     Provide the path to dummycloud
   --replace-adbd             Replace xiaomis custom adbd with generic adbd version
+  --valetudo-path=PATH       Provide the path to valeudo (https://github.com/Hypfer/Valetudo)
   --rrlogd-patcher=PATCHER   Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
   --disable-logs             Disables most log files creations and log uploads on the vacuum
   --ruby                     Restores user ruby (can do sudo) and assigns a random password
-  --ntpserver=IP             Set your local NTP server
+  --ntpserver=ADDRESS        Set your local NTP server
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
   --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
-  --2prc                     Convert to mainland China
-  --2eu                      Convert to EU
+  --2prc                     Convert to mainland China region
+  --2eu                      Convert to EU region
   --unpack-and-mount         Only unpack and mount
   -h, --help                 Prints this message
 
@@ -275,12 +276,6 @@ fi
 DOS2UNIX="$(type -p dos2unix)"
 if [ ! -x "$DOS2UNIX" ]; then
     echo "dos2unix not found! Please install it (e.g. by (apt|brew|dnf|zypper) install dos2unix)"
-    cleanup_and_exit 1
-fi
-
-PIGZ="$(type -p pigz)"
-if [ ! -x "$PIGZ" ]; then
-    echo "pigz not found! Please install it (e.g. by (apt|brew|dnf|zypper) install pigz)"
     cleanup_and_exit 1
 fi
 
@@ -731,7 +726,13 @@ else
     FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
 fi
 
-tar -I pigz -cf "$PATCHED" disk.img
+PIGZ="$(type -p pigz)"
+if [ -x "$PIGZ" ]; then
+    tar -I pigz -cf "$PATCHED" disk.img
+else
+    tar -czf "$PATCHED" disk.img
+fi
+
 if [ ! -r "$PATCHED" ]; then
     echo "File $PATCHED not found! Packing the firmware was unsuccessful."
     exit 1
