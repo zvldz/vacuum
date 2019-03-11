@@ -367,7 +367,7 @@ if [ "$IS_MAC" = true ]; then
     #ext4fuse disk.img image -o force
     fuse-ext2 "$FW_DIR/disk.img" "$IMG_DIR" -o rw+
 else
-    mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
+    mount -v -o loop "$FW_DIR/disk.img" "$IMG_DIR"
 fi
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
@@ -387,7 +387,7 @@ cat ssh_host_ed25519_key > $IMG_DIR/etc/ssh/ssh_host_ed25519_key
 cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
 
 echo "Disable SSH firewall rule"
-sed -i -e '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+sed -i -e '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^ /#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 
 echo "Add SSH authorized_keys"
 mkdir $IMG_DIR/root/.ssh
