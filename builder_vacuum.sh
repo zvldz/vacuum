@@ -387,7 +387,7 @@ cat ssh_host_ed25519_key > $IMG_DIR/etc/ssh/ssh_host_ed25519_key
 cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
 
 echo "Disable SSH firewall rule"
-sed -i -e '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^ /#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^ /#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 
 echo "Add SSH authorized_keys"
 mkdir $IMG_DIR/root/.ssh
@@ -472,6 +472,12 @@ if [ $DISABLE_LOGS -eq 1 ]; then
 
     # Comment $IncludeConfig
     sed -Ei 's/^(\$IncludeConfig)/#&/' $IMG_DIR/etc/rsyslog.conf
+
+    # Disable cores
+    echo "* hard core 0" >> $IMG_DIR/etc/security/limits.conf
+    echo "* soft core 0" >> $IMG_DIR/etc/security/limits.conf
+    sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+
 fi
 
 if [ $PATCH_RRLOGD -eq 1 ]; then
@@ -595,7 +601,7 @@ if [ -d /root/run.d ]; then
 fi
 
 echo "EDITING rc.local AND DELETE SCRIPTS" >> /root/vacuum.txt
-sed -i -r 's/.*run_once.*//' /etc/rc.local
+sed -i -E 's/.*run_once.*//' /etc/rc.local
 rm -rf /root/run_once.sh /root/run.d
 echo "END" >> /root/vacuum.txt
 EOF
@@ -639,7 +645,7 @@ EOF
 fi
 
 chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh $IMG_DIR/etc/profile.d/readline.sh
-sed -i -r 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
+sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
 
 # Disable Chinese New Year
 install -m 0644 silent.wav $IMG_DIR/opt/rockrobo/resources/sounds/start_greeting.wav
@@ -695,7 +701,7 @@ echo "0.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 echo "1.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 
 if [ -n "$DNSSERVER" ]; then
-    sed -i -r "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" $IMG_DIR/etc/dhcp/dhclient.conf
+    sed -i -E "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" $IMG_DIR/etc/dhcp/dhclient.conf
 fi
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
