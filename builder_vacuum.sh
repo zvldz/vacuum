@@ -547,7 +547,7 @@ cat <<EOF > $IMG_DIR/etc/profile.d/motd.sh
 
 FIRMWARE=\`cat /etc/os-release | grep '^ROBOROCK_VERSION' | cut -f2 -d=\`
 IP=\`hostname -I\`
-TOKEN=\`cat /mnt/data/miio/device.token |  tr -d '\n' | xxd -p\`
+TOKEN=\`cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p\`
 DID=\`cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=\`
 MAC=\`cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=\`
 KEY=\`cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=\`
