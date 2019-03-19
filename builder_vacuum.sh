@@ -30,7 +30,7 @@ function print_usage()
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-firmware-updates|--dummycloud-path=PATH|
 --adbd|--valetudo-path=PATH|--rrlogd-patcher=PATCHER|--disable-logs|--ruby|--ntpserver=ADDRESS|--unprovisioned|
---dnsserver=ADDRESS|--2prc|--2eu|--unpack-and-mount|--help]"
+--dnsserver=ADDRESS|--ssh-password=PASSWORD|--ssh-add-user=USER|--2prc|--2eu|--unpack-and-mount|--help]"
 }
 
 function print_help()
@@ -57,6 +57,8 @@ Options:
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
   --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
+  --ssh-password=PASSWORD    Set password for root and custom user
+  --ssh-add-user=USER        Add custom user
   --2prc                     Convert to mainland China region
   --2eu                      Convert to EU region
   --unpack-and-mount         Only unpack and mount
@@ -224,6 +226,14 @@ while [ -n "$1" ]; do
             DNSSERVER="$ARG"
             shift
             ;;
+        *-ssh-password)
+            SSH_PASSWORD="$ARG"
+            shift
+            ;;
+        *-ssh-add-user)
+            SSH_ADDUSER="$ARG"
+            shift
+            ;;
         ----noarg)
             echo "$ARG does not take an argument"
             cleanup_and_exit
@@ -238,6 +248,8 @@ while [ -n "$1" ]; do
     esac
 done
 
+SSH_PASSWORD=${SSH_PASSWORD:-"cleaner"}
+SSH_ADDUSER=${SSH_ADDUSER:-"cleaner"}
 
 SCRIPT="$0"
 SCRIPTDIR=$(dirname "${0}")
@@ -532,8 +544,6 @@ fi
 
 #### CUSTOM START ####
 
-SSH_PASSWORD="cleaner"
-
 tar -C $IMG_DIR -xzf addon.tgz
 
 cat <<EOF > $IMG_DIR/etc/profile.d/readline.sh
@@ -585,8 +595,8 @@ echo START >> /root/vacuum.txt
 
 echo "MODIFYING USERS" >> /root/vacuum.txt
 echo "root:$SSH_PASSWORD" | chpasswd
-echo "cleaner:$SSH_PASSWORD::::/home/cleaner:/bin/bash" | newusers
-usermod -G sudo cleaner
+echo "$SSH_ADDUSER:$SSH_PASSWORD::::/home/$SSH_ADDUSER:/bin/bash" | newusers
+usermod -G sudo $SSH_ADDUSER
 
 echo "RUN SCRIPTS" >> /root/vacuum.txt
 
