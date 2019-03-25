@@ -547,6 +547,7 @@ cat <<EOF > $IMG_DIR/etc/profile.d/readline.sh
 #!/bin/sh
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
+alias vim=vi
 EOF
 
 cat <<EOF > $IMG_DIR/etc/profile.d/motd.sh
@@ -697,11 +698,6 @@ if [ $ENABLE_VALETUDO -eq 1 ]; then
 
     install -m 0755 $VALETUDO_PATH/valetudo $IMG_DIR/usr/local/bin/valetudo
     install -m 0644 $VALETUDO_PATH/deployment/valetudo.conf $IMG_DIR/etc/init/valetudo.conf
-
-    # Valetudo memory leak fix
-    echo "#" > $IMG_DIR/etc/cron.d/valetudo
-    echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/rockrobo/rrlog:/opt/rockrobo/cleaner/bin:/opt/rockrobo/wlan:/opt/rockrobo/watchdog:/opt/rockrobo/miio:/opt/rockrobo/firmware" >> $IMG_DIR/etc/cron.d/valetudo
-    echo "*/30 * * * * root service valetudo restart > /dev/null 2>&1" >> $IMG_DIR/etc/cron.d/valetudo
 fi
 
 if [ -n "$NTPSERVER" ]; then
