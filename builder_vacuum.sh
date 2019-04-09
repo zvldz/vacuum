@@ -42,7 +42,6 @@ function custom_print_help()
 function custom_parse_args()
 {
     for FUNC in "${LIST_CUSTOM_PARSE_ARGS[@]}"; do
-        #echo "PARSE ARGS = $FUNC"
         $FUNC && return 0
     done
 }
