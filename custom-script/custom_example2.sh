@@ -43,7 +43,7 @@ function custom_parse_args_example2()
 
 function custom_function_example2()
 {
-    EXAMPLE1=${EXAMPLE2:-"0"}
+    EXAMPLE2=${EXAMPLE2:-"0"}
 
     if [ $EXAMPLE2 -eq 1 ]; then
         echo "+ Start something 2"
