@@ -32,7 +32,6 @@ function custom_parse_args_valetudo_wo_dummycloud()
                 ENABLE_VALETUDO_WOD=1
             else
                 echo "The valetudo binary hasn't been found in $VALETUDO_PATH_WOD"
-                echo "Please download it from https://github.com/Hypfer/Valetudo"
                 cleanup_and_exit 1
             fi
             CUSTOM_SHIFT=1
