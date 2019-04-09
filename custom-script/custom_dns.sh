@@ -1,4 +1,5 @@
 #!/bin/bash
+# Set custom dns servers
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_dns")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_dns")

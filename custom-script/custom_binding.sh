@@ -1,4 +1,5 @@
 #!/bin/bash
+# Adding keybinding for bash
 
 LIST_CUSTUM_FUNCTION+=("custom_function_binding")
 

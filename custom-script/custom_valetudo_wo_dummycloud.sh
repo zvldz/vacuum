@@ -1,4 +1,5 @@
 #!/bin/bash
+# Installing valetudo without dummycloud
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_wo_dummycloud")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_wo_dummycloud")

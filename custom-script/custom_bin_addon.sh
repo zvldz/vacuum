@@ -1,4 +1,5 @@
 #!/bin/bash
+# Addon contains programs wget, bbe, nano, snmpd, htop
 
 LIST_CUSTUM_FUNCTION+=("custom_function_bin_addon")
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 # Turn off Chinese New Year
+
 LIST_CUSTUM_FUNCTION+=("custom_function_off_cn_ny")
 
 function custom_function_off_cn_ny()
