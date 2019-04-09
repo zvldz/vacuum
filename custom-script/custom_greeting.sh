@@ -1,4 +1,5 @@
 #!/bin/bash
+# Adding Greeting
 
 LIST_CUSTUM_FUNCTION+=("custom_function_greeting")
 
