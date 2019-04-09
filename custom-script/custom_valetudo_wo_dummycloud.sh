@@ -1,4 +1,5 @@
 #!/bin/bash
+# Installing valetudo without dummycloud
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_wo_dummycloud")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_wo_dummycloud")
@@ -32,7 +33,6 @@ function custom_parse_args_valetudo_wo_dummycloud()
                 ENABLE_VALETUDO_WOD=1
             else
                 echo "The valetudo binary hasn't been found in $VALETUDO_PATH_WOD"
-                echo "Please download it from https://github.com/Hypfer/Valetudo"
                 cleanup_and_exit 1
             fi
             CUSTOM_SHIFT=1

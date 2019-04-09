@@ -1,4 +1,5 @@
 #!/bin/bash
+# Example 1
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_example1")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_example1")
