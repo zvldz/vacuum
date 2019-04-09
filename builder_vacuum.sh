@@ -1,5 +1,5 @@
 #!/bin/bash
-# Author: Dennis Giese [dustcloud@1338-1.org]
+# Author: Dennis Giese [dgiese@dontvacuum.me]
 # Copyright 2017 by Dennis Giese
 
 #This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,42 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-function cleanup_and_exit ()
+function cleanup_and_exit()
 {
-    if test "$1" = 0 -o -z "$1" ; then
+    if [ "$1" = 0 -o -z "$1" ]; then
         exit 0
     else
         exit $1
     fi
+}
+
+function custom_print_usage()
+{
+    for FUNC in "${LIST_CUSTOM_PRINT_USAGE[@]}"; do
+        $FUNC
+    done
+}
+
+function custom_print_help()
+{
+    for FUNC in "${LIST_CUSTOM_PRINT_HELP[@]}"; do
+        $FUNC
+    done
+}
+
+function custom_parse_args()
+{
+    for FUNC in "${LIST_CUSTOM_PARSE_ARGS[@]}"; do
+        #echo "PARSE ARGS = $FUNC"
+        $FUNC && return 0
+    done
+}
+
+function custom_function()
+{
+    for FUNC in "${LIST_CUSTUM_FUNCTION[@]}"; do
+        $FUNC
+    done
 }
 
 function print_usage()
@@ -30,9 +59,9 @@ function print_usage()
 echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
 --public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-firmware-updates|
 --dummycloud-path=PATH|--valetudo-path=PATH|--replace-adbd|--rrlogd-patcher=PATCHER|
---disable-logs|--ruby|--ntpserver=ADDRESS|--unprovisioned|
---dnsserver=ADDRESS|--ssh-password=PASSWORD|--ssh-add-user=USER|--2prc|--2eu|--unpack-and-mount|
---help]"
+--disable-logs|--enable-ruby|--ntpserver=ADDRESS|--unprovisioned|
+--run-custom-script=SCRIPT|--unpack-and-mount|--help]"
+custom_print_usage
 }
 
 function print_help()
@@ -52,26 +81,22 @@ Options:
   --replace-adbd             Replace xiaomis custom adbd with generic adbd version
   --rrlogd-patcher=PATCHER   Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
   --disable-logs             Disables most log files creations and log uploads on the vacuum
-  --ruby                     Restores user ruby (can do sudo) and assigns a random password
+  --enable-ruby              Restores user ruby (can do sudo) and assigns a random password
   --ntpserver=ADDRESS        Set your local NTP server
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
-  --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
-  --ssh-password=PASSWORD    Set password for root and custom user
-  --ssh-add-user=USER        Add custom user
-  --2prc                     Convert to mainland China region
-  --2eu                      Convert to EU region
-  --unpack-and-mount         Only unpack and mount
+  --unpack-and-mount         Only unpack and mount image
+  --run-custom-script=SCRIPT Run custom script
   -h, --help                 Prints this message
 
 Each parameter that takes a file as an argument accepts path in any form
 
 Report bugs to: https://github.com/dgiese/dustcloud/issues
 EOF
+custom_print_help
 }
-
 
 fixed_cmd_subst() {
     eval '
@@ -101,12 +126,6 @@ readlink_f() (
     exit 1
 )
 
-if [ -z "$1" ]; then
-    print_usage
-    print_help
-    exit 0
-fi
-
 PUBLIC_KEYS=()
 RESTORE_RUBY=0
 PATCH_ADBD=0
@@ -116,10 +135,12 @@ DISABLE_LOGS=0
 ENABLE_DUMMYCLOUD=0
 ENABLE_VALETUDO=0
 PATCH_RRLOGD=0
-VERSION=`date "+%Y%m%d"`
-CONVERT_2_PRC=0
-CONVERT_2_EU=0
 UNPACK_AND_MOUNT=0
+LIST_CUSTOM_PRINT_USAGE=()
+LIST_CUSTOM_PRINT_HELP=()
+LIST_CUSTOM_PARSE_ARGS=()
+LIST_CUSTUM_FUNCTION=()
+CUSTOM_SHIFT=0
 
 while [ -n "$1" ]; do
     PARAM="$1"
@@ -215,25 +236,17 @@ while [ -n "$1" ]; do
             PSK="$ARG"
             shift
             ;;
-        *-2prc)
-            CONVERT_2_PRC=1
-            ;;
-        *-2eu)
-            CONVERT_2_EU=1
-            ;;
         *-unpack-and-mount)
             UNPACK_AND_MOUNT=1
             ;;
-        *-dnsserver)
-            DNSSERVER="$ARG"
-            shift
-            ;;
-        *-ssh-password)
-            SSH_PASSWORD="$ARG"
-            shift
-            ;;
-        *-ssh-add-user)
-            SSH_ADDUSER="$ARG"
+        *-run-custom-script)
+            CUSTUM_SCRIPT="$ARG"
+            if [ -r "$CUSTUM_SCRIPT" ]; then
+                . $CUSTUM_SCRIPT
+            else
+                echo "The custom script hasn't been found ($CUSTUM_SCRIPT)"
+                cleanup_and_exit 1
+            fi
             shift
             ;;
         ----noarg)
@@ -241,17 +254,22 @@ while [ -n "$1" ]; do
             cleanup_and_exit
             ;;
         -*)
-            echo Unknown Option "$PARAM". Exit.
-            cleanup_and_exit 1
+            if custom_parse_args $PARAM $ARG; then
+                if [ $CUSTOM_SHIFT -eq 1 ]; then
+                    shift
+                    CUSTOM_SHIFT=0
+                fi
+            else
+                echo Unknown Option "$PARAM". Exit.
+                cleanup_and_exit 1
+            fi
             ;;
         *)
             print_usage
+            cleanup_and_exit 1
             ;;
     esac
 done
-
-SSH_PASSWORD=${SSH_PASSWORD:-"cleaner"}
-SSH_ADDUSER=${SSH_ADDUSER:-"cleaner"}
 
 SCRIPT="$0"
 SCRIPTDIR=$(dirname "${0}")
@@ -281,6 +299,11 @@ if [[ $OSTYPE == darwin* ]]; then
     echo "Running on a Mac, adjusting commands accordingly"
 fi
 
+if [ $ENABLE_VALETUDO -eq 1  ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
+    echo "You can't install Valetudo and Dummycloud at the same time, "
+    echo "because Valetudo has implemented Dummycloud fuctionality and map upload support now."
+fi
+
 CCRYPT="$(type -p ccrypt)"
 if [ ! -x "$CCRYPT" ]; then
     echo "ccrypt not found! Please install it (e.g. by (apt|brew|dnf|zypper) install ccrypt)"
@@ -295,7 +318,6 @@ fi
 
 if [ ${#PUBLIC_KEYS[*]} -eq 0 ]; then
     echo "No public keys selected!"
-#   exit 1
 fi
 
 SOUNDLANG=${SOUNDLANG:-"en"}
@@ -382,7 +404,7 @@ fi
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     echo "Image mounted to $IMG_DIR"
-    echo "umount $IMG_DIR for unmount"
+    echo "Run 'umount $IMG_DIR' for unmount the image"
     exit 0
 fi
 
@@ -397,7 +419,7 @@ cat ssh_host_ed25519_key > $IMG_DIR/etc/ssh/ssh_host_ed25519_key
 cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
 
 echo "Disable SSH firewall rule"
-sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^ /#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 
 echo "Add SSH authorized_keys"
 mkdir $IMG_DIR/root/.ssh
@@ -539,131 +561,6 @@ if [ $RESTORE_RUBY -eq 1 ]; then
     ###
 fi
 
-#### CUSTOM START ####
-
-tar -C $IMG_DIR -xzf addon.tgz
-
-cat <<EOF > $IMG_DIR/etc/profile.d/readline.sh
-#!/bin/sh
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-
-stty werase undef
-bind '"\C-w": backward-kill-word'
-
-alias vim=vi
-EOF
-
-cat <<EOF > $IMG_DIR/etc/profile.d/motd.sh
-#!/bin/sh
-
-FIRMWARE=\`cat /etc/os-release | grep '^ROBOROCK_VERSION' | cut -f2 -d=\`
-IP=\`hostname -I\`
-TOKEN=\`cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p\`
-DID=\`cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=\`
-MAC=\`cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=\`
-KEY=\`cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=\`
-MODEL=\`cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=\`
-BUILD_NUMBER=\`cat /opt/rockrobo/buildnumber | tr -d '\n'\`
-
-echo
-echo "          _______  _______                    _______ "
-echo "|\     /|(  ___  )(  ____ \|\     /||\     /|(       )"
-echo "| )   ( || (   ) || (    \/| )   ( || )   ( || () () |"
-echo "| |   | || (___) || |      | |   | || |   | || || || |"
-echo "( (   ) )|  ___  || |      | |   | || |   | || |(_)| |"
-echo " \ \_/ / | (   ) || |      | |   | || |   | || |   | |"
-echo "  \   /  | )   ( || (____/\| (___) || (___) || )   ( |"
-echo "   \_/   |/     \|(_______/(_______)(_______)|/     \|"
-printf "                                              \033[1;91m$VERSION\033[0m\n"
-echo "======================================================"
-printf "\033[1;36mMODEL\033[0m.........: \$MODEL\n"
-printf "\033[1;36mFIRMWARE\033[0m......: \$FIRMWARE\n"
-printf "\033[1;36mBUILD NUMBER\033[0m..: \$BUILD_NUMBER\n"
-printf "\033[1;36mIP\033[0m............: \$IP\n"
-printf "\033[1;36mMAC\033[0m...........: \$MAC\n"
-printf "\033[1;36mTOKEN\033[0m.........: \$TOKEN\n"
-printf "\033[1;36mDID\033[0m...........: \$DID\n"
-printf "\033[1;36mKEY\033[0m...........: \$KEY\n"
-echo "======================================================"
-echo
-EOF
-
-cat <<EOF > $IMG_DIR/root/run_once.sh
-#!/bin/sh
-
-date >> /root/vacuum.txt
-echo START >> /root/vacuum.txt
-
-echo "MODIFYING USERS" >> /root/vacuum.txt
-echo "root:$SSH_PASSWORD" | chpasswd
-echo "$SSH_ADDUSER:$SSH_PASSWORD::::/home/$SSH_ADDUSER:/bin/bash" | newusers
-usermod -G sudo $SSH_ADDUSER
-
-echo "RUN SCRIPTS" >> /root/vacuum.txt
-
-if [ -d /root/run.d ]; then
-    for FILE in /root/run.d/*.sh; do
-        if [ -r \$FILE ]; then
-            echo "RUN - \$FILE" >> /root/vacuum.txt
-            . \$FILE
-        fi
-    done
-    unset FILE
-fi
-
-echo "EDITING rc.local AND DELETE SCRIPTS" >> /root/vacuum.txt
-sed -i -E 's/.*run_once.*//' /etc/rc.local
-rm -rf /root/run_once.sh /root/run.d
-echo "END" >> /root/vacuum.txt
-EOF
-
-if [ $CONVERT_2_PRC -eq 1 ]; then
-    mkdir -p $IMG_DIR/root/run.d
-    cat <<EOF > $IMG_DIR/root/run.d/2prc.sh
-#!/bin/sh
-
-if [ -f /mnt/default/roborock.conf ]; then
-    cat /mnt/default/roborock.conf | grep 'location=prc' > /dev/null 2>&1
-    if [ "\$?" -ne 0 ]; then
-        mount -o remount,rw /mnt/default
-        if [ -w /mnt/default/roborock.conf ]; then
-            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\`date "+%Y-%m-%d_%H-%M"\`
-            sed -i 's/location.*/location=prc/' /mnt/default/roborock.conf
-        fi
-        mount -o remount,ro /mnt/default
-    fi
-fi
-EOF
-    chmod +x $IMG_DIR/root/run.d/2prc.sh
-elif [ $CONVERT_2_EU -eq 1 ]; then
-    mkdir -p $IMG_DIR/root/run.d
-    cat <<EOF > $IMG_DIR/root/run.d/2eu.sh
-#!/bin/sh
-
-if [ -f /mnt/default/roborock.conf ]; then
-    cat /mnt/default/roborock.conf | grep 'location=de' > /dev/null 2>&1
-    if [ "\$?" -ne 0 ]; then
-        mount -o remount,rw /mnt/default
-        if [ -w /mnt/default/roborock.conf ]; then
-            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\`date "+%Y-%m-%d_%H-%M"\`
-            sed -i 's/location.*/location=de/' /mnt/default/roborock.conf
-        fi
-        mount -o remount,ro /mnt/default
-    fi
-fi
-EOF
-    chmod +x $IMG_DIR/root/run.d/2eu.sh
-fi
-
-chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/etc/profile.d/motd.sh $IMG_DIR/etc/profile.d/readline.sh
-sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
-
-# Disable Chinese New Year
-install -m 0644 silent.wav $IMG_DIR/opt/rockrobo/resources/sounds/start_greeting.wav
-
-#### CUSTOM END ####
-
 if [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
     echo "Installing dummycloud"
 
@@ -702,6 +599,34 @@ if [ $ENABLE_VALETUDO -eq 1 ]; then
 
     install -m 0755 $VALETUDO_PATH/valetudo $IMG_DIR/usr/local/bin/valetudo
     install -m 0644 $VALETUDO_PATH/deployment/valetudo.conf $IMG_DIR/etc/init/valetudo.conf
+
+    cat $VALETUDO_PATH/deployment/etc/hosts >> $IMG_DIR/etc/hosts
+
+    sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
+    cat $VALETUDO_PATH/deployment/etc/rc.local >> $IMG_DIR/etc/rc.local
+    echo >> $IMG_DIR/etc/rc.local
+    echo "exit 0" >> $IMG_DIR/etc/rc.local
+
+    # UPLOAD_METHOD=2
+    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
+    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+
+    # Set LOG_LEVEL=3
+    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
+    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+
+    # Reduce logging of miio_client
+    sed -i 's/-l 2/-l 0/' $IMG_DIR/opt/rockrobo/watchdog/ProcessList.conf
+
+    # Let the script cleanup logs
+    sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
+
+    # Disable collecting device info to /dev/shm/misc.log
+    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
+
+    # Disable logging of 'top'
+    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
+    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
 fi
 
 if [ -n "$NTPSERVER" ]; then
@@ -711,10 +636,6 @@ else
 fi
 echo "0.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 echo "1.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
-
-if [ -n "$DNSSERVER" ]; then
-    sed -i -E "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" $IMG_DIR/etc/dhcp/dhclient.conf
-fi
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
 
@@ -728,6 +649,9 @@ if [ -n "$SND_DIR" ]; then
     done
 fi
 
+# Run custom scripts
+custom_function
+
 while [ $(umount $IMG_DIR; echo $?) -ne 0 ]; do
     echo "waiting for unmount..."
     sleep 2
@@ -735,25 +659,8 @@ done
 
 echo "Pack new firmware"
 pushd $FW_DIR
-
-if [ $CONVERT_2_PRC -eq 1 ]; then
-    PATCHED="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
-    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
-elif [ $CONVERT_2_EU -eq 1 ]; then
-    PATCHED="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
-    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
-else
-    PATCHED="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
-    FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
-fi
-
-PIGZ="$(type -p pigz)"
-if [ -x "$PIGZ" ]; then
-    tar -I pigz -cf "$PATCHED" disk.img
-else
-    tar -czf "$PATCHED" disk.img
-fi
-
+PATCHED="${FIRMWARE_FILENAME}_patched.pkg"
+type -p pigz > /dev/null && tar -I pigz -cf "$PATCHED" disk.img || tar -czf "$PATCHED" disk.img
 if [ ! -r "$PATCHED" ]; then
     echo "File $PATCHED not found! Packing the firmware was unsuccessful."
     exit 1
@@ -768,14 +675,15 @@ install -d -m 0755 output
 install -m 0644 "$FW_DIR/${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
 if [ "$IS_MAC" = true ]; then
-    md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
+    md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_FILENAME}.md5"
 else
-    md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
+    md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_FILENAME}.md5"
 fi
+chmod 0644 "output/${FIRMWARE_FILENAME}.md5"
 
 echo "Cleaning up"
 rm -rf $FW_TMPDIR
 
 echo "FINISHED"
-cat "output/${FIRMWARE_BASENAME}.md5"
+cat "output/${FIRMWARE_FILENAME}.md5"
 exit 0
