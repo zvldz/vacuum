@@ -1,13 +1,50 @@
 #!/bin/bash
-# Adding Greeting
+# Add greeting to ssh
 
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_greeting")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_greeting")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_greeting")
 LIST_CUSTUM_FUNCTION+=("custom_function_greeting")
+
+
+function custom_print_usage_greeting()
+{
+    cat << EOF
+
+Custom parameters for '${BASH_SOURCE[0]}':
+[--enable-greeting]
+EOF
+}
+
+function custom_print_help_greeting()
+{
+    cat << EOF
+
+Custom options for '${BASH_SOURCE[0]}':
+  --enable-greeting          Add greeting to ssh
+EOF
+}
+
+function custom_parse_args_greeting()
+{
+    case ${PARAM} in
+        *-enable-greeting)
+            ENABLE_GREETING=1
+            ;;
+        -*)
+            return -1
+            ;;
+    esac
+}
 
 function custom_function_greeting()
 {
-    echo "+ Adding Greetings"
-    VERSION=`date "+%Y%m%d"`
-    cat << EOF > $IMG_DIR/etc/profile.d/greeting.sh
+    ENABLE_GREETING=${ENABLE_GREETING:-"0"}
+
+    if [ $ENABLE_GREETING -eq 1 ]; then
+        echo "+ Adding Greetings"
+        VERSION=`date "+%Y%m%d"`
+        cat << EOF > $IMG_DIR/etc/profile.d/greeting.sh
 #!/bin/sh
 
 FIRMWARE=\`cat /etc/os-release | grep '^ROBOROCK_VERSION' | cut -f2 -d=\`
@@ -41,5 +78,6 @@ printf "\033[1;36mKEY\033[0m...........: \$KEY\n"
 echo "======================================================"
 echo
 EOF
-    chmod +x $IMG_DIR/etc/profile.d/greeting.sh
+        chmod +x $IMG_DIR/etc/profile.d/greeting.sh
+    fi
 }
