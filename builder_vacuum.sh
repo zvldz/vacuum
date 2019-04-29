@@ -1,6 +1,8 @@
 #!/bin/bash
-# Author: Dennis Giese [dgiese@dontvacuum.me]
+# Original Author: Dennis Giese [dgiese@dontvacuum.me]
 # Copyright 2017 by Dennis Giese
+#
+# Modified by zvldz
 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -27,6 +29,7 @@ function cleanup_and_exit()
 
 function custom_print_usage()
 {
+    LIST_CUSTOM_PRINT_USAGE=($(printf "%s\n" "${LIST_CUSTOM_PRINT_USAGE[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PRINT_USAGE[@]}"; do
         $FUNC
     done
@@ -34,6 +37,7 @@ function custom_print_usage()
 
 function custom_print_help()
 {
+    LIST_CUSTOM_PRINT_HELP=($(printf "%s\n" "${LIST_CUSTOM_PRINT_HELP[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PRINT_HELP[@]}"; do
         $FUNC
     done
@@ -41,6 +45,7 @@ function custom_print_help()
 
 function custom_parse_args()
 {
+    LIST_CUSTOM_PARSE_ARGS=($(printf "%s\n" "${LIST_CUSTOM_PARSE_ARGS[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PARSE_ARGS[@]}"; do
         $FUNC && return 0
     done
@@ -48,6 +53,7 @@ function custom_parse_args()
 
 function custom_function()
 {
+    LIST_CUSTUM_FUNCTION=($(printf "%s\n" "${LIST_CUSTUM_FUNCTION[@]}" | sort -u))
     for FUNC in "${LIST_CUSTUM_FUNCTION[@]}"; do
         $FUNC
     done
@@ -55,11 +61,10 @@ function custom_function()
 
 function print_usage()
 {
-echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--soundfile=english.pkg|
---public-key=id_rsa.pub|--timezone=Europe/Berlin|--disable-firmware-updates|
---dummycloud-path=PATH|--valetudo-path=PATH|--replace-adbd|--rrlogd-patcher=PATCHER|
---disable-logs|--enable-ruby|--ntpserver=ADDRESS|--unprovisioned|
---run-custom-script=SCRIPT|--unpack-and-mount|--help]"
+echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
+--timezone=Europe/Berlin|--disable-firmware-updates|--disable-logs|
+--replace-adbd|--ntpserver=ADDRESS|--unprovisioned|--unpack-and-mount|
+--run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
 
@@ -69,25 +74,20 @@ function print_help()
 
 Options:
   -f, --firmware=PATH        Path to firmware file
-  -s, --soundfile=PATH       Path to sound file
   -k, --public-key=PATH      Path to ssh public key to be added to authorized_keys file
                              if need to add multiple keys set -k as many times as you need:
                              -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
   -t, --timezone             Timezone to be used in vacuum
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
-  --dummycloud-path=PATH     Provide the path to dummycloud
-  --valetudo-path=PATH       The path to valetudo to include it into the image
   --replace-adbd             Replace xiaomis custom adbd with generic adbd version
-  --rrlogd-patcher=PATCHER   Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
   --disable-logs             Disables most log files creations and log uploads on the vacuum
-  --enable-ruby              Restores user ruby (can do sudo) and assigns a random password
   --ntpserver=ADDRESS        Set your local NTP server
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
   --unpack-and-mount         Only unpack and mount image
-  --run-custom-script=SCRIPT Run custom script
+  --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
   -h, --help                 Prints this message
 
 Each parameter that takes a file as an argument accepts path in any form
@@ -126,14 +126,10 @@ readlink_f() (
 )
 
 PUBLIC_KEYS=()
-RESTORE_RUBY=0
 PATCH_ADBD=0
 DISABLE_XIAOMI=0
 UNPROVISIONED=0
 DISABLE_LOGS=0
-ENABLE_DUMMYCLOUD=0
-ENABLE_VALETUDO=0
-PATCH_RRLOGD=0
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
 LIST_CUSTOM_PRINT_HELP=()
@@ -155,14 +151,10 @@ while [ -n "$1" ]; do
         *-help|-h)
             print_usage
             print_help
-            exit 0
+            cleanup_and_exit
             ;;
         *-firmware|-f)
             FIRMWARE_PATH="$ARG"
-            shift
-            ;;
-        *-soundfile|-s)
-            SOUNDFILE_PATH="$ARG"
             shift
             ;;
         *-public-key|-k)
@@ -188,36 +180,6 @@ while [ -n "$1" ]; do
         *-replace-adbd)
             PATCH_ADBD=1
             ;;
-        *-enable-ruby)
-            RESTORE_RUBY=1
-            ;;
-        *-rrlogd-patcher)
-            PATCH_RRLOGD=1
-            RRLOGD_PATCHER="$ARG"
-            shift
-            ;;
-        *-dummycloud-path)
-            DUMMYCLOUD_PATH="$ARG"
-            if [ -r "$DUMMYCLOUD_PATH/dummycloud" ]; then
-                ENABLE_DUMMYCLOUD=1
-            else
-                echo "The dummycloud binary hasn't been found in $DUMMYCLOUD_PATH"
-                echo "Please download it from https://github.com/dgiese/dustcloud"
-                cleanup_and_exit 1
-            fi
-            shift
-            ;;
-        *-valetudo-path)
-            VALETUDO_PATH="$ARG"
-            if [ -r "$VALETUDO_PATH/valetudo" ]; then
-                ENABLE_VALETUDO=1
-            else
-                echo "The valetudo binary hasn't been found in $VALETUDO_PATH"
-                echo "Please download it from https://github.com/Hypfer/Valetudo"
-                cleanup_and_exit 1
-            fi
-            shift
-            ;;
         *-ntpserver)
             NTPSERVER="$ARG"
             shift
@@ -240,7 +202,11 @@ while [ -n "$1" ]; do
             ;;
         *-run-custom-script)
             CUSTUM_SCRIPT="$ARG"
-            if [ -r "$CUSTUM_SCRIPT" ]; then
+            if [ "$CUSTUM_SCRIPT" = "ALL" ]; then
+                for FILE in ./custom-script/*.sh; do
+                    . $FILE
+                done
+            elif [ -r "$CUSTUM_SCRIPT" ]; then
                 . $CUSTUM_SCRIPT
             else
                 echo "The custom script hasn't been found ($CUSTUM_SCRIPT)"
@@ -273,6 +239,7 @@ done
 SCRIPT="$0"
 SCRIPTDIR=$(dirname "${0}")
 COUNT=0
+
 while [ -L "${SCRIPT}" ]
 do
     SCRIPT=$(readlink_f ${SCRIPT})
@@ -280,7 +247,7 @@ do
     if [ ${COUNT} -gt 100 ]
     then
         echo "Too many symbolic links"
-        exit 1
+        cleanup_and_exit 1
     fi
 done
 BASEDIR=$(dirname "${SCRIPT}")
@@ -288,7 +255,7 @@ echo "Script path: $BASEDIR"
 
 if [ $EUID -ne 0 ]; then
     echo "You need root privileges to execute this script"
-    exit 1
+    cleanup_and_exit 1
 fi
 
 IS_MAC=false
@@ -298,20 +265,9 @@ if [[ $OSTYPE == darwin* ]]; then
     echo "Running on a Mac, adjusting commands accordingly"
 fi
 
-if [ $ENABLE_VALETUDO -eq 1  ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
-    echo "You can't install Valetudo and Dummycloud at the same time, "
-    echo "because Valetudo has implemented Dummycloud fuctionality and map upload support now."
-fi
-
 CCRYPT="$(type -p ccrypt)"
 if [ ! -x "$CCRYPT" ]; then
     echo "ccrypt not found! Please install it (e.g. by (apt|brew|dnf|zypper) install ccrypt)"
-    cleanup_and_exit 1
-fi
-
-DOS2UNIX="$(type -p dos2unix)"
-if [ ! -x "$DOS2UNIX" ]; then
-    echo "dos2unix not found! Please install it (e.g. by (apt|brew|dnf|zypper) install dos2unix)"
     cleanup_and_exit 1
 fi
 
@@ -319,27 +275,22 @@ if [ ${#PUBLIC_KEYS[*]} -eq 0 ]; then
     echo "No public keys selected!"
 fi
 
-SOUNDLANG=${SOUNDLANG:-"en"}
 TIMEZONE=${TIMEZONE:-"Europe/Berlin"}
 PASSWORD_FW="rockrobo"
-PASSWORD_SND="r0ckrobo#23456"
 
 if [ ! -r "$FIRMWARE_PATH" ]; then
     echo "You need to specify an existing firmware file, e.g. v11_003194.pkg"
-    exit 1
+    cleanup_and_exit 1
 fi
+
 FIRMWARE_PATH=$(readlink_f "$FIRMWARE_PATH")
 FIRMWARE_BASENAME=$(basename $FIRMWARE_PATH)
 FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
 
-if [ -n "$SOUNDFILE_PATH" ]; then
-    SOUNDFILE_PATH=$(readlink_f "$SOUNDFILE_PATH")
-fi
-
 if [ $PATCH_ADBD -eq 1 ]; then
     if [ ! -f $SCRIPTDIR/adbd ]; then
         echo "File adbd not found, cannot replace adbd in image!"
-        exit 1
+        cleanup_and_exit 1
     fi
 fi
 
@@ -361,20 +312,6 @@ fi
 
 FW_TMPDIR="$(pwd)/$(mktemp -d fw.XXXXXX)"
 
-if [ -n "$SOUNDFILE_PATH" ]; then
-    echo "Decrypt soundfile .."
-    SND_DIR="$FW_TMPDIR/sounds"
-    SND_FILE=$(basename $SOUNDFILE_PATH)
-    mkdir -p $SND_DIR
-    cp "$SOUNDFILE_PATH" "$SND_DIR/$SND_FILE"
-    $CCRYPT -d -K "$PASSWORD_SND" "$SND_DIR/$SND_FILE"
-
-    echo "Unpack soundfile .."
-    pushd "$SND_DIR"
-    tar -xzf "$SND_FILE"
-    popd
-fi
-
 echo "Decrypt firmware"
 FW_DIR="$FW_TMPDIR/fw"
 mkdir -p "$FW_DIR"
@@ -386,7 +323,7 @@ pushd "$FW_DIR"
 tar -xzf "$FIRMWARE_FILENAME"
 if [ ! -r disk.img ]; then
     echo "File disk.img not found! Decryption and unpacking was apparently unsuccessful."
-    exit 1
+    cleanup_and_exit 1
 fi
 popd
 
@@ -404,7 +341,7 @@ fi
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     echo "Image mounted to $IMG_DIR"
     echo "Run 'umount $IMG_DIR' for unmount the image"
-    exit 0
+    cleanup_and_exit
 fi
 
 echo "Replace ssh host keys"
@@ -450,18 +387,18 @@ if [ $UNPROVISIONED -eq 1 ]; then
     echo "Implementing unprovisioned mode"
     if [ -z "$WIFIMODE" ]; then
         echo "You need to specify a Wifi Mode: currently only wpa2psk is supported"
-        exit 1
+        cleanup_and_exit 1
     fi
     echo "Wifimode: $WIFIMODE"
     if [ "$WIFIMODE" = "wpa2psk" ]; then
 
         if [ -z "$SSID" ]; then
             echo "No SSID given, please use --ssid YOURSSID"
-            exit 1
+            cleanup_and_exit 1
         fi
         if [ -z "$PSK" ]; then
             echo "No PSK (Wireless Password) given, please use --psk YOURPASSWORD"
-            exit 1
+            cleanup_and_exit 1
         fi
 
         mkdir $IMG_DIR/opt/unprovisioned
@@ -510,143 +447,14 @@ if [ $DISABLE_LOGS -eq 1 ]; then
     sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 fi
 
-if [ $PATCH_RRLOGD -eq 1 ]; then
-    PYTHON=${PYTHON:-"python3"}
-    RRLOGD_PATCHER_ABS="$(readlink_f $RRLOGD_PATCHER 2> /dev/null)"
-
-    if [ -r "$RRLOGD_PATCHER_ABS" ]; then
-        echo "Creating backup of rrlogd"
-        cp $IMG_DIR/opt/rockrobo/rrlog/rrlogd $IMG_DIR/opt/rockrobo/rrlog/rrlogd.xiaomi
-
-        # This is a extremly simple binary patch by John Rev
-        # In the long run we should use his rrlogd-patcher however we would need to integrate
-        # it into the imagebuilder package or git repo.
-        #
-        # See https://github.com/JohnRev/rrlogd-patcher
-        echo "Trying to patch rrlogd"
-        cp $IMG_DIR/opt/rockrobo/rrlog/rrlogd $FW_TMPDIR/rrlogd
-
-        pushd $FW_TMPDIR
-        $PYTHON "$RRLOGD_PATCHER_ABS"
-        ret=$?
-        popd
-        if [ $ret -eq 0 ]; then
-            install -m 0755 $FW_TMPDIR/rrlogd_patch $IMG_DIR/opt/rockrobo/rrlog/rrlogd
-            echo "Successfully patched rrlogd"
-        else
-            echo "Failed to patch rrlogd (please report a bug here: https://github.com/JohnRev/rrlogd-patcher/issues)"
-        fi
-    else
-        echo "Invalid path to rrlogd ($RRLOGD_PATCHER_ABS)"
-    fi
-fi
-
-if [ $RESTORE_RUBY -eq 1 ]; then
-    echo "Generate random password for user ruby"
-    USER_PASSWORD=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;`
-    #original password (<=v3254) file has the following credentials:
-    #   root:rockrobo
-    #   ruby:rockrobo
-    echo "Restore old usertable to enable user ruby"
-    install -m 0644 $IMG_DIR/etc/passwd- $IMG_DIR/etc/passwd
-    install -m 0644 $IMG_DIR/etc/group-  $IMG_DIR/etc/group
-    install -m 0644 $IMG_DIR/etc/shadow- $IMG_DIR/etc/shadow
-    #cp ./etc/gshadow- ./etc/gshadow
-    #cp ./etc/subuid- ./etc/subuid
-    #cp ./etc/subgid- ./etc/subgid
-    #if this fails, then the password is rockrobo for user ruby
-    echo "ruby:$USER_PASSWORD" | chpasswd -c SHA512 -R $PWD
-    echo $USER_PASSWORD > "output/${FIRMWARE_FILENAME}.password"
-    ###
-fi
-
-if [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
-    echo "Installing dummycloud"
-
-    # Fix line endings as the released zip packages have Windows line endings
-    dos2unix $DUMMYCLOUD_PATH/doc/dummycloud.conf
-    dos2unix $DUMMYCLOUD_PATH/doc/etc_hosts-snippet.txt
-    dos2unix $DUMMYCLOUD_PATH/doc/etc_rc.local-snippet.txt
-
-    install -m 0755 $DUMMYCLOUD_PATH/dummycloud $IMG_DIR/usr/local/bin/dummycloud
-    install -m 0644 $DUMMYCLOUD_PATH/doc/dummycloud.conf $IMG_DIR/etc/init/dummycloud.conf
-
-    cat $DUMMYCLOUD_PATH/doc/etc_hosts-snippet.txt >> $IMG_DIR/etc/hosts
-
-    sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
-    cat $DUMMYCLOUD_PATH/doc/etc_rc.local-snippet.txt >> $IMG_DIR/etc/rc.local
-    echo >> $IMG_DIR/etc/rc.local
-    echo "exit 0" >> $IMG_DIR/etc/rc.local
-
-    # UPLOAD_METHOD   0:NO_UPLOAD    1:FTP    2:FDS
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
-
-    # Let the script cleanup logs
-    sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
-
-    # Disable collecting device info to /dev/shm/misc.log
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
-
-    # Disable logging of 'top'
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
-fi
-
-if [ $ENABLE_VALETUDO -eq 1 ]; then
-    echo "Installing valetudo"
-
-    install -m 0755 $VALETUDO_PATH/valetudo $IMG_DIR/usr/local/bin/valetudo
-    install -m 0644 $VALETUDO_PATH/deployment/valetudo.conf $IMG_DIR/etc/init/valetudo.conf
-
-    cat $VALETUDO_PATH/deployment/etc/hosts >> $IMG_DIR/etc/hosts
-
-    sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
-    cat $VALETUDO_PATH/deployment/etc/rc.local >> $IMG_DIR/etc/rc.local
-    echo >> $IMG_DIR/etc/rc.local
-    echo "exit 0" >> $IMG_DIR/etc/rc.local
-
-    # UPLOAD_METHOD=2
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
-
-    # Set LOG_LEVEL=3
-    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
-
-    # Reduce logging of miio_client
-    sed -i 's/-l 2/-l 0/' $IMG_DIR/opt/rockrobo/watchdog/ProcessList.conf
-
-    # Let the script cleanup logs
-    sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
-
-    # Disable collecting device info to /dev/shm/misc.log
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
-
-    # Disable logging of 'top'
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
-fi
-
 if [ -n "$NTPSERVER" ]; then
     echo "$NTPSERVER" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 else
     echo "# you can add your server line by line" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
+    echo "pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 fi
-echo "0.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
-echo "1.de.pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
-
-if [ -n "$SND_DIR" ]; then
-    SND_DST_DIR="$IMG_DIR/opt/rockrobo/resources/sounds/${SOUNDLANG}"
-    install -d -m 0755 $SND_DST_DIR
-
-    # Add sounds for a specific language
-    for f in ${SND_DIR}/*.wav; do
-        install -m 0644 $f ${SND_DST_DIR}/$(basename ${f})
-    done
-fi
 
 # Run custom scripts
 custom_function
@@ -659,10 +467,10 @@ done
 echo "Pack new firmware"
 pushd $FW_DIR
 PATCHED="${FIRMWARE_FILENAME}_patched.pkg"
-type -p pigz > /dev/null && tar -I pigz -cf "$PATCHED" disk.img || tar -czf "$PATCHED" disk.img
+type -p pigz > /dev/null 2>&1 && tar -I pigz -cf "$PATCHED" disk.img || tar -czf "$PATCHED" disk.img
 if [ ! -r "$PATCHED" ]; then
     echo "File $PATCHED not found! Packing the firmware was unsuccessful."
-    exit 1
+    cleanup_and_exit 1
 fi
 
 echo "Encrypt firmware"
@@ -685,4 +493,5 @@ rm -rf $FW_TMPDIR
 
 echo "FINISHED"
 cat "output/${FIRMWARE_FILENAME}.md5"
-exit 0
+
+cleanup_and_exit
