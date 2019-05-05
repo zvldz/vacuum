@@ -1,4 +1,4 @@
-# VACUUM firmware
+# VACUUM firmware builder
 
 This is a rewritten version of imagebuilder(https://github.com/dgiese/dustcloud).
 
