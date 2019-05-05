@@ -1,7 +1,9 @@
 # VACUUM firmware
 
 This is a rewritten version of imagebuilder(https://github.com/dgiese/dustcloud).
+
 Added the ability to run custom scripts (plugins).
+
 Added functionality through custom scripts.
 
 For more information run:
