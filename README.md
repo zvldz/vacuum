@@ -6,9 +6,8 @@ Added the ability to run custom scripts (plugins).
 
 Added functionality through custom scripts.
 
-For more information run:
+### For more information run:
 ./builder_vacuum.sh --run-custom-script=ALL --help
-
 
 ### Thanks
 * https://github.com/dgiese/dustcloud
