@@ -47,7 +47,7 @@ function custom_function_greeting()
         cat << EOF > $IMG_DIR/etc/profile.d/greeting.sh
 #!/bin/sh
 
-FIRMWARE=\`cat /etc/os-release | grep '^ROBOROCK_VERSION' | cut -f2 -d=\`
+FIRMWARE=\`cat /etc/os-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d=\`
 IP=\`hostname -I\`
 TOKEN=\`cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p\`
 DID=\`cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=\`
