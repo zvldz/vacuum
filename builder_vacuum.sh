@@ -486,6 +486,7 @@ if [ "$IS_MAC" = true ]; then
 else
     md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_FILENAME}.md5"
 fi
+sed -i -r "s/ .*\/(.+)/  \1/g" output/${FIRMWARE_FILENAME}.md5
 chmod 0644 "output/${FIRMWARE_FILENAME}.md5"
 
 echo "Cleaning up"
