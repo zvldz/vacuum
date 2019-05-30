@@ -47,6 +47,7 @@ function custom_function_greeting()
         cat << EOF > $IMG_DIR/etc/profile.d/greeting.sh
 #!/bin/sh
 
+SERIAL=\`cat /dev/shm/sn | grep -ao '[[:alnum:]]*'\`
 FIRMWARE=\`cat /etc/os-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d=\`
 IP=\`hostname -I\`
 TOKEN=\`cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p\`
@@ -68,6 +69,7 @@ echo "   \_/   |/     \|(_______/(_______)(_______)|/     \|"
 printf "                                              \033[1;91m$VERSION\033[0m\n"
 echo "======================================================"
 printf "\033[1;36mMODEL\033[0m.........: \$MODEL\n"
+printf "\033[1;36mSERIAL\033[0m........: \$SERIAL\n"
 printf "\033[1;36mFIRMWARE\033[0m......: \$FIRMWARE\n"
 printf "\033[1;36mBUILD NUMBER\033[0m..: \$BUILD_NUMBER\n"
 printf "\033[1;36mIP\033[0m............: \$IP\n"
