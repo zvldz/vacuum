@@ -7,7 +7,6 @@ fi
 
 ./builder_vacuum.sh     --run-custom-script=ALL \
                         --disable-logs --replace-adbd \
-                        --rrlogd-patcher=./patcher.py \
                         --valetudo-path-wod=../Valetudo_0_2_3 \
                         --dnsserver="8.8.8.8, 114.114.114.114" \
                         --root-pass=cleaner \
