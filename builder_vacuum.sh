@@ -18,8 +18,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-function cleanup_and_exit()
-{
+function cleanup_and_exit() {
     if [ "$1" = 0 -o -z "$1" ]; then
         exit 0
     else
@@ -27,49 +26,43 @@ function cleanup_and_exit()
     fi
 }
 
-function custom_print_usage()
-{
+function custom_print_usage() {
     LIST_CUSTOM_PRINT_USAGE=($(printf "%s\n" "${LIST_CUSTOM_PRINT_USAGE[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PRINT_USAGE[@]}"; do
         $FUNC
     done
 }
 
-function custom_print_help()
-{
+function custom_print_help() {
     LIST_CUSTOM_PRINT_HELP=($(printf "%s\n" "${LIST_CUSTOM_PRINT_HELP[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PRINT_HELP[@]}"; do
         $FUNC
     done
 }
 
-function custom_parse_args()
-{
+function custom_parse_args() {
     LIST_CUSTOM_PARSE_ARGS=($(printf "%s\n" "${LIST_CUSTOM_PARSE_ARGS[@]}" | sort -u))
     for FUNC in "${LIST_CUSTOM_PARSE_ARGS[@]}"; do
         $FUNC && return 0
     done
 }
 
-function custom_function()
-{
+function custom_function() {
     LIST_CUSTUM_FUNCTION=($(printf "%s\n" "${LIST_CUSTUM_FUNCTION[@]}" | sort -u))
     for FUNC in "${LIST_CUSTUM_FUNCTION[@]}"; do
         $FUNC
     done
 }
 
-function print_usage()
-{
-echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
+function print_usage() {
+    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
 --timezone=Europe/Berlin|--disable-firmware-updates|--disable-logs|
 --replace-adbd|--ntpserver=ADDRESS|--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
 
-function print_help()
-{
+function print_help() {
     cat << EOF
 
 Options:
@@ -94,7 +87,7 @@ Each parameter that takes a file as an argument accepts path in any form
 
 Report bugs to: https://github.com/dgiese/dustcloud/issues
 EOF
-custom_print_help
+    custom_print_help
 }
 
 fixed_cmd_subst() {
