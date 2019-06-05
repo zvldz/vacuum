@@ -9,4 +9,5 @@ fi
                         --root-pass=cleaner \
                         --custom-user=cleaner \
                         --custom-user-pass=cleaner \
+                        --enable-history \
                         -f $1
