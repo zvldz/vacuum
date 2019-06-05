@@ -6,5 +6,4 @@ if [ ! -r "$1" ]; then
 fi
 
 ./builder_vacuum.sh     --unpack-and-mount \
-                        --enable-history \
                         -f $1
