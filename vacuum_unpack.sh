@@ -5,4 +5,6 @@ if [ ! -r "$1" ]; then
     exit 1
 fi
 
-./builder_vacuum.sh --unpack-and-mount -f $1
+./builder_vacuum.sh     --unpack-and-mount \
+                        --enable-history \
+                        -f $1

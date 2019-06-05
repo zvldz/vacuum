@@ -17,4 +17,5 @@ fi
                         --enable-binding \
                         --enable-turn-off-ny \
                         --convert2eu \
+                        --enable-history \
                         -f $1

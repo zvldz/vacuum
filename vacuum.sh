@@ -16,4 +16,5 @@ fi
                         --enable-addon \
                         --enable-binding \
                         --enable-turn-off-ny \
+                        --enable-history \
                         -f $1
