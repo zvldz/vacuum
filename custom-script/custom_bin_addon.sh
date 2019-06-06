@@ -8,7 +8,7 @@ LIST_CUSTUM_FUNCTION+=("custom_function_bin_addon")
 
 function custom_print_usage_bin_addon()
 {
-	cat << EOF
+    cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
 [--enable-addon]
@@ -17,36 +17,36 @@ EOF
 
 function custom_print_help_bin_addon()
 {
-	cat << EOF
+    cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --enable-addon			 Extract addon.tgz to firmware
+  --enable-addon             Extract addon.tgz to firmware
 EOF
 }
 
 function custom_parse_args_bin_addon()
 {
-	case ${PARAM} in
-		*-enable-addon)
-			ENABLE_ADDON=1
-			;;
-		-*)
-			return -1
-			;;
-	esac
+    case ${PARAM} in
+        *-enable-addon)
+            ENABLE_ADDON=1
+            ;;
+        -*)
+            return -1
+            ;;
+    esac
 }
 
 function custom_function_bin_addon()
 {
-	ENABLE_ADDON=${ENABLE_ADDON:-"0"}
+    ENABLE_ADDON=${ENABLE_ADDON:-"0"}
 
-	if [ $ENABLE_ADDON -eq 1 ]; then
-		ADDON_PATH=$(dirname $(readlink_f ${BASH_SOURCE[0]}))
-		if [ -r "$ADDON_PATH/addon.tgz" ]; then
-			echo "+ Unpacking addon"
-			tar -C $IMG_DIR -xzf $ADDON_PATH/addon.tgz
-		else
-			echo "- $ADDON_PATH/addon.tgz not found/readable"
-		fi
-	fi
+    if [ $ENABLE_ADDON -eq 1 ]; then
+        ADDON_PATH=$(dirname $(readlink_f ${BASH_SOURCE[0]}))
+        if [ -r "$ADDON_PATH/addon.tgz" ]; then
+            echo "+ Unpacking addon"
+            tar -C $IMG_DIR -xzf $ADDON_PATH/addon.tgz
+        else
+            echo "- $ADDON_PATH/addon.tgz not found/readable"
+        fi
+    fi
 }
