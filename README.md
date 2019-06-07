@@ -9,6 +9,9 @@ Added functionality through custom scripts.
 ### For more information run:
 ./builder_vacuum.sh --run-custom-script=ALL --help
 
+### Firmware history
+[Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
+
 ### Thanks
 * https://github.com/dgiese/dustcloud
 * https://github.com/JohnRev/rrlogd-patcher
