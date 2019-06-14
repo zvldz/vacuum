@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_binding")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_binding")
 LIST_CUSTUM_FUNCTION+=("custom_function_binding")
 
-function custom_print_usage_binding()
-{
+function custom_print_usage_binding() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_binding()
-{
+function custom_print_help_binding() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_binding()
-{
+function custom_parse_args_binding() {
     case ${PARAM} in
         *-enable-binding)
             ENABLE_BINDING=1
@@ -36,8 +33,7 @@ function custom_parse_args_binding()
     esac
 }
 
-function custom_function_binding()
-{
+function custom_function_binding() {
     ENABLE_BINDING=${ENABLE_BINDING:-"0"}
 
     if [ $ENABLE_BINDING -eq 1 ]; then

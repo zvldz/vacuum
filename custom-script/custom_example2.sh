@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_example2")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_example2")
 LIST_CUSTUM_FUNCTION+=("custom_function_example2")
 
-function custom_print_usage_example2()
-{
+function custom_print_usage_example2() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_example2()
-{
+function custom_print_help_example2() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -25,8 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_example2()
-{
+function custom_parse_args_example2() {
     case ${PARAM} in
         *-example2)
             EXAMPLE2=1
@@ -41,8 +38,7 @@ function custom_parse_args_example2()
     esac
 }
 
-function custom_function_example2()
-{
+function custom_function_example2() {
     EXAMPLE2=${EXAMPLE2:-"0"}
 
     if [ $EXAMPLE2 -eq 1 ]; then

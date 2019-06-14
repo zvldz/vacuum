@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_history")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_history")
 LIST_CUSTUM_FUNCTION+=("custom_function_history")
 
-function custom_print_usage_history()
-{
+function custom_print_usage_history() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_history()
-{
+function custom_print_help_history() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_history()
-{
+function custom_parse_args_history() {
     case ${PARAM} in
         *-enable-history)
             ENABLE_HISTORY=1
@@ -36,8 +33,7 @@ function custom_parse_args_history()
     esac
 }
 
-function custom_function_history()
-{
+function custom_function_history() {
     ENABLE_ADDON=${ENABLE_HISTORY:-"0"}
 
     if [ $ENABLE_HISTORY -eq 1 ]; then

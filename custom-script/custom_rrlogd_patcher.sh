@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_rrlogd_patcher")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_rrlogd_patcher")
 LIST_CUSTUM_FUNCTION+=("custom_function_rrlogd_patcher")
 
-function custom_print_usage_rrlogd_patcher()
-{
+function custom_print_usage_rrlogd_patcher() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_rrlogd_patcher()
-{
+function custom_print_help_rrlogd_patcher() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_rrlogd_patcher()
-{
+function custom_parse_args_rrlogd_patcher() {
     case ${PARAM} in
         *-rrlogd-patcher)
             PATCH_RRLOGD=1
@@ -38,8 +35,7 @@ function custom_parse_args_rrlogd_patcher()
     esac
 }
 
-function custom_function_rrlogd_patcher()
-{
+function custom_function_rrlogd_patcher() {
     PATCH_RRLOGD=${PATCH_RRLOGD:-"0"}
 
     if [ $PATCH_RRLOGD -eq 1 ]; then

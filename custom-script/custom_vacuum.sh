@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_vacuum")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_vacuum")
 LIST_CUSTUM_FUNCTION+=("custom_function_vacuum")
 
-function custom_print_usage_vacuum()
-{
+function custom_print_usage_vacuum() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -16,8 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_vacuum()
-{
+function custom_print_help_vacuum() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -29,8 +27,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_vacuum()
-{
+function custom_parse_args_vacuum() {
     case ${PARAM} in
         *-convert2prc)
             CONVERT_2_PRC=1
@@ -56,8 +53,7 @@ function custom_parse_args_vacuum()
     esac
 }
 
-function custom_function_vacuum()
-{
+function custom_function_vacuum() {
     VERSION=`date "+%Y%m%d"`
     ROOT_PASSWORD=${ROOT_PASSWORD:-""}
     CUSTOM_USER=${CUSTOM_USER:-""}

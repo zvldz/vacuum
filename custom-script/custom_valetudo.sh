@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo")
 LIST_CUSTUM_FUNCTION+=("custom_function_valetudo")
 
-function custom_print_usage_valetudo()
-{
+function custom_print_usage_valetudo() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_valetudo()
-{
+function custom_print_help_valetudo() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_valetudo()
-{
+function custom_parse_args_valetudo() {
     case ${PARAM} in
         *-valetudo-path)
             VALETUDO_PATH="$ARG"
@@ -44,8 +41,7 @@ function custom_parse_args_valetudo()
     esac
 }
 
-function custom_function_valetudo()
-{
+function custom_function_valetudo() {
     ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
     ENABLE_DUMMYCLOUD=${ENABLE_DUMMYCLOUD:-"0"}
 
