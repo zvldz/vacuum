@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_sound")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_sound")
 LIST_CUSTUM_FUNCTION+=("custom_function_sound")
 
-function custom_print_usage_sound()
-{
+function custom_print_usage_sound() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_sound()
-{
+function custom_print_help_sound() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_sound()
-{
+function custom_parse_args_sound() {
     case ${PARAM} in
         *-soundfile|-s)
             SOUNDFILE_PATH="$ARG"
@@ -37,8 +34,7 @@ function custom_parse_args_sound()
     esac
 }
 
-function custom_function_sound()
-{
+function custom_function_sound() {
     SOUNDLANG=${SOUNDLANG:-"en"}
     PASSWORD_SND="r0ckrobo#23456"
 

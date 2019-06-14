@@ -6,8 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_dummycloud")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_dummycloud")
 LIST_CUSTUM_FUNCTION+=("custom_function_dummycloud")
 
-function custom_print_usage_dummycloud()
-{
+function custom_print_usage_dummycloud() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,8 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_dummycloud()
-{
+function custom_print_help_dummycloud() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,8 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_dummycloud()
-{
+function custom_parse_args_dummycloud() {
     case ${PARAM} in
         *-dummycloud-path)
             DUMMYCLOUD_PATH="$ARG"
@@ -44,8 +41,7 @@ function custom_parse_args_dummycloud()
     esac
 }
 
-function custom_function_dummycloud()
-{
+function custom_function_dummycloud() {
     ENABLE_DUMMYCLOUD=${ENABLE_DUMMYCLOUD:-"0"}
     ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
 

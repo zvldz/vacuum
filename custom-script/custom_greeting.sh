@@ -7,8 +7,7 @@ LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_greeting")
 LIST_CUSTUM_FUNCTION+=("custom_function_greeting")
 
 
-function custom_print_usage_greeting()
-{
+function custom_print_usage_greeting() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -16,8 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_greeting()
-{
+function custom_print_help_greeting() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -25,8 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_greeting()
-{
+function custom_parse_args_greeting() {
     case ${PARAM} in
         *-enable-greeting)
             ENABLE_GREETING=1
@@ -37,8 +34,7 @@ function custom_parse_args_greeting()
     esac
 }
 
-function custom_function_greeting()
-{
+function custom_function_greeting() {
     ENABLE_GREETING=${ENABLE_GREETING:-"0"}
 
     if [ $ENABLE_GREETING -eq 1 ]; then
