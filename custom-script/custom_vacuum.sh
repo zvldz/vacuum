@@ -48,7 +48,7 @@ function custom_parse_args_vacuum() {
             CUSTOM_SHIFT=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

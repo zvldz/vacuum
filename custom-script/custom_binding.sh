@@ -28,7 +28,7 @@ function custom_parse_args_binding() {
             ENABLE_BINDING=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

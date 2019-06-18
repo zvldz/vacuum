@@ -28,7 +28,7 @@ function custom_parse_args_bin_addon() {
             ENABLE_ADDON=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

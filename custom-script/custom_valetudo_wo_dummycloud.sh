@@ -35,7 +35,7 @@ function custom_parse_args_valetudo_wo_dummycloud() {
             CUSTOM_SHIFT=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }
