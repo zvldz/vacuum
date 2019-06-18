@@ -28,7 +28,7 @@ function custom_parse_args_off_cn_ny() {
             ENABLE_TURN_OFF_NY=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

@@ -28,7 +28,7 @@ function custom_parse_args_history() {
             ENABLE_HISTORY=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

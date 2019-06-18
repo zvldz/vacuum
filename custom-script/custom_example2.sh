@@ -33,7 +33,7 @@ function custom_parse_args_example2() {
             CUSTOM_SHIFT=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

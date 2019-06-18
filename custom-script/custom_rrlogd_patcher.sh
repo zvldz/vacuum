@@ -30,7 +30,7 @@ function custom_parse_args_rrlogd_patcher() {
             CUSTOM_SHIFT=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }

@@ -29,7 +29,7 @@ function custom_parse_args_sound() {
             CUSTOM_SHIFT=1
             ;;
         -*)
-            return -1
+            return 1
             ;;
     esac
 }
