@@ -48,8 +48,8 @@ function custom_parse_args() {
 }
 
 function custom_function() {
-    LIST_CUSTUM_FUNCTION=($(printf "%s\n" "${LIST_CUSTUM_FUNCTION[@]}" | sort -u))
-    for FUNC in "${LIST_CUSTUM_FUNCTION[@]}"; do
+    LIST_CUSTOM_FUNCTION=($(printf "%s\n" "${LIST_CUSTOM_FUNCTION[@]}" | sort -u))
+    for FUNC in "${LIST_CUSTOM_FUNCTION[@]}"; do
         $FUNC
     done
 }
@@ -127,7 +127,7 @@ UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
 LIST_CUSTOM_PRINT_HELP=()
 LIST_CUSTOM_PARSE_ARGS=()
-LIST_CUSTUM_FUNCTION=()
+LIST_CUSTOM_FUNCTION=()
 CUSTOM_SHIFT=0
 
 while [ -n "$1" ]; do
@@ -194,15 +194,15 @@ while [ -n "$1" ]; do
             UNPACK_AND_MOUNT=1
             ;;
         *-run-custom-script)
-            CUSTUM_SCRIPT="$ARG"
-            if [ "$CUSTUM_SCRIPT" = "ALL" ]; then
+            CUSTOM_SCRIPT="$ARG"
+            if [ "$CUSTOM_SCRIPT" = "ALL" ]; then
                 for FILE in ./custom-script/*.sh; do
                     . $FILE
                 done
-            elif [ -r "$CUSTUM_SCRIPT" ]; then
-                . $CUSTUM_SCRIPT
+            elif [ -r "$CUSTOM_SCRIPT" ]; then
+                . $CUSTOM_SCRIPT
             else
-                echo "The custom script hasn't been found ($CUSTUM_SCRIPT)"
+                echo "The custom script hasn't been found ($CUSTOM_SCRIPT)"
                 cleanup_and_exit 1
             fi
             shift

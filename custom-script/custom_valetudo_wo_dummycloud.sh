@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_wo_dummycloud")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_wo_dummycloud")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo_wo_dummycloud")
-LIST_CUSTUM_FUNCTION+=("custom_function_valetudo_wo_dummycloud")
+LIST_CUSTOM_FUNCTION+=("custom_function_valetudo_wo_dummycloud")
 
 function custom_print_usage_valetudo_wo_dummycloud() {
     cat << EOF

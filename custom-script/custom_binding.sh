@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_binding")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_binding")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_binding")
-LIST_CUSTUM_FUNCTION+=("custom_function_binding")
+LIST_CUSTOM_FUNCTION+=("custom_function_binding")
 
 function custom_print_usage_binding() {
     cat << EOF
