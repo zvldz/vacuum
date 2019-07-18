@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_dns")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_dns")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_dns")
-LIST_CUSTUM_FUNCTION+=("custom_function_dns")
+LIST_CUSTOM_FUNCTION+=("custom_function_dns")
 
 function custom_print_usage_dns() {
     cat << EOF

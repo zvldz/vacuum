@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_cn_ny")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_off_cn_ny")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_off_cn_ny")
-LIST_CUSTUM_FUNCTION+=("custom_function_off_cn_ny")
+LIST_CUSTOM_FUNCTION+=("custom_function_off_cn_ny")
 
 function custom_print_usage_off_cn_ny() {
     cat << EOF

@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_vacuum")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_vacuum")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_vacuum")
-LIST_CUSTUM_FUNCTION+=("custom_function_vacuum")
+LIST_CUSTOM_FUNCTION+=("custom_function_vacuum")
 
 function custom_print_usage_vacuum() {
     cat << EOF

@@ -4,7 +4,7 @@
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_example1")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_example1")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_example1")
-LIST_CUSTUM_FUNCTION+=("custom_function_example1")
+LIST_CUSTOM_FUNCTION+=("custom_function_example1")
 
 function custom_print_usage_example1() {
     cat << EOF
