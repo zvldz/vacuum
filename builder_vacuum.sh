@@ -56,7 +56,7 @@ function custom_function() {
 
 function print_usage() {
     echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
---disable-firmware-updates|--unprovisioned|--unpack-and-mount|
+--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
@@ -69,7 +69,6 @@ Options:
   -k, --public-key=PATH      Path to ssh public key to be added to authorized_keys file
                              if need to add multiple keys set -k as many times as you need:
                              -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
-  --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
@@ -114,7 +113,6 @@ readlink_f() (
 )
 
 PUBLIC_KEYS=()
-DISABLE_XIAOMI=0
 UNPROVISIONED=0
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
@@ -152,9 +150,6 @@ while [ -n "$1" ]; do
                 cleanup_and_exit 1
             fi
             shift
-            ;;
-        *-disable-firmware-updates)
-            DISABLE_XIAOMI=1
             ;;
         *-unprovisioned)
             UNPROVISIONED=1
@@ -335,16 +330,6 @@ if [ ${#PUBLIC_KEYS[*]} -ne 0 ]; then
         cat "${PUBLIC_KEYS[$i]}" >> $IMG_DIR/root/.ssh/authorized_keys
     done
     chmod 600 $IMG_DIR/root/.ssh/authorized_keys
-fi
-
-if [ $DISABLE_XIAOMI -eq 1 ]; then
-    echo "reconfiguring network traffic to xiaomi"
-    # comment out this section if you do not want do disable the xiaomi cloud
-    # or redirect it
-    echo "0.0.0.0       awsbj0-files.fds.api.xiaomi.com" >> $IMG_DIR/etc/hosts
-    echo "0.0.0.0       awsbj0.fds.api.xiaomi.com" >> $IMG_DIR/etc/hosts
-    #echo "0.0.0.0       ott.io.mi.com" >> ./etc/hosts
-    #echo "0.0.0.0       ot.io.mi.com" >> ./etc/hosts
 fi
 
 if [ $UNPROVISIONED -eq 1 ]; then
