@@ -57,7 +57,7 @@ function custom_function() {
 function print_usage() {
     echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
 --timezone=Europe/Berlin|--disable-firmware-updates|--disable-logs|
---replace-adbd|--ntpserver=ADDRESS|--unprovisioned|--unpack-and-mount|
+--ntpserver=ADDRESS|--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
@@ -72,7 +72,6 @@ Options:
                              -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
   -t, --timezone             Timezone to be used in vacuum
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
-  --replace-adbd             Replace xiaomis custom adbd with generic adbd version
   --disable-logs             Disables most log files creations and log uploads on the vacuum
   --ntpserver=ADDRESS        Set your local NTP server
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
@@ -119,7 +118,6 @@ readlink_f() (
 )
 
 PUBLIC_KEYS=()
-PATCH_ADBD=0
 DISABLE_XIAOMI=0
 UNPROVISIONED=0
 DISABLE_LOGS=0
@@ -169,9 +167,6 @@ while [ -n "$1" ]; do
             ;;
         *-disable-logs)
             DISABLE_LOGS=1
-            ;;
-        *-replace-adbd)
-            PATCH_ADBD=1
             ;;
         *-ntpserver)
             NTPSERVER="$ARG"
@@ -279,13 +274,6 @@ fi
 FIRMWARE_PATH=$(readlink_f "$FIRMWARE_PATH")
 FIRMWARE_BASENAME=$(basename $FIRMWARE_PATH)
 FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
-
-if [ $PATCH_ADBD -eq 1 ]; then
-    if [ ! -f $SCRIPTDIR/adbd ]; then
-        echo "File adbd not found, cannot replace adbd in image!"
-        cleanup_and_exit 1
-    fi
-fi
 
 # Generate SSH Host Keys
 echo "Generate SSH Host Keys if necessary"
@@ -406,12 +394,6 @@ if [ $UNPROVISIONED -eq 1 ]; then
         sed -i 's/#SSID#/'"$SSID"'/g' $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
         sed -i 's/#PSK#/'"$PSK"'/g'   $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
     fi
-fi
-
-if [ $PATCH_ADBD -eq 1 ]; then
-    echo "replacing adbd"
-    cp $IMG_DIR/usr/bin/adbd $IMG_DIR/usr/bin/adbd.xiaomi
-    install -m 0755 $BASEDIR/adbd $IMG_DIR/usr/bin/adbd
 fi
 
 if [ $DISABLE_LOGS -eq 1 ]; then
