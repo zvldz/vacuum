@@ -56,7 +56,7 @@ function custom_function() {
 
 function print_usage() {
     echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
---timezone=Europe/Berlin|--disable-firmware-updates|--disable-logs|
+--disable-firmware-updates|--disable-logs|
 --unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
@@ -70,7 +70,6 @@ Options:
   -k, --public-key=PATH      Path to ssh public key to be added to authorized_keys file
                              if need to add multiple keys set -k as many times as you need:
                              -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
-  -t, --timezone             Timezone to be used in vacuum
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
   --disable-logs             Disables most log files creations and log uploads on the vacuum
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
@@ -155,10 +154,6 @@ while [ -n "$1" ]; do
                 echo "Public key $ARG doesn't exist or is not readable"
                 cleanup_and_exit 1
             fi
-            shift
-            ;;
-        *-timezone|-t)
-            TIMEZONE="$ARG"
             shift
             ;;
         *-disable-firmware-updates)
@@ -258,7 +253,6 @@ if [ ${#PUBLIC_KEYS[*]} -eq 0 ]; then
     echo "No public keys selected!"
 fi
 
-TIMEZONE=${TIMEZONE:-"Europe/Berlin"}
 PASSWORD_FW="rockrobo"
 
 if [ ! -r "$FIRMWARE_PATH" ]; then
@@ -416,8 +410,6 @@ if [ $DISABLE_LOGS -eq 1 ]; then
     echo "* soft core 0" >> $IMG_DIR/etc/security/limits.conf
     sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 fi
-
-echo "$TIMEZONE" > $IMG_DIR/etc/timezone
 
 # Run custom scripts
 custom_function
