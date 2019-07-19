@@ -55,10 +55,9 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
---unprovisioned|--unpack-and-mount|
+    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
-custom_print_usage
+    custom_print_usage
 }
 
 function print_help() {
@@ -66,9 +65,6 @@ function print_help() {
 
 Options:
   -f, --firmware=PATH        Path to firmware file
-  -k, --public-key=PATH      Path to ssh public key to be added to authorized_keys file
-                             if need to add multiple keys set -k as many times as you need:
-                             -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
@@ -112,7 +108,6 @@ readlink_f() (
     exit 1
 )
 
-PUBLIC_KEYS=()
 UNPROVISIONED=0
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
@@ -139,16 +134,6 @@ while [ -n "$1" ]; do
             ;;
         *-firmware|-f)
             FIRMWARE_PATH="$ARG"
-            shift
-            ;;
-        *-public-key|-k)
-            # check if the key file exists
-            if [ -r "$ARG" ]; then
-                PUBLIC_KEYS[${#PUBLIC_KEYS[*]} + 1]=$(readlink_f "$ARG")
-            else
-                echo "Public key $ARG doesn't exist or is not readable"
-                cleanup_and_exit 1
-            fi
             shift
             ;;
         *-unprovisioned)
@@ -238,10 +223,6 @@ if [ ! -x "$CCRYPT" ]; then
     cleanup_and_exit 1
 fi
 
-if [ ${#PUBLIC_KEYS[*]} -eq 0 ]; then
-    echo "No public keys selected!"
-fi
-
 PASSWORD_FW="rockrobo"
 
 if [ ! -r "$FIRMWARE_PATH" ]; then
@@ -315,22 +296,6 @@ cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
 
 echo "Disable SSH firewall rule"
 sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
-
-echo "Add SSH authorized_keys"
-mkdir $IMG_DIR/root/.ssh
-chmod 700 $IMG_DIR/root/.ssh
-
-if [ -r $IMG_DIR/root/.ssh/authorized_keys ]; then
-    echo "Removing obsolete authorized_keys from Xiaomi image"
-    rm $IMG_DIR/root/.ssh/authorized_keys
-fi
-
-if [ ${#PUBLIC_KEYS[*]} -ne 0 ]; then
-    for i in $(eval echo {1..${#PUBLIC_KEYS[*]}}); do
-        cat "${PUBLIC_KEYS[$i]}" >> $IMG_DIR/root/.ssh/authorized_keys
-    done
-    chmod 600 $IMG_DIR/root/.ssh/authorized_keys
-fi
 
 if [ $UNPROVISIONED -eq 1 ]; then
     echo "Implementing unprovisioned mode"
