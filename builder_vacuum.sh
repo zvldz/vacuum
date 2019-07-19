@@ -56,8 +56,7 @@ function custom_function() {
 
 function print_usage() {
     echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
---disable-firmware-updates|--disable-logs|
---unprovisioned|--unpack-and-mount|
+--disable-firmware-updates|--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
@@ -71,7 +70,6 @@ Options:
                              if need to add multiple keys set -k as many times as you need:
                              -k ./local_key.pub -k ~/.ssh/id_rsa.pub -k /root/ssh/id_rsa.pub
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
-  --disable-logs             Disables most log files creations and log uploads on the vacuum
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
@@ -118,7 +116,6 @@ readlink_f() (
 PUBLIC_KEYS=()
 DISABLE_XIAOMI=0
 UNPROVISIONED=0
-DISABLE_LOGS=0
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
 LIST_CUSTOM_PRINT_HELP=()
@@ -158,9 +155,6 @@ while [ -n "$1" ]; do
             ;;
         *-disable-firmware-updates)
             DISABLE_XIAOMI=1
-            ;;
-        *-disable-logs)
-            DISABLE_LOGS=1
             ;;
         *-unprovisioned)
             UNPROVISIONED=1
@@ -383,32 +377,6 @@ if [ $UNPROVISIONED -eq 1 ]; then
         sed -i 's/#SSID#/'"$SSID"'/g' $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
         sed -i 's/#PSK#/'"$PSK"'/g'   $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
     fi
-fi
-
-if [ $DISABLE_LOGS -eq 1 ]; then
-    # Set LOG_LEVEL=3
-    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-    sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
-
-    #UPLOAD_METHOD=0
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-    sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
-
-    # Let the script cleanup logs
-    sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
-
-    # Add exit 0
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-    sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
-
-    # Comment $IncludeConfig
-    sed -Ei 's/^(\$IncludeConfig)/#&/' $IMG_DIR/etc/rsyslog.conf
-
-    # Disable cores
-    echo "* hard core 0" >> $IMG_DIR/etc/security/limits.conf
-    echo "* soft core 0" >> $IMG_DIR/etc/security/limits.conf
-    sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
 fi
 
 # Run custom scripts
