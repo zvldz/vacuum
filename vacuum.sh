@@ -6,8 +6,8 @@ if [ ! -r "$1" ]; then
 fi
 
 ./builder_vacuum.sh     --run-custom-script=ALL \
-                        --disable-logs --replace-adbd \
-                        --valetudo-path-wod=../Valetudo_0_2_3 \
+                        --timezone=Europe/Berlin \
+                        --ntpserver=pool.ntp.org \
                         --dnsserver="8.8.8.8, 114.114.114.114" \
                         --root-pass=cleaner \
                         --custom-user=cleaner \
@@ -16,5 +16,8 @@ fi
                         --enable-addon \
                         --enable-binding \
                         --enable-turn-off-ny \
+                        --disable-logs \
+                        --replace-adbd \
+                        --valetudo-path-wod=../Valetudo_0_2_3 \
                         --enable-history \
                         -f $1
