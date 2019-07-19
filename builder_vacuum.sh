@@ -57,7 +57,7 @@ function custom_function() {
 function print_usage() {
     echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--public-key=id_rsa.pub|
 --timezone=Europe/Berlin|--disable-firmware-updates|--disable-logs|
---ntpserver=ADDRESS|--unprovisioned|--unpack-and-mount|
+--unprovisioned|--unpack-and-mount|
 --run-custom-script=SCRIPT|--help]"
 custom_print_usage
 }
@@ -73,7 +73,6 @@ Options:
   -t, --timezone             Timezone to be used in vacuum
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
   --disable-logs             Disables most log files creations and log uploads on the vacuum
-  --ntpserver=ADDRESS        Set your local NTP server
   --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
                              --unprovisioned wpa2psk
                              --ssid YOUR_SSID
@@ -167,10 +166,6 @@ while [ -n "$1" ]; do
             ;;
         *-disable-logs)
             DISABLE_LOGS=1
-            ;;
-        *-ntpserver)
-            NTPSERVER="$ARG"
-            shift
             ;;
         *-unprovisioned)
             UNPROVISIONED=1
@@ -420,13 +415,6 @@ if [ $DISABLE_LOGS -eq 1 ]; then
     echo "* hard core 0" >> $IMG_DIR/etc/security/limits.conf
     echo "* soft core 0" >> $IMG_DIR/etc/security/limits.conf
     sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
-fi
-
-if [ -n "$NTPSERVER" ]; then
-    echo "$NTPSERVER" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
-else
-    echo "# you can add your server line by line" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
-    echo "pool.ntp.org" >> $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
 fi
 
 echo "$TIMEZONE" > $IMG_DIR/etc/timezone
