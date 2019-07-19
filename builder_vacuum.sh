@@ -55,8 +55,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--unprovisioned|--unpack-and-mount|
---run-custom-script=SCRIPT|--help]"
+    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
@@ -64,18 +63,15 @@ function print_help() {
     cat << EOF
 
 Options:
+  -h, --help                 Prints this message
   -f, --firmware=PATH        Path to firmware file
-  --unprovisioned            Access your network in unprovisioned mode (currently only wpa2psk is supported)
-                             --unprovisioned wpa2psk
-                             --ssid YOUR_SSID
-                             --psk YOUR_WIRELESS_PASSWORD
   --unpack-and-mount         Only unpack and mount image
   --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
-  -h, --help                 Prints this message
 
 Each parameter that takes a file as an argument accepts path in any form
 
-Report bugs to: https://github.com/dgiese/dustcloud/issues
+Report bugs to: https://github.com/zvldz/vacuum/issues
+Original Author: Dennis Giese [dgiese@dontvacuum.me], https://github.com/dgiese/dustcloud
 EOF
     custom_print_help
 }
@@ -108,7 +104,6 @@ readlink_f() (
     exit 1
 )
 
-UNPROVISIONED=0
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
 LIST_CUSTOM_PRINT_HELP=()
@@ -134,19 +129,6 @@ while [ -n "$1" ]; do
             ;;
         *-firmware|-f)
             FIRMWARE_PATH="$ARG"
-            shift
-            ;;
-        *-unprovisioned)
-            UNPROVISIONED=1
-            WIFIMODE="$ARG"
-            shift
-            ;;
-        *-ssid)
-            SSID="$ARG"
-            shift
-            ;;
-        *-psk)
-            PSK="$ARG"
             shift
             ;;
         *-unpack-and-mount)
@@ -296,38 +278,6 @@ cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
 
 echo "Disable SSH firewall rule"
 sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
-
-if [ $UNPROVISIONED -eq 1 ]; then
-    echo "Implementing unprovisioned mode"
-    if [ -z "$WIFIMODE" ]; then
-        echo "You need to specify a Wifi Mode: currently only wpa2psk is supported"
-        cleanup_and_exit 1
-    fi
-    echo "Wifimode: $WIFIMODE"
-    if [ "$WIFIMODE" = "wpa2psk" ]; then
-
-        if [ -z "$SSID" ]; then
-            echo "No SSID given, please use --ssid YOURSSID"
-            cleanup_and_exit 1
-        fi
-        if [ -z "$PSK" ]; then
-            echo "No PSK (Wireless Password) given, please use --psk YOURPASSWORD"
-            cleanup_and_exit 1
-        fi
-
-        mkdir $IMG_DIR/opt/unprovisioned
-        install -m 0755 $BASEDIR/unprovisioned/start_wifi.sh $IMG_DIR/opt/unprovisioned
-
-        sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
-        cat $BASEDIR/unprovisioned/rc.local >> $IMG_DIR/etc/rc.local
-        echo "exit 0" >> $IMG_DIR/etc/rc.local
-
-        install -m 0644 $BASEDIR/unprovisioned/wpa_supplicant.conf.wpa2psk $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
-
-        sed -i 's/#SSID#/'"$SSID"'/g' $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
-        sed -i 's/#PSK#/'"$PSK"'/g'   $IMG_DIR/opt/unprovisioned/wpa_supplicant.conf
-    fi
-fi
 
 # Run custom scripts
 custom_function
