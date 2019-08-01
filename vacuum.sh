@@ -17,6 +17,7 @@ fi
                         --enable-binding \
                         --enable-turn-off-ny \
                         --disable-logs \
+                        --disable-firmware-updates \
                         --replace-adbd \
                         --valetudo-path-wod=../Valetudo_0_2_3 \
                         --enable-history \
