@@ -46,6 +46,12 @@ function custom_function_off_updates() {
         echo "0.0.0.0         cdn.awsbj0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
         echo "0.0.0.0         cdn.awsde0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
         echo "0.0.0.0         cdn.cnbj2.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.awssgp0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.awsusor0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.cnbj1.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.cnbj0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.ksyru0-eco.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
+        echo "0.0.0.0         cdn.awsind0-eco.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
         #echo "0.0.0.0       ott.io.mi.com" >> ./etc/hosts
         #echo "0.0.0.0       ot.io.mi.com" >> ./etc/hosts
     fi
