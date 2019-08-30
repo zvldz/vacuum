@@ -52,6 +52,7 @@ MAC=\`cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=\`
 KEY=\`cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=\`
 MODEL=\`cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=\`
 BUILD_NUMBER=\`cat /opt/rockrobo/buildnumber | tr -d '\n'\`
+REGION=\`cat /mnt/default/roborock.conf| grep prc | cut -f2 -d'='\`
 P_YEAR="201"\`echo \$SERIAL | cut -c 7\`
 P_WEEK=\`echo \$SERIAL | cut -c 8-9\`
 P_DATE=\`date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y"\`
@@ -72,6 +73,7 @@ printf "\033[1;36mSERIAL\033[0m..........: \$SERIAL\n"
 printf "\033[1;36mPRODUCTION DATE\033[0m.: \$P_DATE\n"
 printf "\033[1;36mFIRMWARE\033[0m........: \$FIRMWARE\n"
 printf "\033[1;36mBUILD NUMBER\033[0m....: \$BUILD_NUMBER\n"
+printf "\033[1;36mREGION\033[0m..........: \$REGION\n"
 printf "\033[1;36mIP\033[0m..............: \$IP\n"
 printf "\033[1;36mMAC\033[0m.............: \$MAC\n"
 printf "\033[1;36mTOKEN\033[0m...........: \$TOKEN\n"
