@@ -13,7 +13,7 @@ Added functionality through custom scripts.
 [Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
 
 ### Thanks
-* ~~https://github.com/dgiese/dustcloud~~
+* https://github.com/dgiese/dustcloud
 * https://github.com/JohnRev/rrlogd-patcher
-* https://github.com/Hypfer/Valetudo
+* ~~https://github.com/Hypfer/Valetudo~~
 * https://github.com/LazyT/rrcc
