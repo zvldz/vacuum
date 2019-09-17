@@ -24,7 +24,6 @@ fi
                         --disable-firmware-updates \
                         --replace-adbd \
                         --convert2eu \
-                        --valetudo-path-wod=../Valetudo_0_2_3 \
                         --enable-history \
                         --enable-appproxy-patcher \
                         -f $1

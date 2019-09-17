@@ -55,11 +55,13 @@ function custom_parse_args_vacuum() {
 
 function custom_function_vacuum() {
     VERSION=`date "+%Y%m%d"`
+    FW_VER=`echo $FIRMWARE_FILENAME | grep -oE "v11_[0-9]+" | sed 's/v11_00//'`
     ROOT_PASSWORD=${ROOT_PASSWORD:-""}
     CUSTOM_USER=${CUSTOM_USER:-""}
     CUSTOM_USER_PASSWORD=${CUSTOM_USER_PASSWORD:-""}
     CONVERT_2_PRC=${CONVERT_2_PRC:-"0"}
     CONVERT_2_EU=${CONVERT_2_EU:-"0"}
+    ROOT_ONLY=${ROOT_ONLY:-"0"}
 
     if [ $CONVERT_2_PRC -eq 1 -a $CONVERT_2_EU  -eq 1 ]; then
         echo "! Only one region is possible"
@@ -156,11 +158,27 @@ EOF
     sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
 
     if [ $CONVERT_2_PRC -eq 1 ]; then
-        FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
+        if [ -z "$FW_VER" ]; then
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
+        else
+            FIRMWARE_BASENAME="vacuum_2prc_${FW_VER}.pkg"
+        fi
     elif [ $CONVERT_2_EU -eq 1 ]; then
-        FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
+        if [ -z "$FW_VER" ]; then
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
+        else
+            FIRMWARE_BASENAME="vacuum_2eu_${FW_VER}.pkg"
+        fi
     else
-        FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
+        if [ -z "$FW_VER" ]; then
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
+        else
+            if [ $ROOT_ONLY -ne 1 ]; then
+                FIRMWARE_BASENAME="vacuum_${FW_VER}.pkg"
+            else
+                FIRMWARE_BASENAME="root_${FW_VER}.pkg"
+            fi
+        fi
     fi
 
     FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
