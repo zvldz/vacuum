@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo
+date
+echo $0
+
 if [ ! -r "$1" ]; then
     echo "File not found!"
     exit 1
@@ -21,4 +25,5 @@ fi
                         --replace-adbd \
                         --valetudo-path-wod=../Valetudo_0_2_3 \
                         --enable-history \
+                        --enable-appproxy-patcher \
                         -f $1
