@@ -305,17 +305,17 @@ install -d -m 0755 output
 install -m 0644 "$FW_DIR/${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
 if [ "$IS_MAC" = true ]; then
-    md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_FILENAME}.md5"
+    md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
 else
-    md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_FILENAME}.md5"
+    md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
 fi
-sed -i -r "s/ .*\/(.+)/  \1/g" output/${FIRMWARE_FILENAME}.md5
-chmod 0644 "output/${FIRMWARE_FILENAME}.md5"
+sed -i -r "s/ .*\/(.+)/  \1/g" output/${FIRMWARE_BASENAME}.md5
+chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
 
 echo "Cleaning up"
 rm -rf $FW_TMPDIR
 
 echo "FINISHED"
-cat "output/${FIRMWARE_FILENAME}.md5"
+cat "output/${FIRMWARE_BASENAME}.md5"
 
 cleanup_and_exit
