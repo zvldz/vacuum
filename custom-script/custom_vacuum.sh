@@ -169,6 +169,12 @@ EOF
         else
             FIRMWARE_BASENAME="vacuum_2eu_${FW_VER}.pkg"
         fi
+    elif [ $ENABLE_VALETUDO -eq 1 ]; then
+        if [ -z "$FW_VER" ]; then
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_valetudo_${VERSION}.pkg"
+        else
+            FIRMWARE_BASENAME="vacuum_valetudo_${FW_VER}.pkg"
+        fi
     else
         if [ -z "$FW_VER" ]; then
             FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
