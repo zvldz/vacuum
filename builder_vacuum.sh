@@ -282,6 +282,9 @@ sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/op
 # Run custom scripts
 custom_function
 
+echo "Discard unused blocks"
+type -p fstrim > /dev/null 2>&1 && fstrim $IMG_DIR
+
 while [ $(umount $IMG_DIR; echo $?) -ne 0 ]; do
     echo "waiting for unmount..."
     sleep 2
