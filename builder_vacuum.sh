@@ -253,11 +253,11 @@ IMG_DIR="$FW_TMPDIR/image"
 mkdir -p "$IMG_DIR"
 
 if [ "$IS_MAC" = true ]; then
-	FUSE-EXT2="$(type -p fuse-ext2)"
-	if [ ! -x "$CCRYPT" ]; then
-	    echo "fuse-ext not found! Please install it from https://github.com/alperakcan/fuse-ext2"
-	    cleanup_and_exit 1
-	fi
+    FUSE-EXT2="$(type -p fuse-ext2)"
+    if [ ! -x "$FUSE-EXT2" ]; then
+        echo "fuse-ext not found! Please install it from https://github.com/alperakcan/fuse-ext2"
+        cleanup_and_exit 1
+    fi
     $FUSE-EXT2 -ext2 "$FW_DIR/disk.img" "$IMG_DIR" -o rw+
 else
     mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
