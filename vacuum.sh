@@ -25,4 +25,5 @@ fi
                         --replace-adbd \
                         --enable-history \
                         --enable-appproxy-patcher \
+                        --replace-miio \
                         -f $1

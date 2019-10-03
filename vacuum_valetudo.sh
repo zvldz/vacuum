@@ -25,4 +25,5 @@ fi
                         --enable-history \
                         --enable-appproxy-patcher \
                         --valetudo-path=../Valetudo \
+                        --replace-miio \
                         -f $1
