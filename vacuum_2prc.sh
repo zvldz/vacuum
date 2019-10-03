@@ -26,4 +26,5 @@ fi
                         --convert2prc \
                         --enable-history \
                         --enable-appproxy-patcher \
+                        --replace-miio \
                         -f $1
