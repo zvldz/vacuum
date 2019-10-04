@@ -34,7 +34,7 @@ function custom_parse_args_history() {
 }
 
 function custom_function_history() {
-    ENABLE_ADDON=${ENABLE_HISTORY:-"0"}
+    ENABLE_HISTORY=${ENABLE_HISTORY:-"0"}
 
     if [ $ENABLE_HISTORY -eq 1 ]; then
         echo "+ Added buildnumber to history file"
