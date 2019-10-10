@@ -181,8 +181,13 @@ Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
 </p>
 </details>
 
-### Firmware history
+### History of stock firmware
 [Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
+
+### Already builded firmwares
+[GEN1](https://vacuumz.info/download/gen1/)
+
+[GEN2](https://vacuumz.info/download/gen2/)
 
 ### Thanks
 * **https://github.com/dgiese/dustcloud**
