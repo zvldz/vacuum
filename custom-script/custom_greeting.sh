@@ -53,7 +53,7 @@ MAC=\`cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=\`
 KEY=\`cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=\`
 MODEL=\`cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=\`
 BUILD_NUMBER=\`cat /opt/rockrobo/buildnumber | tr -d '\n'\`
-REGION=\`cat /mnt/default/roborock.conf| grep location | cut -f2 -d'='\`
+REGION=\`cat /mnt/default/roborock.conf 2>/dev/null | grep location | cut -f2 -d'='\`
 P_YEAR="201"\`echo \$SERIAL | cut -c 7\`
 P_WEEK=\`echo \$SERIAL | cut -c 8-9\`
 P_DATE=\`date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y"\`
