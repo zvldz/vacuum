@@ -11,8 +11,8 @@ Added functionality through custom scripts.
 
 <details><summary>CLICK ME</summary>
 <p>
-  
-  
+
+
 ```
 Usage: sudo builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]
 
@@ -172,7 +172,10 @@ Custom options for './custom-script/custom_vacuum.sh':
   --convert2eu                 Convert to EU region
 
 Custom options for './custom-script/custom_valetudo.sh':
-  --valetudo-path=PATH       The path to valetudo to include it into the image
+  --valetudo-path=PATH       The path to Valetudo(https://github.com/Hypfer/Valetudo) to include it into the image
+
+Custom options for './custom-script/custom_valetudo_re.sh':
+  --valetudo-re-path=PATH       The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
 
 Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
   --valetudo-path-wod=PATH   The path to valetudo(without dummycloud) to include it into the image
