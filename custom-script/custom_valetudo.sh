@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Valetudo
+# Install Valetudo (https://github.com/Hypfer/Valetudo)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo")
@@ -18,7 +18,7 @@ function custom_print_help_valetudo() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --valetudo-path=PATH       The path to valetudo to include it into the image
+  --valetudo-path=PATH       The path to Valetudo(https://github.com/Hypfer/Valetudo) to include it into the image
 EOF
 }
 
@@ -29,7 +29,7 @@ function custom_parse_args_valetudo() {
             if [ -r "$VALETUDO_PATH/valetudo" ]; then
                 ENABLE_VALETUDO=1
             else
-                echo "The valetudo binary hasn't been found in $VALETUDO_PATH"
+                echo "The Valetudo binary hasn't been found in $VALETUDO_PATH"
                 echo "Please download it from https://github.com/Hypfer/Valetudo"
                 echo "(example: git clone https://github.com/Hypfer/Valetudo ../Valetudo && wget https://github.com/Hypfer/Valetudo/releases/download/0.4.0/valetudo -O ../Valetudo/valetudo)"
                 echo
@@ -45,6 +45,7 @@ function custom_parse_args_valetudo() {
 
 function custom_function_valetudo() {
     ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
+    ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
     ENABLE_DUMMYCLOUD=${ENABLE_DUMMYCLOUD:-"0"}
 
     if [ $ENABLE_VALETUDO -eq 1  ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
@@ -53,8 +54,13 @@ function custom_function_valetudo() {
         cleanup_and_exit 1
     fi
 
+    if [ $ENABLE_VALETUDO_RE -eq 1  ] && [ $ENABLE_VALETUDO -eq 1  ] ; then
+        echo "You can't install Valetudo RE and Valetudo at the same time, "
+        cleanup_and_exit 1
+    fi
+
     if [ $ENABLE_VALETUDO -eq 1 ]; then
-        echo "Installing valetudo"
+        echo "+ Installing Valetudo"
 
         install -m 0755 $VALETUDO_PATH/valetudo $IMG_DIR/usr/local/bin/valetudo
         install -m 0644 $VALETUDO_PATH/deployment/valetudo.conf $IMG_DIR/etc/init/valetudo.conf

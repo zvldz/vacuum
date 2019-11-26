@@ -24,7 +24,6 @@ fi
                         --disable-firmware-updates \
                         --replace-adbd \
                         --convert2eu \
-                        --enable-history \
                         --enable-appproxy-patcher \
                         --replace-miio \
                         -f $1

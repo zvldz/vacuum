@@ -22,7 +22,6 @@ fi
                         --enable-turn-off-ny \
                         --disable-logs \
                         --replace-adbd \
-                        --enable-history \
                         --enable-appproxy-patcher \
                         --valetudo-path=../Valetudo \
                         --replace-miio \
