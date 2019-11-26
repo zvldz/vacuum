@@ -21,9 +21,8 @@ fi
                         --enable-binding \
                         --enable-turn-off-ny \
                         --disable-logs \
-                        --disable-firmware-updates \
                         --replace-adbd \
-                        --convert2prc \
                         --enable-appproxy-patcher \
+                        --valetudo-re-path=../Valetudo_RE \
                         --replace-miio \
                         -f $1
