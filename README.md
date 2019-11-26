@@ -196,4 +196,5 @@ Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
 * **https://github.com/dgiese/dustcloud**
 * https://github.com/JohnRev/rrlogd-patcher
 * _https://github.com/Hypfer/Valetudo_
+* https://github.com/rand256/valetudo
 * https://github.com/LazyT/rrcc
