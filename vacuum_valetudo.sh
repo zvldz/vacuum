@@ -12,7 +12,6 @@ fi
 ./builder_vacuum.sh     --run-custom-script=ALL \
                         --timezone=Europe/Berlin \
                         --ntpserver=pool.ntp.org \
-                        --dnsserver="8.8.8.8, 114.114.114.114" \
                         --root-pass=cleaner \
                         --custom-user=cleaner \
                         --custom-user-pass=cleaner \
@@ -22,7 +21,6 @@ fi
                         --enable-turn-off-ny \
                         --disable-logs \
                         --replace-adbd \
-                        --enable-appproxy-patcher \
                         --valetudo-path=../Valetudo \
                         --replace-miio \
                         -f $1
