@@ -18,7 +18,7 @@ function custom_print_help_valetudo_re() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --valetudo-re-path=PATH       The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
+  --valetudo-re-path=PATH    The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
 EOF
 }
 
