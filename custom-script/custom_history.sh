@@ -38,16 +38,16 @@ function custom_function_history() {
 
     if [ $ENABLE_HISTORY -eq 1 ]; then
         echo "+ Add buildnumber and firmware version to history file"
-        BUILD_NUMBER=`cat $IMG_DIR/opt/rockrobo/buildnumber | tr -d '\n'`
-        if [ -f $IMG_DIR/opt/rockrobo/rr-release ]; then
-            FW_VERSION=`cat $IMG_DIR/opt/rockrobo/rr-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=`
-        elif [ -f $IMG_DIR/etc/os-release ]; then
-            FW_VERSION=`cat $IMG_DIR/etc/os-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=`
+        BUILD_NUMBER=$(cat "${IMG_DIR}/opt/rockrobo/buildnumber" | tr -d '\n')
+        if [ -f "${IMG_DIR}/opt/rockrobo/rr-release" ]; then
+            FW_VERSION=$(cat "${IMG_DIR}/opt/rockrobo/rr-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
+        elif [ -f "${IMG_DIR}/etc/os-release" ]; then
+            FW_VERSION=$(cat "${IMG_DIR}/etc/os-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
         else
             FW_VERSION="-"
         fi
-        echo "$FIRMWARE_BASENAME $BUILD_NUMBER $FW_VERSION" >> $BASEDIR/history.txt
-        sort -u $BASEDIR/history.txt > $BASEDIR/history.txt.tmp
-        mv $BASEDIR/history.txt.tmp $BASEDIR/history.txt
+        echo "$FIRMWARE_BASENAME $BUILD_NUMBER $FW_VERSION" >> "${BASEDIR}/history.txt"
+        sort -u "${BASEDIR}/history.txt" > "${BASEDIR}/history.txt.tmp"
+        mv "${BASEDIR}/history.txt.tmp" "${BASEDIR}/history.txt"
     fi
 }

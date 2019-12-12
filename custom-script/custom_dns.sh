@@ -37,6 +37,6 @@ function custom_parse_args_dns() {
 function custom_function_dns() {
     if [ -n "$DNSSERVER" ]; then
         echo "+ Replacing DNS servers"
-        sed -i -E "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" $IMG_DIR/etc/dhcp/dhclient.conf
+        sed -i -E "s/.*reject.*/supersede domain-name-servers $DNSSERVER;/" "${IMG_DIR}/etc/dhcp/dhclient.conf"
     fi
 }

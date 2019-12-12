@@ -45,7 +45,7 @@ function custom_function_valetudo_wo_dummycloud() {
 
     if [ $ENABLE_VALETUDO_WOD -eq 1 ]; then
         echo "+ Installing valetudo without dummycloud"
-        install -m 0755 $VALETUDO_PATH_WOD/valetudo $IMG_DIR/usr/local/bin/valetudo
-        install -m 0644 $VALETUDO_PATH_WOD/deployment/valetudo.conf $IMG_DIR/etc/init/valetudo.conf
+        install -m 0755 "${VALETUDO_PATH_WOD}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
+        install -m 0644 "${VALETUDO_PATH_WOD}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
     fi
 }

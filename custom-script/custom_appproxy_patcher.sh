@@ -38,16 +38,16 @@ function custom_function_appproxy_patcher() {
 
     if [ $PATCH_APPPROXY -eq 1 ]; then
         echo "+ Creating backup of AppProxy"
-        cp $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy.xiaomi
+        cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
 
         echo "+ Trying to patch AppProxy"
-        sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/g' $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy
-        MD5_ORG=`md5sum $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy.xiaomi | awk '{print $1}'`
-        MD5_PATCHED=`md5sum $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy | awk '{print $1}'`
+        sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
+        MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" | awk '{print $1}')
+        MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" | awk '{print $1}')
 
         if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
             echo "- AppProxy is NOT patched."
-            rm $IMG_DIR/opt/rockrobo/cleaner/bin/AppProxy.xiaomi
+            rm "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
         else
             echo "+ AppProxy is patched."
         fi

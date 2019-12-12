@@ -12,4 +12,4 @@ export ROOT_ONLY=1
                         --custom-user=cleaner \
                         --custom-user-pass=cleaner \
                         --enable-history \
-                        -f $1
+                        -f "$1"

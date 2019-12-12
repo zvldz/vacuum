@@ -54,8 +54,8 @@ function custom_parse_args_vacuum() {
 }
 
 function custom_function_vacuum() {
-    VERSION=`date "+%Y%m%d"`
-    FW_VER=`echo $FIRMWARE_FILENAME | grep -oE "v11_[0-9]+" | sed 's/v11_00//'`
+    VERSION=$(date "+%Y%m%d")
+    FW_VER=$(echo "$FIRMWARE_FILENAME" | grep -oE "v11_[0-9]+" | sed 's/v11_00//')
     ROOT_PASSWORD=${ROOT_PASSWORD:-""}
     CUSTOM_USER=${CUSTOM_USER:-""}
     CUSTOM_USER_PASSWORD=${CUSTOM_USER_PASSWORD:-""}
@@ -70,7 +70,7 @@ function custom_function_vacuum() {
 
     echo "+ Prepare startup scripts"
 
-    cat << EOF > $IMG_DIR/root/run_once.sh
+    cat << EOF > "${IMG_DIR}/root/run_once.sh"
 #!/bin/sh
 
 date >> /root/vacuum.txt
@@ -95,8 +95,8 @@ EOF
 
     if [ -n "$ROOT_PASSWORD" ]; then
         echo "+ Added script to change password for root"
-        mkdir -p $IMG_DIR/root/run.d
-        cat << EOF > $IMG_DIR/root/run.d/set_root_pass.sh
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/set_root_pass.sh"
 #!/bin/sh
 echo "  - Set a password for root" >> /root/vacuum.txt
 echo "root:$ROOT_PASSWORD" | chpasswd
@@ -105,8 +105,8 @@ EOF
 
     if [ -n "$CUSTOM_USER" -a -n "$CUSTOM_USER_PASSWORD" ]; then
         echo "+ Added script to create custom user"
-        mkdir -p $IMG_DIR/root/run.d
-        cat << EOF > $IMG_DIR/root/run.d/create_custom_user.sh
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
 echo "  - Create custom user" >> /root/vacuum.txt
 echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD::::/home/$CUSTOM_USER:/bin/bash" | newusers
@@ -116,8 +116,8 @@ EOF
 
     if [ $CONVERT_2_PRC -eq 1 ]; then
         echo "+ Added script for change region to Mainland China"
-        mkdir -p $IMG_DIR/root/run.d
-        cat << EOF > $IMG_DIR/root/run.d/convert2prc.sh
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/convert2prc.sh"
 #!/bin/sh
 
 if [ -f /mnt/default/roborock.conf ]; then
@@ -126,7 +126,7 @@ if [ -f /mnt/default/roborock.conf ]; then
         mount -o remount,rw /mnt/default
         if [ -w /mnt/default/roborock.conf ]; then
             echo "  - Change region to Mainland China" >> /root/vacuum.txt
-            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\`date "+%Y-%m-%d_%H-%M"\`
+            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\$(date "+%Y-%m-%d_%H-%M")
             sed -i 's/location.*/location=prc/' /mnt/default/roborock.conf
         fi
         mount -o remount,ro /mnt/default
@@ -135,8 +135,8 @@ fi
 EOF
     elif [ $CONVERT_2_EU -eq 1 ]; then
         echo "+ Added script for change region to EU"
-        mkdir -p $IMG_DIR/root/run.d
-        cat << EOF > $IMG_DIR/root/run.d/convert2eu.sh
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/convert2eu.sh"
 #!/bin/sh
 
 if [ -f /mnt/default/roborock.conf ]; then
@@ -145,7 +145,7 @@ if [ -f /mnt/default/roborock.conf ]; then
         mount -o remount,rw /mnt/default
         if [ -w /mnt/default/roborock.conf ]; then
             echo "  - Change region to EU" >> /root/vacuum.txt
-            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\`date "+%Y-%m-%d_%H-%M"\`
+            cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\$(date "+%Y-%m-%d_%H-%M")
             sed -i 's/location.*/location=de/' /mnt/default/roborock.conf
         fi
         mount -o remount,ro /mnt/default
@@ -154,8 +154,8 @@ fi
 EOF
     fi
 
-    chmod +x $IMG_DIR/root/run_once.sh $IMG_DIR/root/run.d/*
-    sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' $IMG_DIR/etc/rc.local
+    chmod +x "${IMG_DIR}/root/run_once.sh" "${IMG_DIR}/root/run.d/"*
+    sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' "${IMG_DIR}/etc/rc.local"
 
     if [ $CONVERT_2_PRC -eq 1 ]; then
         if [ -z "$FW_VER" ]; then

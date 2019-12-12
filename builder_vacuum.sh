@@ -19,7 +19,7 @@
 #
 
 function cleanup_and_exit() {
-    if [ "$1" = 0 -o -z "$1" ]; then
+    if [ "$1" = 0 ] || [ -z "$1" ]; then
         exit 0
     else
         exit $1
@@ -171,20 +171,18 @@ while [ -n "$1" ]; do
 done
 
 SCRIPT="$0"
-SCRIPTDIR=$(dirname "${0}")
 COUNT=0
 
-while [ -L "${SCRIPT}" ]
+while [ -L "$SCRIPT" ]
 do
-    SCRIPT=$(readlink_f ${SCRIPT})
-    COUNT=$(expr ${COUNT} + 1)
-    if [ ${COUNT} -gt 100 ]
-    then
+    SCRIPT=$(readlink_f "$SCRIPT")
+    COUNT=$(($COUNT + 1))
+    if [ $COUNT -gt 100 ]; then
         echo "Too many symbolic links"
         cleanup_and_exit 1
     fi
 done
-BASEDIR=$(dirname "${SCRIPT}")
+BASEDIR=$(dirname "$SCRIPT")
 echo "Script path: $BASEDIR"
 
 if [ $EUID -ne 0 ]; then
@@ -213,7 +211,7 @@ if [ ! -r "$FIRMWARE_PATH" ]; then
 fi
 
 FIRMWARE_PATH=$(readlink_f "$FIRMWARE_PATH")
-FIRMWARE_BASENAME=$(basename $FIRMWARE_PATH)
+FIRMWARE_BASENAME=$(basename "$FIRMWARE_PATH")
 FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
 
 # Generate SSH Host Keys
@@ -241,13 +239,13 @@ cp "$FIRMWARE_PATH" "$FW_DIR/$FIRMWARE_FILENAME"
 $CCRYPT -d -K "$PASSWORD_FW" "$FW_DIR/$FIRMWARE_FILENAME"
 
 echo "Unpack firmware"
-pushd "$FW_DIR"
+pushd "$FW_DIR" > /dev/null
 tar -xzf "$FIRMWARE_FILENAME"
 if [ ! -r disk.img ]; then
     echo "File disk.img not found! Decryption and unpacking was apparently unsuccessful."
     cleanup_and_exit 1
 fi
-popd
+popd > /dev/null
 
 IMG_DIR="$FW_TMPDIR/image"
 mkdir -p "$IMG_DIR"
@@ -258,9 +256,9 @@ if [ "$IS_MAC" = true ]; then
         echo "fuse-ext2 not found! Please install it from https://github.com/alperakcan/fuse-ext2"
         cleanup_and_exit 1
     fi
-    fuse-ext2 -ext2 "$FW_DIR/disk.img" "$IMG_DIR" -o rw+
+    fuse-ext2 -ext2 "${FW_DIR}/disk.img" "$IMG_DIR" -o rw+
 else
-    mount -o loop "$FW_DIR/disk.img" "$IMG_DIR"
+    mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
 fi
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
@@ -269,32 +267,32 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     cleanup_and_exit
 fi
 
-echo "Replace ssh host keys"
-cat ssh_host_rsa_key > $IMG_DIR/etc/ssh/ssh_host_rsa_key
-cat ssh_host_rsa_key.pub > $IMG_DIR/etc/ssh/ssh_host_rsa_key.pub
-cat ssh_host_dsa_key > $IMG_DIR/etc/ssh/ssh_host_dsa_key
-cat ssh_host_dsa_key.pub > $IMG_DIR/etc/ssh/ssh_host_dsa_key.pub
-cat ssh_host_ecdsa_key > $IMG_DIR/etc/ssh/ssh_host_ecdsa_key
-cat ssh_host_ecdsa_key.pub > $IMG_DIR/etc/ssh/ssh_host_ecdsa_key.pub
-cat ssh_host_ed25519_key > $IMG_DIR/etc/ssh/ssh_host_ed25519_key
-cat ssh_host_ed25519_key.pub > $IMG_DIR/etc/ssh/ssh_host_ed25519_key.pub
+echo "+ Replace ssh host keys"
+cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
+cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
+cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
+cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
+cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
+cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
+cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
+cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
 
-echo "Disable SSH firewall rule"
-sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+echo "+ Disable SSH firewall rule"
+sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
 
 # Run custom scripts
 custom_function
 
 echo "Discard unused blocks"
-type -p fstrim > /dev/null 2>&1 && fstrim $IMG_DIR
+type -p fstrim > /dev/null 2>&1 && fstrim "$IMG_DIR"
 
-while [ $(umount $IMG_DIR; echo $?) -ne 0 ]; do
+while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
     echo "waiting for unmount..."
     sleep 2
 done
 
 echo "Pack new firmware"
-pushd $FW_DIR
+pushd "$FW_DIR" > /dev/null
 PATCHED="${FIRMWARE_FILENAME}_patched.pkg"
 type -p pigz > /dev/null 2>&1 && tar -I pigz -cf "$PATCHED" disk.img || tar -czf "$PATCHED" disk.img
 if [ ! -r "$PATCHED" ]; then
@@ -304,22 +302,22 @@ fi
 
 echo "Encrypt firmware"
 $CCRYPT -e -K "$PASSWORD_FW" "$PATCHED"
-popd
+popd > /dev/null
 
 echo "Copy firmware to output/${FIRMWARE_BASENAME} and creating checksums"
 install -d -m 0755 output
-install -m 0644 "$FW_DIR/${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
+install -m 0644 "${FW_DIR}/${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
 if [ "$IS_MAC" = true ]; then
     md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
 else
     md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
 fi
-sed -i -r "s/ .*\/(.+)/  \1/g" output/${FIRMWARE_BASENAME}.md5
+sed -i -r "s/ .*\/(.+)/  \1/g" "output/${FIRMWARE_BASENAME}.md5"
 chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
 
 echo "Cleaning up"
-rm -rf $FW_TMPDIR
+rm -rf "$FW_TMPDIR"
 
 echo "FINISHED"
 cat "output/${FIRMWARE_BASENAME}.md5"

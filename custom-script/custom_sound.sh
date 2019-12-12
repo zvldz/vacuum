@@ -45,24 +45,24 @@ function custom_function_sound() {
     if [ -n "$SOUNDFILE_PATH" ]; then
         echo "+ Decrypt soundfile .."
         SND_DIR="$FW_TMPDIR/sounds"
-        SND_FILE=$(basename $SOUNDFILE_PATH)
-        mkdir -p $SND_DIR
-        cp "$SOUNDFILE_PATH" "$SND_DIR/$SND_FILE"
-        $CCRYPT -d -K "$PASSWORD_SND" "$SND_DIR/$SND_FILE"
+        SND_FILE=$(basename "$SOUNDFILE_PATH")
+        mkdir -p "$SND_DIR"
+        cp "$SOUNDFILE_PATH" "${SND_DIR}/${SND_FILE}"
+        $CCRYPT -d -K "$PASSWORD_SND" "${SND_DIR}/${SND_FILE}"
 
         echo "+ Unpack soundfile .."
-        pushd "$SND_DIR"
+        pushd "$SND_DIR" > /dev/null
         tar -xzf "$SND_FILE"
-        popd
+        popd > /dev/null
     fi
 
     if [ -n "$SND_DIR" ]; then
         SND_DST_DIR="$IMG_DIR/opt/rockrobo/resources/sounds/${SOUNDLANG}"
-        install -d -m 0755 $SND_DST_DIR
+        install -d -m 0755 "$SND_DST_DIR"
 
         # Add sounds for a specific language
         for f in ${SND_DIR}/*.wav; do
-            install -m 0644 $f ${SND_DST_DIR}/$(basename ${f})
+            install -m 0644 "$f" "${SND_DST_DIR}/$(basename "${f}")"
         done
     fi
 }

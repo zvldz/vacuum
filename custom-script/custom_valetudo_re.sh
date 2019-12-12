@@ -69,43 +69,43 @@ function custom_function_valetudo_re() {
     if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         echo "+ Installing Valetudo RE"
 
-        VALETUDO_RE_DEPS_PATH=$(dirname $(readlink_f ${BASH_SOURCE[0]}))
-        if [ -r "$VALETUDO_RE_DEPS_PATH/valetudo_re_deps.tgz" ]; then
+        VALETUDO_RE_DEPS_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
+        if [ -r "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz" ]; then
             echo "+ Unpacking of Valetudo RE dependencies"
-            tar -C $IMG_DIR -xzf $VALETUDO_RE_DEPS_PATH/valetudo_re_deps.tgz
+            tar -C "${IMG_DIR}" -xzf "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz"
         else
-            echo "- $VALETUDO_RE_DEPS_PATH/valetudo_re_deps.tgz not found/readable"
+            echo "- ${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz not found/readable"
         fi
 
-        install -m 0755 $VALETUDO_RE_PATH/valetudo $IMG_DIR/usr/local/bin/valetudo
-        install -m 0644 $VALETUDO_RE_PATH/valetudo.conf $IMG_DIR/etc/init/valetudo.conf
+        install -m 0755 "${VALETUDO_RE_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
+        install -m 0644 "${VALETUDO_RE_PATH}/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
-        cat $VALETUDO_RE_PATH/hosts >> $IMG_DIR/etc/hosts
+        cat "${VALETUDO_RE_PATH}/hosts" >> "${IMG_DIR}/etc/hosts"
 
-        sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
-        cat $VALETUDO_RE_PATH/rc.local >> $IMG_DIR/etc/rc.local
-        echo >> $IMG_DIR/etc/rc.local
-        echo "exit 0" >> $IMG_DIR/etc/rc.local
+        sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+        cat "${VALETUDO_RE_PATH}/rc.local" >> "${IMG_DIR}/etc/rc.local"
+        echo >> "${IMG_DIR}/etc/rc.local"
+        echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
         # UPLOAD_METHOD=2
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         # Set LOG_LEVEL=3
-        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         # Reduce logging of miio_client
-        sed -i 's/-l 2/-l 0/' $IMG_DIR/opt/rockrobo/watchdog/ProcessList.conf
+        sed -i 's/-l 2/-l 0/' "${IMG_DIR}/opt/rockrobo/watchdog/ProcessList.conf"
 
         # Let the script cleanup logs
-        sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
+        sed -i 's/nice.*//' "${IMG_DIR}/opt/rockrobo/rrlog/tar_extra_file.sh"
 
         # Disable collecting device info to /dev/shm/misc.log
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/misc.sh"
 
         # Disable logging of 'top'
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/toprotation.sh"
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/topstop.sh"
     fi
 }
