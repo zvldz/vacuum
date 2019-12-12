@@ -51,27 +51,14 @@ function custom_function_dummycloud() {
         cleanup_and_exit 1
     fi
 
-    DOS2UNIX="$(type -p dos2unix)"
-    if [ ! -x "$DOS2UNIX" ]; then
-        echo "dos2unix not found! Please install it (e.g. by (apt|brew|dnf|zypper) install dos2unix)"
-        cleanup_and_exit 1
-    fi
-
     if [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
         echo "Installing dummycloud"
 
-        # Fix line endings as the released zip packages have Windows line endings
-        dos2unix "${DUMMYCLOUD_PATH}/doc/dummycloud.conf"
-        dos2unix "${DUMMYCLOUD_PATH}/doc/etc_hosts-snippet.txt"
-        dos2unix "${DUMMYCLOUD_PATH}/doc/etc_rc.local-snippet.txt"
-
         install -m 0755 "${DUMMYCLOUD_PATH}/dummycloud" "${IMG_DIR}/usr/local/bin/dummycloud"
-        install -m 0644 "${DUMMYCLOUD_PATH}/doc/dummycloud.conf" "${IMG_DIR}/etc/init/dummycloud.conf"
-
-        cat "${DUMMYCLOUD_PATH}/doc/etc_hosts-snippet.txt" >> "${IMG_DIR}/etc/hosts"
-
+        cat "${DUMMYCLOUD_PATH}/doc/dummycloud.conf" | tr -d '\15\32' > "${IMG_DIR}/etc/init/dummycloud.conf"
+        cat "${DUMMYCLOUD_PATH}/doc/etc_hosts-snippet.txt" | tr -d '\15\32' >> "${IMG_DIR}/etc/hosts"
         sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-        cat "${DUMMYCLOUD_PATH}/doc/etc_rc.local-snippet.txt" >> "${IMG_DIR}/etc/rc.local"
+        cat "${DUMMYCLOUD_PATH}/doc/etc_rc.local-snippet.txt" | tr -d '\15\32' >> "${IMG_DIR}/etc/rc.local"
         echo >> "${IMG_DIR}/etc/rc.local"
         echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
