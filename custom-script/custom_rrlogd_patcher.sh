@@ -1,5 +1,5 @@
 #!/bin/bash
-# Patch rrlogd to disable log encryption
+# Patch rrlogd to disable log encryption (based on https://github.com/JohnRev/rrlogd-patcher)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_rrlogd_patcher")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_rrlogd_patcher")
@@ -10,7 +10,7 @@ function custom_print_usage_rrlogd_patcher() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
-[--rrlogd-patcher=PATCHER]
+[--enable-rrlogd-patcher]
 EOF
 }
 
@@ -18,16 +18,14 @@ function custom_print_help_rrlogd_patcher() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --rrlogd-patcher=PATCHER   Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
+  --enable-rrlogd-patcher    Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
 EOF
 }
 
 function custom_parse_args_rrlogd_patcher() {
     case ${PARAM} in
-        *-rrlogd-patcher)
+        *-enable-rrlogd-patcher)
             PATCH_RRLOGD=1
-            RRLOGD_PATCHER="$ARG"
-            CUSTOM_SHIFT=1
             ;;
         -*)
             return 1
@@ -39,33 +37,21 @@ function custom_function_rrlogd_patcher() {
     PATCH_RRLOGD=${PATCH_RRLOGD:-"0"}
 
     if [ $PATCH_RRLOGD -eq 1 ]; then
-        PYTHON=${PYTHON:-"python3"}
-        RRLOGD_PATCHER_ABS="$(readlink_f "$RRLOGD_PATCHER" 2> /dev/null)"
+        echo "+ Creating backup of rrlogd"
+        cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
 
-        if [ -r "$RRLOGD_PATCHER_ABS" ]; then
-            echo "+ Creating backup of rrlogd"
-            cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
+        echo "+ Trying to patch rrlogd"
+        sed -i 's/\xF2\x04\x03\xFF\xF7\x4B\xFF/\xF2\x04\x03\xE3\x20\x4B\xFF/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
+        sed -i 's/\xF2\x04\x03\xFF\xF7\x45\xFF/\xF2\x04\x03\xE3\x20\x45\xFF/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
+        sed -i 's/\x33\x46\x4B\xA8\x10\x22/\x33\x46\x47\xA8\x10\x22/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
+        MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi" | awk '{print $1}')
+        MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" | awk '{print $1}')
 
-            # This is a extremly simple binary patch by John Rev
-            # In the long run we should use his rrlogd-patcher however we would need to integrate
-            # it into the imagebuilder package or git repo.
-            #
-            # See https://github.com/JohnRev/rrlogd-patcher
-            echo "+ Trying to patch rrlogd"
-            cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${FW_TMPDIR}/rrlogd"
-
-            pushd "$FW_TMPDIR" > /dev/null
-            $PYTHON "$RRLOGD_PATCHER_ABS"
-            ret=$?
-            popd > /dev/null
-            if [ $ret -eq 0 ]; then
-                install -m 0755 "${FW_TMPDIR}/rrlogd_patch" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
-                echo "+ Successfully patched rrlogd"
-            else
-                echo "! Failed to patch rrlogd (please report a bug here: https://github.com/JohnRev/rrlogd-patcher/issues)"
-            fi
+        if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
+            echo "- rrlogd is NOT patched."
+            rm "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
         else
-            echo "! Invalid path to rrlogd ($RRLOGD_PATCHER_ABS)"
+            echo "+ rrlogd is patched."
         fi
     fi
 }
