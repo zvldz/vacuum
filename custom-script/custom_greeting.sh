@@ -39,24 +39,23 @@ function custom_function_greeting() {
 
     if [ $ENABLE_GREETING -eq 1 ]; then
         echo "+ Adding Greetings"
-        VERSION=`date "+%Y%m%d"`
-        cat << EOF > $IMG_DIR/etc/profile.d/greeting.sh
+        VERSION=$(date "+%Y%m%d")
+        cat << EOF > "${IMG_DIR}/etc/profile.d/greeting.sh"
 #!/bin/sh
 
-SERIAL=\`cat /dev/shm/sn | grep -ao '[[:alnum:]]*'\`
-#FIRMWARE=\`cat /etc/os-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d=\`
-FIRMWARE=\`cat /opt/rockrobo/rr-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=\`
-IP=\`hostname -I\`
-TOKEN=\`cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p\`
-DID=\`cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=\`
-MAC=\`cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=\`
-KEY=\`cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=\`
-MODEL=\`cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=\`
-BUILD_NUMBER=\`cat /opt/rockrobo/buildnumber | tr -d '\n'\`
-REGION=\`cat /mnt/default/roborock.conf 2>/dev/null | grep location | cut -f2 -d'='\`
-P_YEAR="201"\`echo \$SERIAL | cut -c 7\`
-P_WEEK=\`echo \$SERIAL | cut -c 8-9\`
-P_DATE=\`date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y"\`
+SERIAL=\$(cat /dev/shm/sn | grep -ao '[[:alnum:]]*')
+FIRMWARE=\$(cat /opt/rockrobo/rr-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
+IP=\$(hostname -I)
+TOKEN=\$(cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p)
+DID=\$(cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=)
+MAC=\$(cat /mnt/default/device.conf | grep '^mac' | cut -f2 -d=)
+KEY=\$(cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=)
+MODEL=\$(cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=)
+BUILD_NUMBER=\$(cat /opt/rockrobo/buildnumber | tr -d '\n')
+REGION=\$(cat /mnt/default/roborock.conf 2>/dev/null | grep location | cut -f2 -d'=')
+P_YEAR="201"\$(echo \$SERIAL | cut -c 7)
+P_WEEK=\$(echo \$SERIAL | cut -c 8-9)
+P_DATE=\$(date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
 
 echo
 echo "          _______  _______                    _______ "
@@ -83,6 +82,6 @@ printf "\033[1;36mKEY\033[0m.............: \$KEY\n"
 echo "======================================================"
 echo
 EOF
-        chmod +x $IMG_DIR/etc/profile.d/greeting.sh
+        chmod +x "${IMG_DIR}/etc/profile.d/greeting.sh"
     fi
 }

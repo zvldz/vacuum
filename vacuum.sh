@@ -26,4 +26,4 @@ fi
                         --enable-history \
                         --enable-appproxy-patcher \
                         --replace-miio \
-                        -f $1
+                        -f "$1"

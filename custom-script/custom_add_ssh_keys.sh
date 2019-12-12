@@ -43,19 +43,19 @@ function custom_parse_args_ssh_keys() {
 }
 
 function custom_function_ssh_keys() {
-    if [ -r $IMG_DIR/root/.ssh/authorized_keys ]; then
+    if [ -r "${IMG_DIR}/root/.ssh/authorized_keys" ]; then
         echo "+ Removing obsolete authorized_keys from Xiaomi image"
-        rm $IMG_DIR/root/.ssh/authorized_keys
+        rm "${IMG_DIR}/root/.ssh/authorized_keys"
     fi
 
     if [ ${#PUBLIC_KEYS[*]} -ne 0 ]; then
         echo "+ Add SSH authorized_keys"
-        mkdir -p $IMG_DIR/root/.ssh
-        chmod 700 $IMG_DIR/root/.ssh
+        mkdir -p "${IMG_DIR}/root/.ssh"
+        chmod 700 "${IMG_DIR}/root/.ssh"
 
         for i in $(eval echo {1..${#PUBLIC_KEYS[*]}}); do
-            cat "${PUBLIC_KEYS[$i]}" >> $IMG_DIR/root/.ssh/authorized_keys
+            cat "${PUBLIC_KEYS[$i]}" >> "${IMG_DIR}/root/.ssh/authorized_keys"
         done
-        chmod 600 $IMG_DIR/root/.ssh/authorized_keys
+        chmod 600 "${IMG_DIR}/root/.ssh/authorized_keys"
     fi
 }

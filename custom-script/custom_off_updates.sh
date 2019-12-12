@@ -41,18 +41,18 @@ function custom_function_off_updates() {
         echo "+ Disable xiaomi servers using hosts file for firmware updates"
         # comment out this section if you do not want do disable the xiaomi cloud
         # or redirect it
-        #echo "0.0.0.0       awsbj0-files.fds.api.xiaomi.com" >> $IMG_DIR/etc/hosts
-        #echo "0.0.0.0       awsbj0.fds.api.xiaomi.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.awsbj0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.awsde0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.cnbj2.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.awssgp0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.awsusor0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.cnbj1.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.cnbj0.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.ksyru0-eco.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        echo "0.0.0.0         cdn.awsind0-eco.fds.api.mi-img.com" >> $IMG_DIR/etc/hosts
-        #echo "0.0.0.0       ott.io.mi.com" >> ./etc/hosts
-        #echo "0.0.0.0       ot.io.mi.com" >> ./etc/hosts
+        #echo "0.0.0.0       awsbj0-files.fds.api.xiaomi.com" >> "${IMG_DIR}/etc/hosts"
+        #echo "0.0.0.0       awsbj0.fds.api.xiaomi.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.awsbj0.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.awsde0.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.cnbj2.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.awssgp0.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.awsusor0.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.cnbj1.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.cnbj0.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.ksyru0-eco.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        echo "0.0.0.0         cdn.awsind0-eco.fds.api.mi-img.com" >> "${IMG_DIR}/etc/hosts"
+        #echo "0.0.0.0       ott.io.mi.com" >> "${IMG_DIR}/etc/hosts"
+        #echo "0.0.0.0       ot.io.mi.com" >> "${IMG_DIR}/etc/hosts"
     fi
 }

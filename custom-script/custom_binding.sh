@@ -48,6 +48,6 @@ bind '"\C-w": backward-kill-word'
 
 alias vim=vi
 EOF
-        chmod +x $IMG_DIR/etc/profile.d/binding.sh
+        chmod +x "${IMG_DIR}/etc/profile.d/binding.sh"
     fi
 }

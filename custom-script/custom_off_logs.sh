@@ -39,27 +39,27 @@ function custom_function_off_logs() {
     if [ $DISABLE_LOGS -eq 1 ]; then
         echo "+ Disabling logging"
         # Set LOG_LEVEL=3
-        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         #UPLOAD_METHOD=0
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         # Let the script cleanup logs
-        sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
+        sed -i 's/nice.*//' "${IMG_DIR}/opt/rockrobo/rrlog/tar_extra_file.sh"
 
         # Add exit 0
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/misc.sh"
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/toprotation.sh"
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/topstop.sh"
 
         # Comment $IncludeConfig
-        sed -Ei 's/^(\$IncludeConfig)/#&/' $IMG_DIR/etc/rsyslog.conf
+        sed -Ei 's/^(\$IncludeConfig)/#&/' "${IMG_DIR}/etc/rsyslog.conf"
 
         # Disable cores
-        echo "* hard core 0" >> $IMG_DIR/etc/security/limits.conf
-        echo "* soft core 0" >> $IMG_DIR/etc/security/limits.conf
-        sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' $IMG_DIR/opt/rockrobo/watchdog/rrwatchdoge.conf
+        echo "* hard core 0" >> "${IMG_DIR}/etc/security/limits.conf"
+        echo "* soft core 0" >> "${IMG_DIR}/etc/security/limits.conf"
+        sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
     fi
 }

@@ -37,5 +37,5 @@ function custom_parse_args_timezone() {
 function custom_function_timezone() {
     TIMEZONE=${TIMEZONE:-"Europe/Berlin"}
     echo "+ Replacing timezone"
-    echo "$TIMEZONE" > $IMG_DIR/etc/timezone
+    echo "$TIMEZONE" > "${IMG_DIR}/etc/timezone"
 }

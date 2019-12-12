@@ -37,10 +37,10 @@ function custom_function_bin_addon() {
     ENABLE_ADDON=${ENABLE_ADDON:-"0"}
 
     if [ $ENABLE_ADDON -eq 1 ]; then
-        ADDON_PATH=$(dirname $(readlink_f ${BASH_SOURCE[0]}))
+        ADDON_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
         if [ -r "$ADDON_PATH/addon.tgz" ]; then
             echo "+ Unpacking addon"
-            tar -C $IMG_DIR -xzf $ADDON_PATH/addon.tgz
+            tar -C "$IMG_DIR" -xzf "${ADDON_PATH}/addon.tgz"
         else
             echo "- $ADDON_PATH/addon.tgz not found/readable"
         fi

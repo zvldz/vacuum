@@ -37,6 +37,6 @@ function custom_parse_args_ntp() {
 function custom_function_ntp() {
     if [ -n "$NTPSERVER" ]; then
         echo "+ Replacing NTP servers"
-        echo "$NTPSERVER" > $IMG_DIR/opt/rockrobo/watchdog/ntpserver.conf
+        echo "$NTPSERVER" > "${IMG_DIR}/opt/rockrobo/watchdog/ntpserver.conf"
     fi
 }

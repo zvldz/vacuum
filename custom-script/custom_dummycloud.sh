@@ -61,32 +61,32 @@ function custom_function_dummycloud() {
         echo "Installing dummycloud"
 
         # Fix line endings as the released zip packages have Windows line endings
-        dos2unix $DUMMYCLOUD_PATH/doc/dummycloud.conf
-        dos2unix $DUMMYCLOUD_PATH/doc/etc_hosts-snippet.txt
-        dos2unix $DUMMYCLOUD_PATH/doc/etc_rc.local-snippet.txt
+        dos2unix "${DUMMYCLOUD_PATH}/doc/dummycloud.conf"
+        dos2unix "${DUMMYCLOUD_PATH}/doc/etc_hosts-snippet.txt"
+        dos2unix "${DUMMYCLOUD_PATH}/doc/etc_rc.local-snippet.txt"
 
-        install -m 0755 $DUMMYCLOUD_PATH/dummycloud $IMG_DIR/usr/local/bin/dummycloud
-        install -m 0644 $DUMMYCLOUD_PATH/doc/dummycloud.conf $IMG_DIR/etc/init/dummycloud.conf
+        install -m 0755 "${DUMMYCLOUD_PATH}/dummycloud" "${IMG_DIR}/usr/local/bin/dummycloud"
+        install -m 0644 "${DUMMYCLOUD_PATH}/doc/dummycloud.conf" "${IMG_DIR}/etc/init/dummycloud.conf"
 
-        cat $DUMMYCLOUD_PATH/doc/etc_hosts-snippet.txt >> $IMG_DIR/etc/hosts
+        cat "${DUMMYCLOUD_PATH}/doc/etc_hosts-snippet.txt" >> "${IMG_DIR}/etc/hosts"
 
-        sed -i 's/exit 0//' $IMG_DIR/etc/rc.local
-        cat $DUMMYCLOUD_PATH/doc/etc_rc.local-snippet.txt >> $IMG_DIR/etc/rc.local
-        echo >> $IMG_DIR/etc/rc.local
-        echo "exit 0" >> $IMG_DIR/etc/rc.local
+        sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+        cat "${DUMMYCLOUD_PATH}/doc/etc_rc.local-snippet.txt" >> "${IMG_DIR}/etc/rc.local"
+        echo >> "${IMG_DIR}/etc/rc.local"
+        echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
         # UPLOAD_METHOD   0:NO_UPLOAD    1:FTP    2:FDS
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlog.conf
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' $IMG_DIR/opt/rockrobo/rrlog/rrlogmt.conf
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         # Let the script cleanup logs
-        sed -i 's/nice.*//' $IMG_DIR/opt/rockrobo/rrlog/tar_extra_file.sh
+        sed -i 's/nice.*//' "${IMG_DIR}/opt/rockrobo/rrlog/tar_extra_file.sh"
 
         # Disable collecting device info to /dev/shm/misc.log
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/misc.sh
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/misc.sh"
 
         # Disable logging of 'top'
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/toprotation.sh
-        sed -i '/^\#!\/bin\/bash$/a exit 0' $IMG_DIR/opt/rockrobo/rrlog/topstop.sh
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/toprotation.sh"
+        sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/topstop.sh"
     fi
 }

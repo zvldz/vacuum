@@ -23,4 +23,4 @@ fi
                         --replace-adbd \
                         --valetudo-path=../Valetudo \
                         --replace-miio \
-                        -f $1
+                        -f "$1"

@@ -26,4 +26,4 @@ fi
                         --convert2prc \
                         --enable-appproxy-patcher \
                         --replace-miio \
-                        -f $1
+                        -f "$1"
