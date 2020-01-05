@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_logs")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_off_logs")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_off_logs")
 LIST_CUSTOM_FUNCTION+=("custom_function_off_logs")
+DISABLE_LOGS=${DISABLE_LOGS:-"0"}
 
 function custom_print_usage_off_logs() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_off_logs() {
 }
 
 function custom_function_off_logs() {
-    DISABLE_LOGS=${DISABLE_LOGS:-"0"}
-
     if [ $DISABLE_LOGS -eq 1 ]; then
         echo "+ Disabling logging"
         # Set LOG_LEVEL=3
@@ -55,11 +54,15 @@ function custom_function_off_logs() {
         sed -i '/^\#!\/bin\/bash$/a exit 0' "${IMG_DIR}/opt/rockrobo/rrlog/topstop.sh"
 
         # Comment $IncludeConfig
-        sed -Ei 's/^(\$IncludeConfig)/#&/' "${IMG_DIR}/etc/rsyslog.conf"
+        if [ -f "${IMG_DIR}/etc/rsyslog.conf" ]; then
+            sed -Ei 's/^(\$IncludeConfig)/#&/' "${IMG_DIR}/etc/rsyslog.conf"
+        fi
 
         # Disable cores
-        echo "* hard core 0" >> "${IMG_DIR}/etc/security/limits.conf"
-        echo "* soft core 0" >> "${IMG_DIR}/etc/security/limits.conf"
+        if [ -f "${IMG_DIR}/etc/security/limits.conf" ]; then
+            echo "* hard core 0" >> "${IMG_DIR}/etc/security/limits.conf"
+            echo "* soft core 0" >> "${IMG_DIR}/etc/security/limits.conf"
+        fi
         sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
     fi
 }

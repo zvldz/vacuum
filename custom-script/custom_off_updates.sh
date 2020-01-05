@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_updates")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_off_updates")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_off_updates")
 LIST_CUSTOM_FUNCTION+=("custom_function_off_updates")
+DISABLE_XIAOMI=${DISABLE_XIAOMI:-"0"}
 
 function custom_print_usage_off_updates() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_off_updates() {
 }
 
 function custom_function_off_updates() {
-    DISABLE_XIAOMI=${DISABLE_XIAOMI:-"0"}
-
     if [ $DISABLE_XIAOMI -eq 1 ]; then
         #echo "+ Reconfiguring network traffic to xiaomi"
         echo "+ Disable xiaomi servers using hosts file for firmware updates"

@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_bin_addon")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_bin_addon")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_bin_addon")
 LIST_CUSTOM_FUNCTION+=("custom_function_bin_addon")
+ENABLE_ADDON=${ENABLE_ADDON:-"0"}
 
 function custom_print_usage_bin_addon() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_bin_addon() {
 }
 
 function custom_function_bin_addon() {
-    ENABLE_ADDON=${ENABLE_ADDON:-"0"}
-
     if [ $ENABLE_ADDON -eq 1 ]; then
         ADDON_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
         if [ -r "$ADDON_PATH/addon.tgz" ]; then

@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_example2")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_example2")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_example2")
 LIST_CUSTOM_FUNCTION+=("custom_function_example2")
+EXAMPLE2=${EXAMPLE2:-"0"}
 
 function custom_print_usage_example2() {
     cat << EOF
@@ -39,8 +40,6 @@ function custom_parse_args_example2() {
 }
 
 function custom_function_example2() {
-    EXAMPLE2=${EXAMPLE2:-"0"}
-
     if [ $EXAMPLE2 -eq 1 ]; then
         echo "+ Start something 2"
     fi
