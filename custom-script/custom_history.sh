@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_history")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_history")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_history")
 LIST_CUSTOM_FUNCTION+=("custom_function_history")
+ENABLE_HISTORY=${ENABLE_HISTORY:-"0"}
 
 function custom_print_usage_history() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_history() {
 }
 
 function custom_function_history() {
-    ENABLE_HISTORY=${ENABLE_HISTORY:-"0"}
-
     if [ $ENABLE_HISTORY -eq 1 ]; then
         echo "+ Add buildnumber and firmware version to history file"
         BUILD_NUMBER=$(cat "${IMG_DIR}/opt/rockrobo/buildnumber" | tr -d '\n')

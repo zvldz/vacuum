@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_appproxy_patcher")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_appproxy_patcher")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_appproxy_patcher")
 LIST_CUSTOM_FUNCTION+=("custom_function_appproxy_patcher")
+PATCH_APPPROXY=${PATCH_APPPROXY:-"0"}
 
 function custom_print_usage_appproxy_patcher() {
     cat << EOF
@@ -34,14 +35,13 @@ function custom_parse_args_appproxy_patcher() {
 }
 
 function custom_function_appproxy_patcher() {
-    PATCH_APPPROXY=${PATCH_APPPROXY:-"0"}
-
     if [ $PATCH_APPPROXY -eq 1 ]; then
         echo "+ Creating backup of AppProxy"
         cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
 
         echo "+ Trying to patch AppProxy"
-        sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
+#       sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8\x45\xF2/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
+        sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
         MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" | awk '{print $1}')
         MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" | awk '{print $1}')
 

@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo")
 LIST_CUSTOM_FUNCTION+=("custom_function_valetudo")
+ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
 
 function custom_print_usage_valetudo() {
     cat << EOF
@@ -44,10 +45,6 @@ function custom_parse_args_valetudo() {
 }
 
 function custom_function_valetudo() {
-    ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
-    ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
-    ENABLE_DUMMYCLOUD=${ENABLE_DUMMYCLOUD:-"0"}
-
     if [ $ENABLE_VALETUDO -eq 1 ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
         echo "You can't install Valetudo and Dummycloud at the same time, "
         echo "because Valetudo has implemented Dummycloud fuctionality and map upload support now."

@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_re")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_re")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo_re")
 LIST_CUSTOM_FUNCTION+=("custom_function_valetudo_re")
+ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
 
 function custom_print_usage_valetudo_re() {
     cat << EOF
@@ -51,10 +52,6 @@ function custom_parse_args_valetudo_re() {
 }
 
 function custom_function_valetudo_re() {
-    ENABLE_VALETUDO=${ENABLE_VALETUDO:-"0"}
-    ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
-    ENABLE_DUMMYCLOUD=${ENABLE_DUMMYCLOUD:-"0"}
-
     if [ $ENABLE_VALETUDO_RE -eq 1 ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
         echo "You can't install Valetudo RE and Dummycloud at the same time, "
         echo "because Valetudo RE has implemented Dummycloud fuctionality and map upload support now."
@@ -73,6 +70,12 @@ function custom_function_valetudo_re() {
         if [ -r "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz" ]; then
             echo "+ Unpacking of Valetudo RE dependencies"
             tar -C "${IMG_DIR}" -xzf "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz"
+
+            if [ -f "${IMG_DIR}/etc/inittab" ]; then
+                mkdir -p "${IMG_DIR}/usr/local/bin"
+                install -m 0755  "${VALETUDO_RE_DEPS_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+                install -m 0755  "${VALETUDO_RE_DEPS_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+            fi
         else
             echo "- ${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz not found/readable"
         fi

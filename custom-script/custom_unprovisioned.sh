@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_unprovisioned")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_unprovisioned")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_unprovisioned")
 LIST_CUSTOM_FUNCTION+=("custom_function_unprovisioned")
+UNPROVISIONED=${UNPROVISIONED:-"0"}
 
 function custom_print_usage_unprovisioned() {
     cat << EOF
@@ -47,8 +48,6 @@ function custom_parse_args_unprovisioned() {
 }
 
 function custom_function_unprovisioned() {
-    UNPROVISIONED=${UNPROVISIONED:-"0"}
-
     if [ $UNPROVISIONED -eq 1 ]; then
         echo "+ Implementing unprovisioned mode"
 

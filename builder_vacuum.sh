@@ -137,7 +137,7 @@ while [ -n "$1" ]; do
         *-run-custom-script)
             CUSTOM_SCRIPT="$ARG"
             if [ "$CUSTOM_SCRIPT" = "ALL" ]; then
-                for FILE in ./custom-script/*.sh; do
+                for FILE in ./custom-script/custom*.sh; do
                     . $FILE
                 done
             elif [ -r "$CUSTOM_SCRIPT" ]; then
@@ -267,18 +267,21 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     cleanup_and_exit
 fi
 
-echo "+ Replace ssh host keys"
-cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
-cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
-cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
-cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
-cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
-cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
-cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
-cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
+if [ -d "${IMG_DIR}/etc/ssh" ]; then
+    echo "+ Replace ssh host keys"
+    cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
+    cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
+    cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
+    cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
+    cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
+    cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
+    cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
+    cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
+fi
 
 echo "+ Disable SSH firewall rule"
 sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
+sed -i -E 's/iptables/true    /' "${IMG_DIR}/opt/rockrobo/watchdog/WatchDoge"
 
 # Run custom scripts
 custom_function

@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_rrlogd_patcher")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_rrlogd_patcher")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_rrlogd_patcher")
 LIST_CUSTOM_FUNCTION+=("custom_function_rrlogd_patcher")
+PATCH_RRLOGD=${PATCH_RRLOGD:-"0"}
 
 function custom_print_usage_rrlogd_patcher() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_rrlogd_patcher() {
 }
 
 function custom_function_rrlogd_patcher() {
-    PATCH_RRLOGD=${PATCH_RRLOGD:-"0"}
-
     if [ $PATCH_RRLOGD -eq 1 ]; then
         echo "+ Creating backup of rrlogd"
         cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"

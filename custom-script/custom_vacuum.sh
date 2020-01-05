@@ -5,6 +5,12 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_vacuum")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_vacuum")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_vacuum")
 LIST_CUSTOM_FUNCTION+=("custom_function_vacuum")
+ROOT_PASSWORD=${ROOT_PASSWORD:-""}
+CUSTOM_USER=${CUSTOM_USER:-""}
+CUSTOM_USER_PASSWORD=${CUSTOM_USER_PASSWORD:-""}
+CONVERT_2_PRC=${CONVERT_2_PRC:-"0"}
+CONVERT_2_EU=${CONVERT_2_EU:-"0"}
+ROOT_ONLY=${ROOT_ONLY:-"0"}
 
 function custom_print_usage_vacuum() {
     cat << EOF
@@ -56,12 +62,7 @@ function custom_parse_args_vacuum() {
 function custom_function_vacuum() {
     VERSION=$(date "+%Y%m%d")
     FW_VER=$(echo "$FIRMWARE_FILENAME" | grep -oE "v11_[0-9]+" | sed 's/v11_00//')
-    ROOT_PASSWORD=${ROOT_PASSWORD:-""}
-    CUSTOM_USER=${CUSTOM_USER:-""}
-    CUSTOM_USER_PASSWORD=${CUSTOM_USER_PASSWORD:-""}
-    CONVERT_2_PRC=${CONVERT_2_PRC:-"0"}
-    CONVERT_2_EU=${CONVERT_2_EU:-"0"}
-    ROOT_ONLY=${ROOT_ONLY:-"0"}
+    FILES_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
 
     if [ $CONVERT_2_PRC -eq 1 -a $CONVERT_2_EU  -eq 1 ]; then
         echo "! Only one region is possible"
@@ -72,8 +73,11 @@ function custom_function_vacuum() {
 
     cat << EOF > "${IMG_DIR}/root/run_once.sh"
 #!/bin/sh
-
 date >> /root/vacuum.txt
+
+mkdir -p /mnt/data/root
+touch /mnt/data/root/.bash_history
+ln -s /mnt/data/root/.bash_history /root/ > /dev/null 2>&1
 
 echo "Run custom scripts" >> /root/vacuum.txt
 
@@ -109,8 +113,8 @@ EOF
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
 echo "  - Create custom user" >> /root/vacuum.txt
-echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD::::/home/$CUSTOM_USER:/bin/bash" | newusers
-usermod -G sudo $CUSTOM_USER
+adduser $CUSTOM_USER -s /bin/bash -D -G sudo
+echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD" | chpasswd
 EOF
     fi
 
@@ -156,6 +160,23 @@ EOF
 
     chmod +x "${IMG_DIR}/root/run_once.sh" "${IMG_DIR}/root/run.d/"*
     sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' "${IMG_DIR}/etc/rc.local"
+
+    if [ -f "${IMG_DIR}/etc/inittab" ]; then
+        tar -C "$IMG_DIR" -xzf "${FILES_PATH}/addon2.tgz"
+        sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' "${IMG_DIR}/etc/profile"
+        sed -i -E 's/root:x:0:0:root:\/root:\/bin\/ash/root:x:0:0:root:\/root:\/bin\/bash/' "${IMG_DIR}/etc/passwd"
+        cat << EOF >> "${IMG_DIR}/etc/profile"
+
+if [ -d /etc/profile.d ]; then
+    for i in /etc/profile.d/*.sh; do
+        if [ -r \$i ]; then
+            . \$i
+        fi
+    done
+    unset i
+fi
+EOF
+    fi
 
     if [ $CONVERT_2_PRC -eq 1 ]; then
         if [ -z "$FW_VER" ]; then

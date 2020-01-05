@@ -5,6 +5,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_cn_ny")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_off_cn_ny")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_off_cn_ny")
 LIST_CUSTOM_FUNCTION+=("custom_function_off_cn_ny")
+ENABLE_TURN_OFF_NY=${ENABLE_TURN_OFF_NY:-"0"}
 
 function custom_print_usage_off_cn_ny() {
     cat << EOF
@@ -34,8 +35,6 @@ function custom_parse_args_off_cn_ny() {
 }
 
 function custom_function_off_cn_ny() {
-    ENABLE_TURN_OFF_NY=${ENABLE_TURN_OFF_NY:-"0"}
-
     if [ $ENABLE_TURN_OFF_NY -eq 1 ]; then
         SILENT_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
         if [ -r "$SILENT_PATH/silent.wav" ]; then
