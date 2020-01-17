@@ -7,9 +7,17 @@ load() {
 }
 
 unload() {
-    echo "Stopping logging" >/dev/kmsg
+    echo "stopping valetudo" >/dev/kmsg
     start-stop-daemon -K -q -p /var/run/valetudo-daemon.pid
     killall -9 valetudo
+}
+
+status() {
+    if [ ! -f /var/run/valetudo-daemon.pid -o -z "$(ps | grep `cat /var/run/valetudo-daemon.pid` | grep -v grep)" ]; then
+        echo "valetudo seems stopped"
+    else
+        echo "valetudo seems started"
+    fi
 }
 
 case "$1" in
@@ -23,8 +31,11 @@ case "$1" in
         unload
         load
         ;;
+    status)
+        status
+        ;;
     *)
-        echo "$0 <start/stop/restart>"
+        echo "$0 <start/stop/restart/status>"
         ;;
 esac
 
