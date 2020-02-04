@@ -162,6 +162,7 @@ EOF
     sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' "${IMG_DIR}/etc/rc.local"
 
     if [ -f "${IMG_DIR}/etc/inittab" ]; then
+        echo "+ Unpacking addon2"
         tar -C "$IMG_DIR" -xzf "${FILES_PATH}/addon2.tgz"
         sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' "${IMG_DIR}/etc/profile"
         sed -i -E 's/root:x:0:0:root:\/root:\/bin\/ash/root:x:0:0:root:\/root:\/bin\/bash/' "${IMG_DIR}/etc/passwd"
