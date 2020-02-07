@@ -42,6 +42,8 @@ function custom_function_binding() {
 if [ "\$BASH" ]; then
     bind '"\e[A": history-search-backward'
     bind '"\e[B": history-search-forward'
+    bind '"\e[1~": beginning-of-line'
+    bind '"\e[4~": end-of-line'
 
     stty werase undef
     bind '"\C-w": backward-kill-word'
