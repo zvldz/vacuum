@@ -12,6 +12,7 @@ function custom_print_usage_valetudo_re() {
 
 Custom parameters for '${BASH_SOURCE[0]}':
 [--valetudo-re-path=PATH]
+[--valetudo-re-nodeps]
 EOF
 }
 
@@ -20,6 +21,7 @@ function custom_print_help_valetudo_re() {
 
 Custom options for '${BASH_SOURCE[0]}':
   --valetudo-re-path=PATH    The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
+  --valetudo-re-nodeps       Do not add libstd++ dependencies if using binary built with partial static linking
 EOF
 }
 
@@ -45,6 +47,9 @@ function custom_parse_args_valetudo_re() {
             fi
             CUSTOM_SHIFT=1
             ;;
+        *-valetudo-re-nodeps)
+            VALETUDO_RE_NODEPS=1
+            ;;
         -*)
             return 1
             ;;
@@ -65,19 +70,19 @@ function custom_function_valetudo_re() {
 
     if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         echo "+ Installing Valetudo RE"
-
         VALETUDO_RE_DEPS_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
-        if [ -r "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz" ]; then
-            echo "+ Unpacking of Valetudo RE dependencies"
-            tar -C "${IMG_DIR}" -xzf "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz"
-
-            if [ -f "${IMG_DIR}/etc/inittab" ]; then
-                mkdir -p "${IMG_DIR}/usr/local/bin"
-                install -m 0755  "${VALETUDO_RE_DEPS_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
-                install -m 0755  "${VALETUDO_RE_DEPS_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+        if [ "$VALETUDO_RE_NODEPS" -ne 1 ]; then
+            if [ -r "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz" ]; then
+                echo "+ Unpacking of Valetudo RE dependencies"
+                tar -C "${IMG_DIR}" -xzf "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz"
+            else
+                echo "- ${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz not found/readable"
             fi
-        else
-            echo "- ${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz not found/readable"
+        fi
+
+        if [ -f "${IMG_DIR}/etc/inittab" ]; then
+            install -m 0755  "${VALETUDO_RE_DEPS_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+            install -D -m 0755  "${VALETUDO_RE_DEPS_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
         fi
 
         install -m 0755 "${VALETUDO_RE_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
@@ -90,9 +95,9 @@ function custom_function_valetudo_re() {
         echo >> "${IMG_DIR}/etc/rc.local"
         echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
-        # UPLOAD_METHOD=2
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
-        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
+        # UPLOAD_METHOD=0
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
+        sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogmt.conf"
 
         # Set LOG_LEVEL=3
         sed -i -E 's/(LOG_LEVEL=)([0-9]+)/\13/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
