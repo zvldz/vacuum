@@ -20,9 +20,9 @@ fi
                         --enable-binding \
                         --enable-turn-off-ny \
                         --disable-logs \
+                        --enable-ramdisk \
                         --replace-adbd \
                         --valetudo-path=../Valetudo \
                         --replace-miio \
-                        --enable-ramdisk \
                         --enable-dns-catcher \
                         -f "$1"
