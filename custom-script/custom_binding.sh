@@ -37,7 +37,7 @@ function custom_parse_args_binding() {
 function custom_function_binding() {
     if [ $ENABLE_BINDING -eq 1 ]; then
         echo "+ Adding keybinding for bash"
-        cat << EOF > $IMG_DIR/etc/profile.d/binding.sh
+        cat << EOF > "${IMG_DIR}/etc/profile.d/binding.sh"
 #!/bin/sh
 if [ "\$BASH" ]; then
     bind '"\e[A": history-search-backward'

@@ -70,13 +70,13 @@ function custom_function_unprovisioned() {
             fi
 
             mkdir "${IMG_DIR}/opt/unprovisioned"
-            install -m 0755 "${BASEDIR}/unprovisioned/start_wifi.sh" "${IMG_DIR}/opt/unprovisioned"
+            install -m 0755 "${FILES_PATH}/unprovisioned/start_wifi.sh" "${IMG_DIR}/opt/unprovisioned"
 
             sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-            cat "${BASEDIR}/unprovisioned/rc.local" >> "${IMG_DIR}/etc/rc.local"
+            cat "${FILES_PATH}/unprovisioned/rc.local" >> "${IMG_DIR}/etc/rc.local"
             echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
-            install -m 0644 "${BASEDIR}/unprovisioned/wpa_supplicant.conf.wpa2psk" "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
+            install -m 0644 "${FILES_PATH}/unprovisioned/wpa_supplicant.conf.wpa2psk" "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
 
             sed -i 's/#SSID#/'"$SSID"'/g' "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
             sed -i 's/#PSK#/'"$PSK"'/g'   "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"

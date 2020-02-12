@@ -51,13 +51,11 @@ function custom_function_sound() {
         $CCRYPT -d -K "$PASSWORD_SND" "${SND_DIR}/${SND_FILE}"
 
         echo "+ Unpack soundfile .."
-        pushd "$SND_DIR" > /dev/null
-        tar -xzf "$SND_FILE"
-        popd > /dev/null
+        tar -C "$SND_DIR" -xzf "$SND_FILE"
     fi
 
     if [ -n "$SND_DIR" ]; then
-        SND_DST_DIR="$IMG_DIR/opt/rockrobo/resources/sounds/${SOUNDLANG}"
+        SND_DST_DIR="${IMG_DIR}/opt/rockrobo/resources/sounds/${SOUNDLANG}"
         install -d -m 0755 "$SND_DST_DIR"
 
         # Add sounds for a specific language

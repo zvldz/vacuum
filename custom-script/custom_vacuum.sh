@@ -62,7 +62,6 @@ function custom_parse_args_vacuum() {
 function custom_function_vacuum() {
     VERSION=$(date "+%Y%m%d")
     FW_VER=$(echo "$FIRMWARE_FILENAME" | grep -oE "v11_[0-9]+" | sed 's/v11_00//')
-    FILES_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
 
     if [ $CONVERT_2_PRC -eq 1 -a $CONVERT_2_EU  -eq 1 ]; then
         echo "! Only one region is possible"
@@ -100,21 +99,26 @@ EOF
     if [ -n "$ROOT_PASSWORD" ]; then
         echo "+ Added script to change password for root"
         mkdir -p "${IMG_DIR}/root/run.d"
-        cat << EOF > "${IMG_DIR}/root/run.d/set_root_pass.sh"
+        cat << EOF > "${IMG_DIR}/root/run.d/change_root_pass.sh"
 #!/bin/sh
 echo "  - Set a password for root" >> /root/vacuum.txt
 echo "root:$ROOT_PASSWORD" | chpasswd
 EOF
     fi
 
-    if [ -n "$CUSTOM_USER" -a -n "$CUSTOM_USER_PASSWORD" ]; then
+    if [ -n "$CUSTOM_USER" -a -n "$CUSTOM_USER_PASSWORD" -a ! -f "${IMG_DIR}/etc/inittab" ]; then
         echo "+ Added script to create custom user"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
 echo "  - Create custom user" >> /root/vacuum.txt
-adduser $CUSTOM_USER -s /bin/bash -D -G sudo
-echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD" | chpasswd
+if [ -f /usr/sbin/newusers ]; then
+    echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD::::/home/$CUSTOM_USER:/bin/bash" | newusers
+    usermod -G sudo $CUSTOM_USER
+else
+    adduser $CUSTOM_USER -s /bin/sh -D -G sudo -g "custom user"
+    echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD" | chpasswd
+fi
 EOF
     fi
 

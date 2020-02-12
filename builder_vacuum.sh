@@ -104,6 +104,9 @@ readlink_f() (
     exit 1
 )
 
+BASEDIR=$(dirname "$SCRIPT")
+CUSTOM_PATH="${BASEDIR}/custom-script"
+FILES_PATH="${CUSTOM_PATH}/files"
 UNPACK_AND_MOUNT=0
 LIST_CUSTOM_PRINT_USAGE=()
 LIST_CUSTOM_PRINT_HELP=()
@@ -137,7 +140,7 @@ while [ -n "$1" ]; do
         *-run-custom-script)
             CUSTOM_SCRIPT="$ARG"
             if [ "$CUSTOM_SCRIPT" = "ALL" ]; then
-                for FILE in ./custom-script/custom*.sh; do
+                for FILE in ${CUSTOM_PATH}/custom*.sh; do
                     . $FILE
                 done
             elif [ -r "$CUSTOM_SCRIPT" ]; then
@@ -182,8 +185,6 @@ do
         cleanup_and_exit 1
     fi
 done
-BASEDIR=$(dirname "$SCRIPT")
-echo "Script path: $BASEDIR"
 
 if [ $EUID -ne 0 ]; then
     echo "You need root privileges to execute this script"
@@ -233,21 +234,19 @@ fi
 FW_TMPDIR="$(pwd)/$(mktemp -d fw.XXXXXX)"
 
 echo "Decrypt firmware"
-FW_DIR="$FW_TMPDIR/fw"
+FW_DIR="${FW_TMPDIR}/fw"
 mkdir -p "$FW_DIR"
-cp "$FIRMWARE_PATH" "$FW_DIR/$FIRMWARE_FILENAME"
-$CCRYPT -d -K "$PASSWORD_FW" "$FW_DIR/$FIRMWARE_FILENAME"
+cp "$FIRMWARE_PATH" "${FW_DIR}/$FIRMWARE_FILENAME"
+$CCRYPT -d -K "$PASSWORD_FW" "${FW_DIR}/$FIRMWARE_FILENAME"
 
 echo "Unpack firmware"
-pushd "$FW_DIR" > /dev/null
-tar -xzf "$FIRMWARE_FILENAME"
-if [ ! -r disk.img ]; then
-    echo "File disk.img not found! Decryption and unpacking was apparently unsuccessful."
+tar -C "$FW_DIR" -xzf "${FW_DIR}/$FIRMWARE_FILENAME"
+if [ ! -r "${FW_DIR}/disk.img" ]; then
+    echo "File ${FW_DIR}/disk.img not found! Decryption and unpacking was apparently unsuccessful."
     cleanup_and_exit 1
 fi
-popd > /dev/null
 
-IMG_DIR="$FW_TMPDIR/image"
+IMG_DIR="${FW_TMPDIR}/image"
 mkdir -p "$IMG_DIR"
 
 if [ "$IS_MAC" = true ]; then
@@ -294,10 +293,17 @@ while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
     sleep 2
 done
 
+PIGZ="$(type -p pigz)"
+if [ ! -x "$PIGZ" ]; then
+    TAR_ARGS="-z"
+    echo "! If you install pigz, the firmware will be created faster."
+else
+    TAR_ARGS="-I pigz"
+fi
+
 echo "Pack new firmware"
-pushd "$FW_DIR" > /dev/null
-PATCHED="${FIRMWARE_FILENAME}_patched.pkg"
-type -p pigz > /dev/null 2>&1 && tar -I pigz -cf "$PATCHED" disk.img || tar -czf "$PATCHED" disk.img
+PATCHED="${FW_DIR}/${FIRMWARE_FILENAME}_patched.pkg"
+tar -C "$FW_DIR" $TAR_ARGS -cf "$PATCHED" disk.img
 if [ ! -r "$PATCHED" ]; then
     echo "File $PATCHED not found! Packing the firmware was unsuccessful."
     cleanup_and_exit 1
@@ -305,11 +311,10 @@ fi
 
 echo "Encrypt firmware"
 $CCRYPT -e -K "$PASSWORD_FW" "$PATCHED"
-popd > /dev/null
 
 echo "Copy firmware to output/${FIRMWARE_BASENAME} and creating checksums"
 install -d -m 0755 output
-install -m 0644 "${FW_DIR}/${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
+install -m 0644 "${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
 if [ "$IS_MAC" = true ]; then
     md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
