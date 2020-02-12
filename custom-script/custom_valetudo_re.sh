@@ -29,7 +29,7 @@ function custom_parse_args_valetudo_re() {
     case ${PARAM} in
         *-valetudo-re-path)
             VALETUDO_RE_PATH="$ARG"
-            if [ -r "$VALETUDO_RE_PATH/valetudo" ]; then
+            if [ -r "${VALETUDO_RE_PATH}/valetudo" ]; then
                 ENABLE_VALETUDO_RE=1
             else
                 echo "The Valetudo RE binary hasn't been found in $VALETUDO_RE_PATH"
@@ -70,25 +70,26 @@ function custom_function_valetudo_re() {
 
     if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         echo "+ Installing Valetudo RE"
-        VALETUDO_RE_DEPS_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
-        if [ "$VALETUDO_RE_NODEPS" -ne 1 ]; then
-            if [ -r "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz" ]; then
+        if [ $VALETUDO_RE_NODEPS -ne 1 ]; then
+            if [ -r "${FILES_PATH}/valetudo_re_deps.tgz" ]; then
                 echo "+ Unpacking of Valetudo RE dependencies"
-                tar -C "${IMG_DIR}" -xzf "${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz"
+                tar -C "${IMG_DIR}" -xzf "${FILES_PATH}/valetudo_re_deps.tgz"
             else
-                echo "- ${VALETUDO_RE_DEPS_PATH}/valetudo_re_deps.tgz not found/readable"
+                echo "- ${FILES_PATH}/valetudo_re_deps.tgz not found/readable"
             fi
         fi
 
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
-            install -m 0755  "${VALETUDO_RE_DEPS_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
-            install -D -m 0755  "${VALETUDO_RE_DEPS_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+            install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+            install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
         fi
 
         install -m 0755 "${VALETUDO_RE_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
         install -m 0644 "${VALETUDO_RE_PATH}/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
-        cat "${VALETUDO_RE_PATH}/hosts" >> "${IMG_DIR}/etc/hosts"
+        if [ $ENABLE_DNS_CATCHER -ne 1 ]; then
+            cat "${VALETUDO_RE_PATH}/hosts" >> "${IMG_DIR}/etc/hosts"
+        fi
 
         sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
         cat "${VALETUDO_RE_PATH}/rc.local" >> "${IMG_DIR}/etc/rc.local"

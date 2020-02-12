@@ -36,13 +36,12 @@ function custom_parse_args_multisound() {
 
 function custom_function_multisound() {
     if [ $ENABLE_MULTISOUND -eq 1 ]; then
-        MULTISOUND_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
-        if [ -r "$MULTISOUND_PATH/multisound.tgz" ]; then
+        if [ -r "${FILES_PATH}/multisound.tgz" ]; then
             echo "+ Unpacking multisound files"
             tar -C "$IMG_DIR" -xzf "${MULTISOUND_PATH}/multisound.tgz"
             sed -E -i '/exit 0$/iif [ -d \/mnt\/data\/rockrobo\/sounds -a -d \/mnt\/data\/rockrobo\/sounds_multi ]; then \/usr\/local\/bin\/bbfs -o nonempty,allow_root \/mnt\/data\/rockrobo\/sounds_multi \/mnt\/data\/rockrobo\/sounds; fi' "${IMG_DIR}/etc/rc.local"
         else
-            echo "- $MULTISOUND_PATH/multisound.tgz not found/readable"
+            echo "- ${MULTISOUND_PATH}/multisound.tgz not found/readable"
         fi
     fi
 }

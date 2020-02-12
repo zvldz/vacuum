@@ -36,12 +36,11 @@ function custom_parse_args_off_cn_ny() {
 
 function custom_function_off_cn_ny() {
     if [ $ENABLE_TURN_OFF_NY -eq 1 ]; then
-        SILENT_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
-        if [ -r "$SILENT_PATH/silent.wav" ]; then
+        if [ -r "${FILES_PATH}/silent.wav" ]; then
             echo "+ Turn off Chinese New Year"
-            install -m 0644 "${SILENT_PATH}/silent.wav" "${IMG_DIR}/opt/rockrobo/resources/sounds/start_greeting.wav"
+            install -m 0644 "${FILES_PATH}/silent.wav" "${IMG_DIR}/opt/rockrobo/resources/sounds/start_greeting.wav"
         else
-            echo "- $SILENT_PATH/silent.wav not found/readable"
+            echo "- ${FILES_PATH}/silent.wav not found/readable"
         fi
     fi
 }

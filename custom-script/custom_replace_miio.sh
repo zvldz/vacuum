@@ -36,12 +36,11 @@ function custom_parse_args_replace_miio() {
 
 function custom_function_replace_miio() {
     if [ $PATCH_MIIO -eq 1 ]; then
-        MIIO_PATH=$(dirname $(readlink_f "${BASH_SOURCE[0]}"))
-        if [ -r "$MIIO_PATH/miio_3_3_9.tgz" ]; then
+        if [ -r "${FILES_PATH}/miio_3_3_9.tgz" ]; then
             echo "+ Unpacking miio 3.3.9"
-            tar -C "${IMG_DIR}" -xzf "${MIIO_PATH}/miio_3_3_9.tgz"
+            tar -C "${IMG_DIR}" -xzf "${FILES_PATH}/miio_3_3_9.tgz"
         else
-            echo "- $MIIO_PATH/miio_3_3_9.tgz not found/readable"
+            echo "- ${FILES_PATH}/miio_3_3_9.tgz not found/readable"
         fi
     fi
 }

@@ -51,12 +51,16 @@ KEY=\$(cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=)
 MODEL=\$(cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=)
 BUILD_NUMBER=\$(cat /opt/rockrobo/buildnumber | tr -d '\n')
 REGION=\$(cat /mnt/default/roborock.conf 2>/dev/null | grep location | cut -f2 -d'=')
-P_YEAR="201"\$(echo \$SERIAL | cut -c 7)
-P_WEEK=\$(echo \$SERIAL | cut -c 8-9)
-if [ -f /root/bin/date ]; then
-    P_DATE=\$(/root/bin/date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(/root/bin/date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
+if echo \$SERIAL | grep -E "^R" >/dev/null 2>&1; then
+    P_YEAR="201"\$(echo \$SERIAL | cut -c 7)
+    P_WEEK=\$(echo \$SERIAL | cut -c 8-9)
+    if [ -f /root/bin/date ]; then
+        P_DATE=\$(/root/bin/date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(/root/bin/date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
+    else
+        P_DATE=\$(date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
+    fi
 else
-    P_DATE=\$(date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
+    P_DATE="UNKNOWN"
 fi
 
 echo

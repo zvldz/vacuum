@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installing valetudo without dummycloud
+# Installing valetudo without dummycloud (deprecated)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_wo_dummycloud")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_wo_dummycloud")
@@ -27,7 +27,7 @@ function custom_parse_args_valetudo_wo_dummycloud() {
     case ${PARAM} in
         *-valetudo-path-wod)
             VALETUDO_PATH_WOD="$ARG"
-            if [ -r "$VALETUDO_PATH_WOD/valetudo" ]; then
+            if [ -r "${VALETUDO_PATH_WOD}/valetudo" ]; then
                 ENABLE_VALETUDO_WOD=1
             else
                 echo "The valetudo binary hasn't been found in $VALETUDO_PATH_WOD"

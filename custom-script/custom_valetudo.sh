@@ -27,7 +27,7 @@ function custom_parse_args_valetudo() {
     case ${PARAM} in
         *-valetudo-path)
             VALETUDO_PATH="$ARG"
-            if [ -r "$VALETUDO_PATH/valetudo" ]; then
+            if [ -r "${VALETUDO_PATH}/valetudo" ]; then
                 ENABLE_VALETUDO=1
             else
                 echo "The Valetudo binary hasn't been found in $VALETUDO_PATH"
@@ -62,7 +62,9 @@ function custom_function_valetudo() {
         install -m 0755 "${VALETUDO_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
         install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
-        cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
+        if [ $ENABLE_DNS_CATCHER -ne 1]; then
+            cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
+        fi
 
         sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
         cat "${VALETUDO_PATH}/deployment/etc/rc.local" >> "${IMG_DIR}/etc/rc.local"

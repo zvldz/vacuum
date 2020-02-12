@@ -27,7 +27,7 @@ function custom_parse_args_dummycloud() {
     case ${PARAM} in
         *-dummycloud-path)
             DUMMYCLOUD_PATH="$ARG"
-            if [ -r "$DUMMYCLOUD_PATH/dummycloud" ]; then
+            if [ -r "${DUMMYCLOUD_PATH}/dummycloud" ]; then
                 ENABLE_DUMMYCLOUD=1
             else
                 echo "The dummycloud binary hasn't been found in $DUMMYCLOUD_PATH"

@@ -22,5 +22,8 @@ fi
                         --disable-logs \
                         --replace-adbd \
                         --valetudo-re-path=../Valetudo_RE \
+                        --valetudo-re-nodeps \
                         --replace-miio \
+                        --enable-ramdisk \
+                        --enable-dns-catcher \
                         -f "$1"
