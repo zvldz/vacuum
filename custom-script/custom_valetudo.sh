@@ -62,7 +62,7 @@ function custom_function_valetudo() {
         install -m 0755 "${VALETUDO_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
         install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
-        if [ $ENABLE_DNS_CATCHER -ne 1]; then
+        if [ $ENABLE_DNS_CATCHER -ne 1 ]; then
             cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
         fi
 
