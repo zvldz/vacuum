@@ -1,6 +1,6 @@
 #!/bin/bash
 # Redirect and spoof outgoing dns requests(for xiaomi servers)
-# unbound and drill for tests
+# dnsmasq and drill for tests
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_xiaomi_dns_catcher")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_xiaomi_dns_catcher")
@@ -41,14 +41,14 @@ function custom_function_xiaomi_dns_catcher() {
             echo "+ Installing dns-catcher"
             tar -C "$IMG_DIR" -xzf "${FILES_PATH}/dns.tgz"
             if [ ! -f "${IMG_DIR}/etc/inittab" ]; then
-                rm "${IMG_DIR}/etc/init/S09unbound"
+                rm "${IMG_DIR}/etc/init/S09xdnsmasq"
             fi
             sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
             cat << EOF >> "${IMG_DIR}/etc/rc.local"
 
 ### DNS CATCHER INIT ###
-iptables -t nat -A OUTPUT -p udp -m owner ! --uid-owner unbound --dport 53 -j DNAT --to 127.0.0.1:53
-iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner unbound --dport 53 -j DNAT --to 127.0.0.1:53
+iptables -t nat -A OUTPUT -p udp -m owner ! --uid-owner nobody --dport 53 -j DNAT --to 127.0.0.1:55553
+iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner nobody --dport 53 -j DNAT --to 127.0.0.1:55553
 ### DNS CATCHER END ###
 
 EOF
