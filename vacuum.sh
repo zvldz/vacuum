@@ -21,6 +21,7 @@ fi
                         --enable-binding \
                         --enable-turn-off-ny \
                         --disable-logs \
+                        --enable-ramdisk \
                         --disable-firmware-updates \
                         --replace-adbd \
                         --enable-appproxy-patcher \
