@@ -1,6 +1,6 @@
 #!/bin/bash
 # Put rrlog directory to RAM-disk
-# https://github.com/MadJoker0815/roborock_nologs/
+# From https://github.com/rand256/vacuum
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_ramdisk")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_ramdisk")
