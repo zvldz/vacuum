@@ -70,7 +70,7 @@ function custom_function_valetudo_re() {
 
     if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         echo "+ Installing Valetudo RE"
-        if [ $VALETUDO_RE_NODEPS -ne 1 ]; then
+        if [ ${VALETUDO_RE_NODEPS:-0} -ne 1 ]; then
             if [ -r "${FILES_PATH}/valetudo_re_deps.tgz" ]; then
                 echo "+ Unpacking of Valetudo RE dependencies"
                 tar -C "${IMG_DIR}" -xzf "${FILES_PATH}/valetudo_re_deps.tgz"
