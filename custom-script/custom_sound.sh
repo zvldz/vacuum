@@ -51,7 +51,7 @@ function custom_function_sound() {
         $CCRYPT -d -K "$PASSWORD_SND" "${SND_DIR}/${SND_FILE}"
 
         echo "+ Unpack soundfile .."
-        tar -C "$SND_DIR" -xzf "$SND_FILE"
+        tar -C "$SND_DIR" -xzf "$SND_DIR/$SND_FILE"
     fi
 
     if [ -n "$SND_DIR" ]; then
