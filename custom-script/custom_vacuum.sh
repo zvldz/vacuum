@@ -162,7 +162,10 @@ fi
 EOF
     fi
 
-    chmod +x "${IMG_DIR}/root/run_once.sh" "${IMG_DIR}/root/run.d/"*
+    if [ -d "${IMG_DIR}/root/run.d/" ]; then
+        chmod +x "${IMG_DIR}/root/run.d/"*
+    fi
+    chmod +x "${IMG_DIR}/root/run_once.sh"
     sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' "${IMG_DIR}/etc/rc.local"
 
     if [ -f "${IMG_DIR}/etc/inittab" ]; then
