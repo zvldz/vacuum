@@ -6,6 +6,7 @@ LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_re")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo_re")
 LIST_CUSTOM_FUNCTION+=("custom_function_valetudo_re")
 ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
+VALETUDO_RE_NODEPS=${VALETUDO_RE_NODEPS:-"0"}
 
 function custom_print_usage_valetudo_re() {
     cat << EOF
