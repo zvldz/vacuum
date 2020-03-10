@@ -122,6 +122,19 @@ fi
 EOF
     fi
 
+    if [ $ENABLE_RANDOM_PHRASES -eq 1 ]; then
+        echo "+ Added script for init 'random phrases'"
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
+#!/bin/bash
+
+mkdir -p /mnt/data/random_phrases/phrases
+rm -f /mnt/data/random_phrases/phrases.sh
+ln -s /usr/local/bin/phrases.sh /mnt/data/random_phrases/phrases.sh
+crontab -l | { sed '/phrases.sh/d'; echo "* * * * * /mnt/data/random_phrases/phrases.sh"; } | crontab -
+EOF
+    fi
+
     if [ $CONVERT_2_PRC -eq 1 ]; then
         echo "+ Added script for change region to Mainland China"
         mkdir -p "${IMG_DIR}/root/run.d"
@@ -186,29 +199,37 @@ fi
 EOF
     fi
 
+    if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
+        VALETUDO_VER=`fgrep  -a -m1 -A1 '"name": "valetudo' "${VALETUDO_RE_PATH}/valetudo" | tail -n1 | sed -E 's/.*version": "(.*)".*/\1/' | tr "." "_" 2>/dev/null`
+    elif [ $ENABLE_VALETUDO -eq 1 ]; then
+        VALETUDO_VER=`fgrep  -a -m1 -A1 '"name": "valetudo' "${VALETUDO_PATH}/valetudo" | tail -n1 | sed -E 's/.*version": "(.*)".*/\1/' | tr "." "_" 2>/dev/null`
+	fi
+
+    [ -z "$VALETUDO_VER" ] && VALETUDO_VER="UNK"
+
     if [ $CONVERT_2_PRC -eq 1 ]; then
         if [ -z "$FW_VER" ]; then
-            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2prc_${VERSION}.pkg"
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}_2prc.pkg"
         else
-            FIRMWARE_BASENAME="vacuum_2prc_${FW_VER}.pkg"
+            FIRMWARE_BASENAME="vacuum_${FW_VER}_2prc.pkg"
         fi
     elif [ $CONVERT_2_EU -eq 1 ]; then
         if [ -z "$FW_VER" ]; then
-            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_2eu_${VERSION}.pkg"
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}_2eu.pkg"
         else
-            FIRMWARE_BASENAME="vacuum_2eu_${FW_VER}.pkg"
+            FIRMWARE_BASENAME="vacuum_${FW_VER}_2eu.pkg"
         fi
     elif [ $ENABLE_VALETUDO -eq 1 ]; then
         if [ -z "$FW_VER" ]; then
-            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_valetudo_${VERSION}.pkg"
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}_valetudo_${VALETUDO_VER}.pkg"
         else
-            FIRMWARE_BASENAME="vacuum_valetudo_${FW_VER}.pkg"
+            FIRMWARE_BASENAME="vacuum_${FW_VER}_valetudo_${VALETUDO_VER}.pkg"
         fi
-     elif [ $ENABLE_VALETUDO_RE -eq 1 ]; then
+    elif [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         if [ -z "$FW_VER" ]; then
-            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_valetudo_re_${VERSION}.pkg"
+            FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}_valetudo_re_${VALETUDO_VER}.pkg"
         else
-            FIRMWARE_BASENAME="vacuum_valetudo_re_${FW_VER}.pkg"
+            FIRMWARE_BASENAME="vacuum_${FW_VER}_valetudo_re_${VALETUDO_VER}.pkg"
         fi
 
     else
