@@ -19,7 +19,7 @@ function custom_print_help_multisound() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --enable-multisound             Make robot use different sounds at the same event
+  --enable-multisound        Make robot use different sounds at the same event
 EOF
 }
 
