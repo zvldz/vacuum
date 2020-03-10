@@ -20,7 +20,7 @@ function custom_print_help_ramdisk() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --enable-ramdisk             Put rrlog directory to RAM-disk to prevent wearing out FLASH memory
+  --enable-ramdisk           Put rrlog directory to RAM-disk to prevent wearing out FLASH memory
 EOF
 }
 
