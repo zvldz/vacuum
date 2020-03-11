@@ -27,4 +27,6 @@ fi
                         --convert2eu \
                         --enable-appproxy-patcher \
                         --replace-miio \
+                        --enable-addon-sox \
+                        --enable-random-phrases \
                         -f "$1"

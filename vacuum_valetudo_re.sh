@@ -26,4 +26,6 @@ fi
                         --valetudo-re-nodeps \
                         --replace-miio \
                         --enable-dns-catcher \
+                        --enable-addon-sox \
+                        --enable-random-phrases \
                         -f "$1"
