@@ -1,0 +1,21 @@
+- General information (ip, token, did, firmware version, etc.) is shown when login via ssh.
+- The root and cleaner logins have a password - 'cleaner'.
+  Login via ssh by root user can be useful for example for RoboRock Control Center program.
+- Added to the system wget, nano, htop, bbe, snmpd (community: public).
+- Added separate firmware containing Valetudo(example file name vacuum_1898_valetudo_0_4_0.pkg). There is no change of region in it. It also does not sends maps and data to cloud servers, the robot can only be controlled either through Valetudo or through alternative Smart Houses. MiHome will not work.
+- Added separate firmware containing Valetudo RE(example file name vacuum_1898_valetudo_re_0_9_1.pkg). There is no change of region in it. It also does not sends maps and data to cloud servers, the robot can only be controlled either through Valetudo or through alternative Smart Houses. MiHome will not work.
+- DNS is not taken from DHCP and set at 8.8.8.8.8 and 114.114.114.114 (not for valetudo firmware).
+- Firmware with 2prc in its name (e.g. vacuum_1768_2prc.pkg) will turn it into a Chinese one when upgrading to the European version (if /mnt/default/roborock.conf file is available, by default it is not available on some earlier models).
+- Firmware with 2eu in its name (e.g. vacuum_1768_2eu.pkg) turns it into a European firmware when upgrading the Chinese version (if /mnt/default/roborock.conf file is available, by default it is not available on some earlier models).
+- Chinese New Year's Eve greetings are disabled.
+- The original, full adbd is installed.
+- Sending logs to cloud is disabled (maps are not affected). Significantly reduces the traffic and load on the robot CPU.
+- Added a patch to disable region checking on new revisions (02.2019) of the second generation of robots.
+- Update from official servers is disabled (MiHome will display a firmware update error).
+- Replaced the miio client with the version 3.3.9, which allows to update the firmware not through the servers (local ota).
+- Captures all dns requests (to external dns servers including) to domains *.mi.com and *.xiaomi.com and returns the ip address 203.0.113.1. (dns catcher)
+- ramdisk & rrlogclean for rrlogd from https://github.com/rand256/vacuum/
+- Added sox (SoX console audio player)
+- Adding random phrases when cleaning(per minute by default). Put the files in folder /mnt/data/random_phrases/phrases (wav, mp3 and etc).
+  Author: .//Hack (Alexander Krylov)
+  Site: https://4pda.ru/forum/index.php?showtopic=881982&st=8100#entry92139228
