@@ -25,6 +25,9 @@ Custom parameters for './custom-script/custom_appproxy_patcher.sh':
 Custom parameters for './custom-script/custom_bin_addon.sh':
 [--enable-addon]
 
+Custom parameters for './custom-script/custom_bin_addon_sox.sh':
+[--enable-addon-sox]
+
 Custom parameters for './custom-script/custom_binding.sh':
 [--enable-binding]
 
@@ -46,6 +49,9 @@ Custom parameters for './custom-script/custom_greeting.sh':
 Custom parameters for './custom-script/custom_history.sh':
 [--enable-history]
 
+Custom parameters for './custom-script/custom_multisound.sh':
+[--enable-multisound]
+
 Custom parameters for './custom-script/custom_ntp.sh':
 [--ntpserver=ADDRESS]
 
@@ -58,11 +64,17 @@ Custom parameters for './custom-script/custom_off_logs.sh':
 Custom parameters for './custom-script/custom_off_updates.sh':
 [--disable-firmware-updates]
 
+Custom parameters for './custom-script/custom_ramdisk.sh':
+[--enable-ramdisk]
+
+Custom parameters for './custom-script/custom_random_phrases.sh':
+[--enable-random-phrases]
+
 Custom parameters for './custom-script/custom_replace_miio.sh':
 [--replace-miio]
 
 Custom parameters for './custom-script/custom_rrlogd_patcher.sh':
-[--rrlogd-patcher=PATCHER]
+[--enable-rrlogd-patcher]
 
 Custom parameters for './custom-script/custom_sound.sh':
 [--soundfile=english.pkg]
@@ -83,8 +95,15 @@ Custom parameters for './custom-script/custom_vacuum.sh':
 Custom parameters for './custom-script/custom_valetudo.sh':
 [--valetudo-path=PATH]
 
+Custom parameters for './custom-script/custom_valetudo_re.sh':
+[--valetudo-re-path=PATH]
+[--valetudo-re-nodeps]
+
 Custom parameters for './custom-script/custom_valetudo_wo_dummycloud.sh':
 [--valetudo-path-wod=PATH]
+
+Custom parameters for './custom-script/custom_dns_catcher.sh':
+[--enable-dns-catcher]
 
 Options:
   -h, --help                 Prints this message
@@ -105,6 +124,9 @@ Custom options for './custom-script/custom_appproxy_patcher.sh':
 
 Custom options for './custom-script/custom_bin_addon.sh':
   --enable-addon             Extract addon.tgz to firmware
+
+Custom options for './custom-script/custom_bin_addon_sox.sh':
+  --enable-addon-sox         Extract sox.tgz to firmware (SoX console audio player)
 
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
@@ -129,6 +151,9 @@ Custom options for './custom-script/custom_greeting.sh':
 Custom options for './custom-script/custom_history.sh':
   --enable-history           Add buildnumber and firmware version to history file
 
+Custom options for './custom-script/custom_multisound.sh':
+  --enable-multisound        Make robot use different sounds at the same event
+
 Custom options for './custom-script/custom_ntp.sh':
   --ntpserver=ADDRESS        Set your local NTP server
 
@@ -141,11 +166,17 @@ Custom options for './custom-script/custom_off_logs.sh':
 Custom options for './custom-script/custom_off_updates.sh':
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
 
+Custom options for './custom-script/custom_ramdisk.sh':
+  --enable-ramdisk           Put rrlog directory to RAM-disk to prevent wearing out FLASH memory
+
+Custom options for './custom-script/custom_random_phrases.sh':
+  --enable-random-phrases    Adding random phrases when cleaning
+
 Custom options for './custom-script/custom_replace_miio.sh':
   --replace-miio             Replaces miio to version 3.3.9
 
 Custom options for './custom-script/custom_rrlogd_patcher.sh':
-  --rrlogd-patcher=PATCHER   Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
+  --enable-rrlogd-patcher    Patch rrlogd to disable log encryption (only use with dummycloud or dustcloud)
 
 Custom options for './custom-script/custom_sound.sh':
   -s, --soundfile=PATH       Path to sound file
@@ -172,13 +203,17 @@ Custom options for './custom-script/custom_vacuum.sh':
   --convert2eu                 Convert to EU region
 
 Custom options for './custom-script/custom_valetudo.sh':
-  --valetudo-path=PATH         The path to Valetudo(https://github.com/Hypfer/Valetudo) to include it into the image
+  --valetudo-path=PATH       The path to Valetudo(https://github.com/Hypfer/Valetudo) to include it into the image
 
 Custom options for './custom-script/custom_valetudo_re.sh':
-  --valetudo-re-path=PATH      The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
+  --valetudo-re-path=PATH    The path to Valetudo RE(https://github.com/rand256/valetudo) to include it into the image
+  --valetudo-re-nodeps       Do not add libstd++ dependencies if using binary built with partial static linking
 
 Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
-  --valetudo-path-wod=PATH     The path to valetudo(without dummycloud) to include it into the image
+  --valetudo-path-wod=PATH   The path to valetudo(without dummycloud) to include it into the image
+
+Custom options for './custom-script/custom_dns_catcher.sh':
+  --enable-dns-catcher       Redirect and spoof outgoing dns requests(for xiaomi servers)
 ```
 
 </p>
