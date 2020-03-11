@@ -25,4 +25,6 @@ fi
                         --valetudo-path=../Valetudo \
                         --replace-miio \
                         --enable-dns-catcher \
+                        --enable-addon-sox \
+                        --enable-random-phrases \
                         -f "$1"
