@@ -59,14 +59,14 @@ if [ -n "$STATUS" ]; then
     DECRYPTED=$(echo -n ${STATUS:64} | xxd -r -p | openssl aes-128-cbc -d -K $KEY -iv $IV)
     STATE=$(echo -n $DECRYPTED | sed 's/.*"state"\s*:\s*\([0-9]\+\).*/\1/')
     DND=$(echo -n $DECRYPTED | sed 's/.*"dnd_enabled"\s*:\s*\([0-9]\+\).*/\1/')
-    if [[ "$DND" -eq 0 && ("$STATE" -eq 5 || "$STATE" -eq 11 || "$STATE" -eq 17) ]]; then
+    if [[ "$DND" -eq 0 && ("$STATE" -eq 5 || "$STATE" -eq 11 || "$STATE" -eq 17 || "$STATE" -eq 18) ]]; then
         if [ -z "$VOLUME" ]; then
             VOLUME='0.5'
         else
             VOLUME=$(echo -n ${VOLUME:64} | xxd -r -p | openssl aes-128-cbc -d -K $KEY -iv $IV | sed 's/.*"result"\s*:\s*\[\s*\([0-9]\+\).*/\1/')
             VOLUME=$(printf '%03d'  $(((VOLUME - 30) * (100 - 10) / (90 - 30) + 10)) | sed 's/..$/.&/')
         fi
-        FILE=$(ls $DIR | $SHUF -n 1)
+        #FILE=$(ls $DIR | $SHUF -n 1)
         echo 'Play phrase' $FILE
         sox -v $VOLUME $DIR/$FILE -d > /dev/null 2>&1
     fi
