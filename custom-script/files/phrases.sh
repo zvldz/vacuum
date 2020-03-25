@@ -66,7 +66,7 @@ if [ -n "$STATUS" ]; then
             VOLUME=$(echo -n ${VOLUME:64} | xxd -r -p | openssl aes-128-cbc -d -K $KEY -iv $IV | sed 's/.*"result"\s*:\s*\[\s*\([0-9]\+\).*/\1/')
             VOLUME=$(printf '%03d'  $(((VOLUME - 30) * (100 - 10) / (90 - 30) + 10)) | sed 's/..$/.&/')
         fi
-        #FILE=$(ls $DIR | $SHUF -n 1)
+        FILE=$(ls $DIR | $SHUF -n 1)
         echo 'Play phrase' $FILE
         sox -v $VOLUME $DIR/$FILE -d > /dev/null 2>&1
     fi
