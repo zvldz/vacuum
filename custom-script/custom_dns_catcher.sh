@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Redirect and spoof outgoing dns requests(for xiaomi servers)
 # dnsmasq and drill for tests
 

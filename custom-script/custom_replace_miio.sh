@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Replaces miio to version 3.3.9
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_replace_miio")

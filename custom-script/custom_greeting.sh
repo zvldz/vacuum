@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Add greeting to ssh
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_greeting")

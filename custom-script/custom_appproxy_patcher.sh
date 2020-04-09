@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # AppProxy patch to disable timezone checking (Anonymous author)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_appproxy_patcher")

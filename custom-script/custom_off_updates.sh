@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Disable xiaomi servers using hosts file for firmware updates
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_updates")

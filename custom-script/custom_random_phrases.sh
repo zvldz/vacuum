@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Xiaomi Vacuum v1/2 begins to talk random phrases when cleaning
 # Author: .//Hack (Alexander Krylov)
 # Site: https://4pda.ru/forum/index.php?showtopic=881982&st=8100#entry92139228

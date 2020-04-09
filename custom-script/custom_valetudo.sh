@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install Valetudo (https://github.com/Hypfer/Valetudo)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo")

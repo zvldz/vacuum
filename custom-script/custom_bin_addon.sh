@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Addon contains programs wget, bbe, nano, snmpd, htop
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_bin_addon")
