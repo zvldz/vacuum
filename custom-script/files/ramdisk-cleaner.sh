@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ -d /mnt/data/rockrobo/rrlog ]; then
   items=/mnt/data/rockrobo/rrlog/*
   for item in $items

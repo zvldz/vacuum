@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LANG=C LC_ALL=C
 DIR='/mnt/data/random_phrases/phrases'

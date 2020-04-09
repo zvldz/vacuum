@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install Valetudo RE (https://github.com/rand256/valetudo)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_re")

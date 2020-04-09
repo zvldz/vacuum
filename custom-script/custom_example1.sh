@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Example 1
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_example1")

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Disables most log files creations and log uploads on the vacuum
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_logs")

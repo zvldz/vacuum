@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Timezone to be used in vacuum
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_timezone")
