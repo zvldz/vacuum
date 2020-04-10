@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Turn off Chinese New Year
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_cn_ny")

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Patch rrlogd to disable log encryption (based on https://github.com/JohnRev/rrlogd-patcher)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_rrlogd_patcher")

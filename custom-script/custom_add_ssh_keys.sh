@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Adding keys for ssh authentication
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_ssh_keys")

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Access your network in unprovisioned mode (currently only wpa2psk is supported)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_unprovisioned")

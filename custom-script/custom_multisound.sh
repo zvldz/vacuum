@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Make robot use different sounds at the same event
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_multisound")
