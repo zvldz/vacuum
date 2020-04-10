@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Put rrlog directory to RAM-disk
 # From https://github.com/rand256/vacuum
 

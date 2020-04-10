@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Adding keybinding for bash
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_binding")

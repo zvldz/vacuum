@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install dummycloud
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_dummycloud")

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 config="/opt/unprovisioned/wpa_supplicant.conf"
 log="/opt/unprovisioned/wpa_supplicant.log"
