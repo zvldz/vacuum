@@ -59,6 +59,11 @@ function custom_function_valetudo() {
     if [ $ENABLE_VALETUDO -eq 1 ]; then
         echo "+ Installing Valetudo"
 
+        if [ -f "${IMG_DIR}/etc/inittab" ]; then
+            install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+            install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+        fi
+
         install -m 0755 "${VALETUDO_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
         install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
