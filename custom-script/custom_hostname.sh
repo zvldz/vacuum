@@ -37,12 +37,7 @@ function custom_parse_args_hostname() {
 function custom_function_hostname() {
     if [ -n "$CUSTOM_HOSTNAME" ]; then
         echo "+ Set hostname '${CUSTOM_HOSTNAME}'"
-
-
-        sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-        echo "hostname ${CUSTOM_HOSTNAME} && echo ${CUSTOM_HOSTNAME} > /etc/hostname" >> "${IMG_DIR}/etc/rc.local"
-        echo >> "${IMG_DIR}/etc/rc.local"
-        echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
-    fi    
+        echo ${CUSTOM_HOSTNAME} > "${IMG_DIR}/etc/hostname"
+    fi
 }
 
