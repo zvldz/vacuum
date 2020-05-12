@@ -37,22 +37,22 @@ function custom_parse_args_fixreset() {
 function custom_function_fixreset() {
     if [ $FIX_RESET -eq 1 ]; then
         echo "+ Running reset fix"
-        if [ -f "./etc/inittab" ]; then
+        if [ -f "${IMG_DIR}/etc/inittab" ]; then
         echo "++ OpenWRT mode"
-            cp ${FILES_PATH}/cleanflags.sh ${IMG_DIR}/sbin/
-            chmod a+x ${IMG_DIR}/sbin/cleanflags.sh
-            install -m 0755 ${FILES_PATH}/S10cleanflags ${IMG_DIR}/etc/init/S10cleanflags
+            cp "${FILES_PATH}/cleanflags.sh" "${IMG_DIR}/sbin/"
+            chmod a+x "${IMG_DIR}/sbin/cleanflags.sh"
+            install -m 0755 "${FILES_PATH}/S10cleanflags" "${IMG_DIR}/etc/init/S10cleanflags"
             else
         echo "++ Ubuntu mode"
-            install -m 0755 ${FILES_PATH}/cleanflags.sh ${IMG_DIR}/sbin/
-            install -m 0755 ${FILES_PATH}/S20cleanflags ${IMG_DIR}/etc/init.d/cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc0.d/K20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc1.d/K20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc6.d/K20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc2.d/S20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc3.d/S20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc4.d/S20cleanflags
-            ln -sr ${IMG_DIR}/etc/init.d/cleanflags ${IMG_DIR}/etc/rc5.d/S20cleanflags
+            install -m 0755 "${FILES_PATH}/cleanflags.sh" "${IMG_DIR}/sbin/"
+            install -m 0755 "${FILES_PATH}/S20cleanflags" "${IMG_DIR}/etc/init.d/cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc0.d/K20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc1.d/K20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc6.d/K20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc2.d/S20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc3.d/S20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc4.d/S20cleanflags"
+            ln -sr "${IMG_DIR}/etc/init.d/cleanflags" "${IMG_DIR}/etc/rc5.d/S20cleanflags"
         fi
     fi
 }
