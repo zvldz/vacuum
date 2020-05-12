@@ -104,6 +104,7 @@ readlink_f() (
     exit 1
 )
 
+SCRIPT="$0"
 BASEDIR=$(dirname "$SCRIPT")
 CUSTOM_PATH="${BASEDIR}/custom-script"
 FILES_PATH="${CUSTOM_PATH}/files"
