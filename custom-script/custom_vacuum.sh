@@ -97,7 +97,7 @@ echo "END" >> /root/vacuum.txt
 EOF
 
     if [ -n "$ROOT_PASSWORD" ]; then
-        echo "+ Added script to change password for root"
+        echo "++ Added script to change password for root"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/change_root_pass.sh"
 #!/bin/sh
@@ -107,7 +107,7 @@ EOF
     fi
 
     if [ -n "$CUSTOM_USER" -a -n "$CUSTOM_USER_PASSWORD" -a ! -f "${IMG_DIR}/etc/inittab" ]; then
-        echo "+ Added script to create custom user"
+        echo "++ Added script to create custom user"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
@@ -123,7 +123,7 @@ EOF
     fi
 
     if [ $ENABLE_RANDOM_PHRASES -eq 1 ]; then
-        echo "+ Added script for init 'random phrases'"
+        echo "++ Added script for init 'random phrases'"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
 #!/bin/bash
@@ -136,7 +136,7 @@ EOF
     fi
 
     if [ $CONVERT_2_PRC -eq 1 ]; then
-        echo "+ Added script for change region to Mainland China"
+        echo "++ Added script for change region to Mainland China"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/convert2prc.sh"
 #!/bin/sh
@@ -155,7 +155,7 @@ if [ -f /mnt/default/roborock.conf ]; then
 fi
 EOF
     elif [ $CONVERT_2_EU -eq 1 ]; then
-        echo "+ Added script for change region to EU"
+        echo "++ Added script for change region to EU"
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/convert2eu.sh"
 #!/bin/sh
@@ -182,7 +182,7 @@ EOF
     sed -i -E 's/^exit 0/\/root\/run_once.sh\nexit 0/' "${IMG_DIR}/etc/rc.local"
 
     if [ -f "${IMG_DIR}/etc/inittab" ]; then
-        echo "+ Unpacking addon2"
+        echo "++ Unpacking addon2"
         tar -C "$IMG_DIR" -xzf "${FILES_PATH}/addon2.tgz"
         sed -i -E 's/ulimit -c unlimited/ulimit -c 0/' "${IMG_DIR}/etc/profile"
         sed -i -E 's/root:x:0:0:root:\/root:\/bin\/ash/root:x:0:0:root:\/root:\/bin\/bash/' "${IMG_DIR}/etc/passwd"

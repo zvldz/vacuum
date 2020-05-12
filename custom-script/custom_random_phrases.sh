@@ -43,10 +43,11 @@ function custom_function_random_phrases() {
             install -D -m 0755  "${FILES_PATH}/phrases.sh" "${IMG_DIR}/usr/local/bin/phrases.sh"
 
             if [ $ENABLE_ADDON_SOX -eq 0 ]; then
-                echo "! 'random-phrases' requires a sox. Set it manually or add '--enable-addon-sox'"
+                echo "!! 'random-phrases' requires a sox. Set it manually or add '--enable-addon-sox'"
+                 cleanup_and_exit 2
             fi
         else
-            echo "- ${FILES_PATH}/phrases.sh not found/readable"
+            echo "-- ${FILES_PATH}/phrases.sh not found/readable"
         fi
     fi
 }

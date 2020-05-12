@@ -52,20 +52,20 @@ function custom_function_unprovisioned() {
         echo "+ Implementing unprovisioned mode"
 
         if [ -z "$WIFIMODE" ]; then
-            echo "- You need to specify a Wifi Mode: currently only wpa2psk is supported"
+            echo "-- You need to specify a Wifi Mode: currently only wpa2psk is supported"
             cleanup_and_exit 1
         fi
 
-        echo "+ Wifimode: $WIFIMODE"
+        echo "++ Wifimode: $WIFIMODE"
 
         if [ "$WIFIMODE" = "wpa2psk" ]; then
             if [ -z "$SSID" ]; then
-            echo "- No SSID given, please use --ssid YOURSSID"
+            echo "-- No SSID given, please use --ssid YOURSSID"
             cleanup_and_exit 1
             fi
 
             if [ -z "$PSK" ]; then
-                echo "- No PSK (Wireless Password) given, please use --psk YOURPASSWORD"
+                echo "-- No PSK (Wireless Password) given, please use --psk YOURPASSWORD"
                 cleanup_and_exit 1
             fi
 

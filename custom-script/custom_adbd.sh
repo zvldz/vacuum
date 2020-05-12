@@ -38,7 +38,6 @@ function custom_function_adbd() {
     if [ $PATCH_ADBD -eq 1 ]; then
         if [ -r "${FILES_PATH}/adbd" ]; then
             echo "+ Replacing adbd"
-            cp "${IMG_DIR}/usr/bin/adbd" "${IMG_DIR}/usr/bin/adbd.xiaomi"
             install -m 0755 "${FILES_PATH}/adbd" "${IMG_DIR}/usr/bin/adbd"
         else
             echo "- ${FILES_PATH}/adbd not found/readable, cannot replace adbd in image"
