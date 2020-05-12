@@ -18,7 +18,7 @@ function custom_print_help_hostname() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --hostname=HOSTNAME       Sets a custom hostname
+  --hostname=HOSTNAME        Sets a custom hostname
 EOF
 }
 
