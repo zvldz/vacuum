@@ -51,6 +51,7 @@ KEY=\$(cat /mnt/default/device.conf | grep '^key' | cut -f2 -d=)
 MODEL=\$(cat /mnt/default/device.conf | grep '^model' | cut -f2 -d=)
 BUILD_NUMBER=\$(cat /opt/rockrobo/buildnumber | tr -d '\n')
 REGION=\$(cat /mnt/default/roborock.conf 2>/dev/null | grep location | cut -f2 -d'=')
+MIIO_VERSION=\$(/opt/rockrobo/miio/miio_client --help 2>&1 | grep miio-client | cut -f3 -d' ')
 if echo \$SERIAL | grep -E "^R" >/dev/null 2>&1; then
     P_YEAR="201"\$(echo \$SERIAL | cut -c 7)
     P_WEEK=\$(echo \$SERIAL | cut -c 8-9)
@@ -66,9 +67,9 @@ fi
 echo
 echo "          _______  _______                    _______ "
 echo "|\     /|(  ___  )(  ____ \|\     /||\     /|(       )"
-echo "| )   ( || (   ) || (    \/| )   ( || )   ( || () () |"
+echo "| )   ( || (   ) || (    \/| )   ( || )   ( || || || |"
 echo "| |   | || (___) || |      | |   | || |   | || || || |"
-echo "( (   ) )|  ___  || |      | |   | || |   | || |(_)| |"
+echo "( (   ) )|  ___  || |      | |   | || |   | || ||_|| |"
 echo " \ \_/ / | (   ) || |      | |   | || |   | || |   | |"
 echo "  \   /  | )   ( || (____/\| (___) || (___) || )   ( |"
 echo "   \_/   |/     \|(_______/(_______)(_______)|/     \|"
@@ -79,6 +80,7 @@ printf "\033[1;36mSERIAL\033[0m..........: \$SERIAL\n"
 printf "\033[1;36mPRODUCTION DATE\033[0m.: \$P_DATE\n"
 printf "\033[1;36mFIRMWARE\033[0m........: \$FIRMWARE\n"
 printf "\033[1;36mBUILD NUMBER\033[0m....: \$BUILD_NUMBER\n"
+printf "\033[1;36mMIIO VERSION\033[0m....: \$MIIO_VERSION\n"
 printf "\033[1;36mREGION\033[0m..........: \$REGION\n"
 printf "\033[1;36mIP\033[0m..............: \$IP\n"
 printf "\033[1;36mMAC\033[0m.............: \$MAC\n"
