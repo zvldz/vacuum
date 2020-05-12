@@ -36,7 +36,6 @@ function custom_parse_args_off_updates() {
 
 function custom_function_off_updates() {
     if [ $DISABLE_XIAOMI -eq 1 ]; then
-        #echo "+ Reconfiguring network traffic to xiaomi"
         echo "+ Disable xiaomi servers using hosts file for firmware updates"
         # comment out this section if you do not want do disable the xiaomi cloud
         # or redirect it

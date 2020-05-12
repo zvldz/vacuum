@@ -44,13 +44,13 @@ function custom_parse_args_dummycloud() {
 
 function custom_function_dummycloud() {
     if [ $ENABLE_VALETUDO -eq 1  ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
-        echo "You can't install Valetudo and Dummycloud at the same time, "
-        echo "because Valetudo has implemented Dummycloud fuctionality and map upload support now."
+        echo "! You can't install Valetudo and Dummycloud at the same time, "
+        echo "! because Valetudo has implemented Dummycloud fuctionality and map upload support now."
         cleanup_and_exit 1
     fi
 
     if [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
-        echo "Installing dummycloud"
+        echo "+ Installing dummycloud"
 
         install -m 0755 "${DUMMYCLOUD_PATH}/dummycloud" "${IMG_DIR}/usr/local/bin/dummycloud"
         cat "${DUMMYCLOUD_PATH}/doc/dummycloud.conf" | tr -d '\15\32' > "${IMG_DIR}/etc/init/dummycloud.conf"

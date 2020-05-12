@@ -36,10 +36,8 @@ function custom_parse_args_rrlogd_patcher() {
 
 function custom_function_rrlogd_patcher() {
     if [ $PATCH_RRLOGD -eq 1 ]; then
-        echo "+ Creating backup of rrlogd"
+        echo "++ Trying to patch rrlogd"
         cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
-
-        echo "+ Trying to patch rrlogd"
         sed -i 's/\xF2\x04\x03\xFF\xF7\x4B\xFF/\xF2\x04\x03\xE3\x20\x4B\xFF/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
         sed -i 's/\xF2\x04\x03\xFF\xF7\x45\xFF/\xF2\x04\x03\xE3\x20\x45\xFF/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
         sed -i 's/\x33\x46\x4B\xA8\x10\x22/\x33\x46\x47\xA8\x10\x22/g' "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd"
@@ -47,10 +45,11 @@ function custom_function_rrlogd_patcher() {
         MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" | awk '{print $1}')
 
         if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
-            echo "- rrlogd is NOT patched."
-            rm "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
+            echo "-- rrlogd is NOT patched."
         else
-            echo "+ rrlogd is patched."
+            echo "++ rrlogd is patched."
         fi
     fi
+
+    rm -f "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
 }

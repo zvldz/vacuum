@@ -38,19 +38,20 @@ function custom_function_sound() {
     SOUNDLANG=${SOUNDLANG:-"en"}
     PASSWORD_SND="r0ckrobo#23456"
 
+    echo "+ Installing custom sound files"
     if [ -n "$SOUNDFILE_PATH" ]; then
         SOUNDFILE_PATH=$(readlink_f "$SOUNDFILE_PATH")
     fi
 
     if [ -n "$SOUNDFILE_PATH" ]; then
-        echo "+ Decrypt soundfile .."
+        echo "++ Decrypt soundfile .."
         SND_DIR="$FW_TMPDIR/sounds"
         SND_FILE=$(basename "$SOUNDFILE_PATH")
         mkdir -p "$SND_DIR"
         cp "$SOUNDFILE_PATH" "${SND_DIR}/${SND_FILE}"
         $CCRYPT -d -K "$PASSWORD_SND" "${SND_DIR}/${SND_FILE}"
 
-        echo "+ Unpack soundfile .."
+        echo "++ Unpack soundfile .."
         tar -C "$SND_DIR" -xzf "$SND_DIR/$SND_FILE"
     fi
 
