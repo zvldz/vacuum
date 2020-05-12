@@ -27,4 +27,5 @@ fi
                         --enable-dns-catcher \
                         --enable-addon-sox \
                         --enable-random-phrases \
+                        --enable-local-ota \
                         -f "$1"
