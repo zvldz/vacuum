@@ -14,7 +14,7 @@ Added functionality through custom scripts.
 
 
 ```
-Usage: sudo builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]
+Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]
 
 Custom parameters for './custom-script/custom_adbd.sh':
 [--replace-adbd]
@@ -37,17 +37,26 @@ Custom parameters for './custom-script/custom_dns.sh':
 Custom parameters for './custom-script/custom_dummycloud.sh':
 [--dummycloud-path=PATH]
 
+Custom parameters for './custom-script/custom_enable_local_ota.sh':
+[--enable-local-ota]
+
 Custom parameters for './custom-script/custom_example1.sh':
 [--example1 --param1=PARAM]
 
 Custom parameters for './custom-script/custom_example2.sh':
 [--example2 --param2=PARAM]
 
+Custom parameters for './custom-script/custom_fixreset.sh':
+[--fix-reset]
+
 Custom parameters for './custom-script/custom_greeting.sh':
 [--enable-greeting]
 
 Custom parameters for './custom-script/custom_history.sh':
 [--enable-history]
+
+Custom parameters for './custom-script/custom_hostname.sh':
+[--hostname=roborock]
 
 Custom parameters for './custom-script/custom_multisound.sh':
 [--enable-multisound]
@@ -137,6 +146,9 @@ Custom options for './custom-script/custom_dns.sh':
 Custom options for './custom-script/custom_dummycloud.sh':
   --dummycloud-path=PATH     Provide the path to dummycloud
 
+Custom options for './custom-script/custom_enable_local_ota.sh':
+  --enable-local-ota         Enable local ota on 2008+ firmware
+
 Custom options for './custom-script/custom_example1.sh':
   --example1                 Example1
   --param1=PARAM             Param1
@@ -145,11 +157,17 @@ Custom options for './custom-script/custom_example2.sh':
   --example2                 Example2
   --param2=PARAM             Param2
 
+Custom options for './custom-script/custom_fixreset.sh':
+  --fix-reset                Apply firmware reset fix
+
 Custom options for './custom-script/custom_greeting.sh':
   --enable-greeting          Add greeting to ssh
 
 Custom options for './custom-script/custom_history.sh':
   --enable-history           Add buildnumber and firmware version to history file
+
+Custom options for './custom-script/custom_hostname.sh':
+  --hostname=HOSTNAME        Sets a custom hostname
 
 Custom options for './custom-script/custom_multisound.sh':
   --enable-multisound        Make robot use different sounds at the same event
@@ -219,6 +237,9 @@ Custom options for './custom-script/custom_dns_catcher.sh':
 </p>
 </details>
 
+### Major changes
+[Link](https://raw.githubusercontent.com/zvldz/vacuum/master/changes.txt)
+
 ### History of stock firmware
 [Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
 
@@ -229,7 +250,7 @@ Custom options for './custom-script/custom_dns_catcher.sh':
 
 ### Thanks
 * **https://github.com/dgiese/dustcloud**
-* https://github.com/JohnRev/rrlogd-patcher
+* https://github.com/JohnRev
 * _https://github.com/Hypfer/Valetudo_
 * https://github.com/rand256/valetudo
 * https://github.com/LazyT/rrcc
