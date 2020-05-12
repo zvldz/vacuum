@@ -76,26 +76,42 @@ function custom_function_valetudo_re() {
                 echo "+ Unpacking of Valetudo RE dependencies"
                 tar -C "${IMG_DIR}" -xzf "${FILES_PATH}/valetudo_re_deps.tgz"
             else
-                echo "- ${FILES_PATH}/valetudo_re_deps.tgz not found/readable"
+                echo "!! ${FILES_PATH}/valetudo_re_deps.tgz not found/readable"
             fi
         fi
 
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
             install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
             install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+        else
+            if [ -f "${VALETUDO_RE_PATH}/valetudo.conf" ]; then
+                install -m 0644 "${VALETUDO_RE_PATH}/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
+            else
+                echo "!! ${VALETUDO_RE_PATH}/valetudo.conf not found. Please download it."
+                cleanup_and_exit 2
+            fi
         fi
 
         install -D -m 0755 "${VALETUDO_RE_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
-        install -m 0644 "${VALETUDO_RE_PATH}/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
         if [ $ENABLE_DNS_CATCHER -ne 1 ]; then
-            cat "${VALETUDO_RE_PATH}/hosts" >> "${IMG_DIR}/etc/hosts"
+            if [ -f "${VALETUDO_RE_PATH}/hosts" ]; then
+                cat "${VALETUDO_RE_PATH}/hosts" >> "${IMG_DIR}/etc/hosts"
+            else
+                echo "!! ${VALETUDO_RE_PATH}/hosts not found. Please download it."
+                cleanup_and_exit 2
+            fi
         fi
 
-        sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-        cat "${VALETUDO_RE_PATH}/rc.local" >> "${IMG_DIR}/etc/rc.local"
-        echo >> "${IMG_DIR}/etc/rc.local"
-        echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
+        if [ -f "${VALETUDO_RE_PATH}/rc.local" ]; then
+            sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+            cat "${VALETUDO_RE_PATH}/rc.local" >> "${IMG_DIR}/etc/rc.local"
+            echo >> "${IMG_DIR}/etc/rc.local"
+            echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
+        else
+            echo "!! ${VALETUDO_RE_PATH}/rc.local not found. Please download it."
+            cleanup_and_exit 2
+        fi
 
         # UPLOAD_METHOD=0
         sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\10/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
