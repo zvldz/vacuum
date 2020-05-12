@@ -46,13 +46,13 @@ function custom_parse_args_valetudo() {
 
 function custom_function_valetudo() {
     if [ $ENABLE_VALETUDO -eq 1 ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
-        echo "You can't install Valetudo and Dummycloud at the same time, "
-        echo "because Valetudo has implemented Dummycloud fuctionality and map upload support now."
+        echo "! You can't install Valetudo and Dummycloud at the same time, "
+        echo "! because Valetudo has implemented Dummycloud fuctionality and map upload support now."
         cleanup_and_exit 1
     fi
 
     if [ $ENABLE_VALETUDO_RE -eq 1 ] && [ $ENABLE_VALETUDO -eq 1 ]; then
-        echo "You can't install Valetudo RE and Valetudo at the same time, "
+        echo "! You can't install Valetudo RE and Valetudo at the same time, "
         cleanup_and_exit 1
     fi
 
@@ -62,19 +62,35 @@ function custom_function_valetudo() {
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
             install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
             install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+        else
+            if [ -f "${VALETUDO_PATH}/deployment/valetudo.conf" ]; then
+                install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
+            else
+                echo "!! ${VALETUDO_PATH}/deployment/valetudo.conf not found. Please download it."
+                cleanup_and_exit 2
+            fi
         fi
 
         install -D -m 0755 "${VALETUDO_PATH}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"
-        install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
 
         if [ $ENABLE_DNS_CATCHER -ne 1 ]; then
-            cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
+            if [ -f "${VALETUDO_PATH}/deployment/etc/hosts" ]; then
+                cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
+            else
+                echo "!! ${VALETUDO_PATH}/deployment/etc/hosts not found. Please download it."
+                cleanup_and_exit 2
+            fi
         fi
 
-        sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-        cat "${VALETUDO_PATH}/deployment/etc/rc.local" >> "${IMG_DIR}/etc/rc.local"
-        echo >> "${IMG_DIR}/etc/rc.local"
-        echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
+        if [ -f "${VALETUDO_PATH}/deployment/etc/rc.local" ]; then
+            sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+            cat "${VALETUDO_PATH}/deployment/etc/rc.local" >> "${IMG_DIR}/etc/rc.local"
+            echo >> "${IMG_DIR}/etc/rc.local"
+            echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
+        else
+            echo "!! ${VALETUDO_PATH}/deployment/etc/rc.local not found. Please download it."
+            cleanup_and_exit 2
+        fi
 
         # UPLOAD_METHOD=2
         sed -i -E 's/(UPLOAD_METHOD=)([0-9]+)/\12/' "${IMG_DIR}/opt/rockrobo/rrlog/rrlog.conf"
