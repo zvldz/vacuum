@@ -18,10 +18,25 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
+function umount_image() {
+    while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
+	   echo "waiting for unmount..."
+	   sleep 2
+	done
+}
+
 function cleanup_and_exit() {
     if [ "$1" = 0 ] || [ -z "$1" ]; then
+        if [ -f "$FW_TMPDIR" ]; then
+            rm -rf "$FW_TMPDIR"
+        fi
         exit 0
     else
+        echo "Cleaning up"
+		if mountpoint -q "$IMG_DIR"; then
+			umount_image
+		fi
+        rm -rf "$FW_TMPDIR"
         exit $1
     fi
 }
@@ -55,7 +70,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo $(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]"
+    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
@@ -286,13 +301,10 @@ sed -i -E 's/iptables/true    /' "${IMG_DIR}/opt/rockrobo/watchdog/WatchDoge"
 # Run custom scripts
 custom_function
 
-echo "Discard unused blocks"
+echo "Discard unused blocks(if exist fstrim)"
 type -p fstrim > /dev/null 2>&1 && fstrim "$IMG_DIR"
 
-while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
-    echo "waiting for unmount..."
-    sleep 2
-done
+umount_image
 
 PIGZ="$(type -p pigz)"
 if [ ! -x "$PIGZ" ]; then
@@ -324,9 +336,6 @@ else
 fi
 sed -i -r "s/ .*\/(.+)/  \1/g" "output/${FIRMWARE_BASENAME}.md5"
 chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
-
-echo "Cleaning up"
-rm -rf "$FW_TMPDIR"
 
 echo "FINISHED"
 cat "output/${FIRMWARE_BASENAME}.md5"
