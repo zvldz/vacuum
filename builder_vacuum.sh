@@ -27,7 +27,8 @@ function umount_image() {
 
 function cleanup_and_exit() {
     if [ "$1" = 0 ] || [ -z "$1" ]; then
-        if [ -f "$FW_TMPDIR" ]; then
+        echo $FW_TMPDIR
+        if [ -d "$FW_TMPDIR" ]; then
             rm -rf "$FW_TMPDIR"
         fi
         exit 0
@@ -279,7 +280,7 @@ fi
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     echo "Image mounted to $IMG_DIR"
     echo "Run 'umount $IMG_DIR' for unmount the image"
-    cleanup_and_exit
+    exit 0
 fi
 
 if [ -d "${IMG_DIR}/etc/ssh" ]; then
