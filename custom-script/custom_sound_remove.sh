@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install custom sound files
+# Removes extra sound files to gain space (prc, tw and testing samples)
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_cleanup_sound")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_cleanup_sound")
@@ -37,7 +37,7 @@ function custom_parse_args_cleanup_sound() {
 function custom_function_cleanup_sound() {
     TO_REMOVE=('sounds/mtest' 'sounds/prc' 'sounds/tw' 'sounds/Facsounds/prc')
     SOUNDS_FOLDER="${IMG_DIR}/opt/rockrobo/resources"
-    
+
     if [ $CLEANUP_SOUNDFILES -eq 1 ]; then
         for pack in "${TO_REMOVE[@]}"; do
             echo "+ Remove $pack"
