@@ -40,7 +40,7 @@ function custom_function_sound() {
 
     echo "+ Installing custom sound files"
     if [ -n "$SOUNDFILE_PATH" ]; then
-        SOUNDFILE_PATH=$(readlink_f "$SOUNDFILE_PATH")
+        SOUNDFILE_PATH=$(readlink -f "$SOUNDFILE_PATH")
     fi
 
     if [ -n "$SOUNDFILE_PATH" ]; then

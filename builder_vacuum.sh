@@ -20,23 +20,22 @@
 
 function umount_image() {
     while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
-	   echo "waiting for unmount..."
-	   sleep 2
-	done
+       echo "waiting for unmount..."
+       sleep 2
+    done
 }
 
 function cleanup_and_exit() {
     if [ "$1" = 0 ] || [ -z "$1" ]; then
-        echo $FW_TMPDIR
         if [ -d "$FW_TMPDIR" ]; then
             rm -rf "$FW_TMPDIR"
         fi
         exit 0
     else
         echo "Cleaning up"
-		if mountpoint -q "$IMG_DIR"; then
-			umount_image
-		fi
+        if mountpoint -q "$IMG_DIR"; then
+            umount_image
+        fi
         rm -rf "$FW_TMPDIR"
         exit $1
     fi
@@ -71,7 +70,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]"
+    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
@@ -82,6 +81,7 @@ Options:
   -h, --help                 Prints this message
   -f, --firmware=PATH        Path to firmware file
   --unpack-and-mount         Only unpack and mount image
+  --resize-root-fs=FS_SIZE   Resize root fs to FS_SIZE.
   --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
 
 Each parameter that takes a file as an argument accepts path in any form
@@ -92,36 +92,8 @@ EOF
     custom_print_help
 }
 
-fixed_cmd_subst() {
-    eval '
-    '"$1"'=$('"$2"'; ret=$?; echo .; exit "$ret")
-    set -- "$1" "$?"
-    '"$1"'=${'"$1"'%??}
-    '
-    return "$2"
-}
-
-readlink_f() (
-    link=$1 max_iterations=40
-    while [ "$max_iterations" -gt 0 ]; do
-        max_iterations=$(($max_iterations - 1))
-        fixed_cmd_subst dir 'dirname -- "$link"' || exit
-        fixed_cmd_subst base 'basename -- "$link"' || exit
-        cd -P -- "$dir" || exit
-        link=${PWD%/}/$base
-        if [ ! -L "$link" ]; then
-            printf '%s\n' "$link"
-            exit
-        fi
-        fixed_cmd_subst link 'ls -ld -- "$link"' || exit
-        link=${link#* -> }
-    done
-    printf >&2 'Loop detected\n'
-    exit 1
-)
-
-SCRIPT="$0"
-BASEDIR=$(dirname "$SCRIPT")
+SCRIPT=$(readlink -f "$0")
+BASEDIR=$(dirname "$0")
 CUSTOM_PATH="${BASEDIR}/custom-script"
 FILES_PATH="${CUSTOM_PATH}/files"
 UNPACK_AND_MOUNT=0
@@ -154,6 +126,14 @@ while [ -n "$1" ]; do
         *-unpack-and-mount)
             UNPACK_AND_MOUNT=1
             ;;
+        *-resize-root-fs)
+            RESIZE_ROOT_FS="$ARG"
+            if [[ ! $RESIZE_ROOT_FS =~ ^[0-9]+$ ]]; then
+                echo "$RESIZE_ROOT_FS is not numeric"
+                cleanup_and_exit 1
+            fi
+            shift
+            ;;
         *-run-custom-script)
             CUSTOM_SCRIPT="$ARG"
             if [ "$CUSTOM_SCRIPT" = "ALL" ]; then
@@ -184,23 +164,11 @@ while [ -n "$1" ]; do
             fi
             ;;
         *)
+            echo "PARAM=$PARAM"
             print_usage
             cleanup_and_exit 1
             ;;
     esac
-done
-
-SCRIPT="$0"
-COUNT=0
-
-while [ -L "$SCRIPT" ]
-do
-    SCRIPT=$(readlink_f "$SCRIPT")
-    COUNT=$(($COUNT + 1))
-    if [ $COUNT -gt 100 ]; then
-        echo "Too many symbolic links"
-        cleanup_and_exit 1
-    fi
 done
 
 if [ $EUID -ne 0 ]; then
@@ -208,16 +176,14 @@ if [ $EUID -ne 0 ]; then
     cleanup_and_exit 1
 fi
 
-IS_MAC=false
 if [[ $OSTYPE == darwin* ]]; then
-    # Mac OSX
-    IS_MAC=true
-    echo "Running on a Mac, adjusting commands accordingly"
+    echo "Does not work on OSX. Fuse-ext2 is broken and does not work well."
+    cleanup_and_exit 1
 fi
 
 CCRYPT="$(type -p ccrypt)"
 if [ ! -x "$CCRYPT" ]; then
-    echo "ccrypt not found! Please install it (e.g. by (apt|brew|dnf|zypper) install ccrypt)"
+    echo "ccrypt not found! Please install it (e.g. by (apt|dnf|zypper) install ccrypt)"
     cleanup_and_exit 1
 fi
 
@@ -228,7 +194,7 @@ if [ ! -r "$FIRMWARE_PATH" ]; then
     cleanup_and_exit 1
 fi
 
-FIRMWARE_PATH=$(readlink_f "$FIRMWARE_PATH")
+FIRMWARE_PATH=$(readlink -f "$FIRMWARE_PATH")
 FIRMWARE_BASENAME=$(basename "$FIRMWARE_PATH")
 FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
 
@@ -266,16 +232,7 @@ fi
 IMG_DIR="${FW_TMPDIR}/image"
 mkdir -p "$IMG_DIR"
 
-if [ "$IS_MAC" = true ]; then
-    FUSE-EXT2="$(type -p fuse-ext2)"
-    if [ ! -x "$FUSE-EXT2" ]; then
-        echo "fuse-ext2 not found! Please install it from https://github.com/alperakcan/fuse-ext2"
-        cleanup_and_exit 1
-    fi
-    fuse-ext2 -ext2 "${FW_DIR}/disk.img" "$IMG_DIR" -o rw+
-else
-    mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
-fi
+mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     echo "Image mounted to $IMG_DIR"
@@ -302,15 +259,21 @@ sed -i -E 's/iptables/true    /' "${IMG_DIR}/opt/rockrobo/watchdog/WatchDoge"
 # Run custom scripts
 custom_function
 
-echo "Discard unused blocks(if exist fstrim)"
-type -p fstrim > /dev/null 2>&1 && fstrim "$IMG_DIR"
+echo "+ Discard unused blocks"
+fstrim "$IMG_DIR"
 
 umount_image
+
+if [ -n "$RESIZE_ROOT_FS" ]; then
+    echo "+ Resize partition to $RESIZE_ROOT_FS"
+    e2fsck -pf "${FW_DIR}/disk.img"
+    resize2fs "${FW_DIR}/disk.img" $RESIZE_ROOT_FS
+fi
 
 PIGZ="$(type -p pigz)"
 if [ ! -x "$PIGZ" ]; then
     TAR_ARGS="-z"
-    echo "! If you install pigz, the firmware will be created faster."
+    echo "! If you install pigz, the firmware will be created faster (e.g. by (apt|dnf|zypper) install pigz)"
 else
     TAR_ARGS="-I pigz"
 fi
@@ -330,15 +293,10 @@ echo "Copy firmware to output/${FIRMWARE_BASENAME} and creating checksums"
 install -d -m 0755 output
 install -m 0644 "${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
-if [ "$IS_MAC" = true ]; then
-    md5 "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
-else
-    md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
-fi
-sed -i -r "s/ .*\/(.+)/  \1/g" "output/${FIRMWARE_BASENAME}.md5"
+md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
 chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
 
-echo "FINISHED"
 cat "output/${FIRMWARE_BASENAME}.md5"
+echo "FINISHED"
 
 cleanup_and_exit
