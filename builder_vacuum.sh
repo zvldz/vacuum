@@ -232,6 +232,12 @@ fi
 IMG_DIR="${FW_TMPDIR}/image"
 mkdir -p "$IMG_DIR"
 
+if [ -n "$RESIZE_ROOT_FS" ]; then
+    echo "+ Resize partition to $RESIZE_ROOT_FS"
+    e2fsck -pf "${FW_DIR}/disk.img"
+    resize2fs "${FW_DIR}/disk.img" $RESIZE_ROOT_FS
+fi
+
 mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
@@ -263,12 +269,6 @@ echo "+ Discard unused blocks"
 fstrim "$IMG_DIR"
 
 umount_image
-
-if [ -n "$RESIZE_ROOT_FS" ]; then
-    echo "+ Resize partition to $RESIZE_ROOT_FS"
-    e2fsck -pf "${FW_DIR}/disk.img"
-    resize2fs "${FW_DIR}/disk.img" $RESIZE_ROOT_FS
-fi
 
 PIGZ="$(type -p pigz)"
 if [ ! -x "$PIGZ" ]; then
