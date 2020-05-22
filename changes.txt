@@ -21,3 +21,4 @@
   Author: .//Hack (Alexander Krylov)
   Site: https://4pda.ru/forum/index.php?showtopic=881982&st=8100#entry92139228
 - Enabled local ota update on 2008+ firmware(Thanks @JohnRev)
+- Resize root fs (for fw 2008+)
