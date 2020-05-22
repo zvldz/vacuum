@@ -45,10 +45,10 @@ function custom_function_enable_local_ota() {
         MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" | awk '{print $1}')
 
         if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
-            echo "-- AppProxy is NOT patched."
-            echo "!! Probably this firmware is not 2008+."
+            echo "-- AppProxy is NOT patched"
+            echo "!! Probably this firmware is not 2008+"
         else
-            echo "++ AppProxy is patched."
+            echo "++ AppProxy is patched"
 	        echo "++ Trying to patch SysUpdate"
 	        cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi"
 	        sed -i 's/\x0B\x79\x03\xF0\xDF\x03\x53\x2B\x3E\xD0\x4C/\xCB\x78\x03\xF0\xDF\x03\x50\x2B\x3E\xD0\x4C/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate"
@@ -56,12 +56,12 @@ function custom_function_enable_local_ota() {
 	        MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" | awk '{print $1}')
 
 	        if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
-				echo "-- SysUpdate is NOT patched."
-				echo "!! Restore original AppProxy."
-                echo "!! Probably this firmware is not 2008+."
+				echo "-- SysUpdate is NOT patched"
+				echo "!! Restore original AppProxy"
+                echo "!! Probably this firmware is not 2008+"
 				cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
 			else
-            echo "++ SysUpdate is patched."
+            echo "++ SysUpdate is patched"
 			fi
         fi
     fi

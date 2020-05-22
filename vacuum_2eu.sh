@@ -30,5 +30,5 @@ fi
                         --enable-addon-sox \
                         --enable-random-phrases \
                         --enable-local-ota \
-                        --resize-root-fs \
+                        --resize-root-fs=522240 \
                         -f "$1"

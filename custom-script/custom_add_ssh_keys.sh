@@ -29,7 +29,7 @@ function custom_parse_args_ssh_keys() {
         *-public-key|-k)
             # check if the key file exists
             if [ -r "$ARG" ]; then
-                PUBLIC_KEYS[${#PUBLIC_KEYS[*]} + 1]=$(readlink_f "$ARG")
+                PUBLIC_KEYS[${#PUBLIC_KEYS[*]} + 1]=$(readlink -f "$ARG")
             else
                 echo "Public key $ARG doesn't exist or is not readable"
                 cleanup_and_exit 1
