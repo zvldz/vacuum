@@ -14,7 +14,7 @@ Added functionality through custom scripts.
 
 
 ```
-Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--run-custom-script=SCRIPT|--help]
+Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--run-custom-script=SCRIPT|--help]
 
 Custom parameters for './custom-script/custom_adbd.sh':
 [--replace-adbd]
@@ -30,6 +30,9 @@ Custom parameters for './custom-script/custom_bin_addon_sox.sh':
 
 Custom parameters for './custom-script/custom_binding.sh':
 [--enable-binding]
+
+Custom parameters for './custom-script/custom_sound_remove.sh':
+[--remove-extra-sounds]
 
 Custom parameters for './custom-script/custom_dns.sh':
 [--dnsserver=ADDRESS]
@@ -118,6 +121,7 @@ Options:
   -h, --help                 Prints this message
   -f, --firmware=PATH        Path to firmware file
   --unpack-and-mount         Only unpack and mount image
+  --resize-root-fs=FS_SIZE   Resize root fs to FS_SIZE.
   --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
 
 Each parameter that takes a file as an argument accepts path in any form
@@ -139,6 +143,9 @@ Custom options for './custom-script/custom_bin_addon_sox.sh':
 
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
+
+Custom options for './custom-script/custom_sound_remove.sh':
+  --remove-extra-sounds      Removes extra sound files to gain space (prc, tw and testing samples).
 
 Custom options for './custom-script/custom_dns.sh':
   --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
