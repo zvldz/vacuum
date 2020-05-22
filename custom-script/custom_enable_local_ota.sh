@@ -49,23 +49,23 @@ function custom_function_enable_local_ota() {
             echo "!! Probably this firmware is not 2008+"
         else
             echo "++ AppProxy is patched"
-	        echo "++ Trying to patch SysUpdate"
-	        cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi"
-	        sed -i 's/\x0B\x79\x03\xF0\xDF\x03\x53\x2B\x3E\xD0\x4C/\xCB\x78\x03\xF0\xDF\x03\x50\x2B\x3E\xD0\x4C/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate"
-	        MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi" | awk '{print $1}')
-	        MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" | awk '{print $1}')
+            echo "++ Trying to patch SysUpdate"
+            cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi"
+            sed -i 's/\x0B\x79\x03\xF0\xDF\x03\x53\x2B\x3E\xD0\x4C/\xCB\x78\x03\xF0\xDF\x03\x50\x2B\x3E\xD0\x4C/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate"
+            MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi" | awk '{print $1}')
+            MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate" | awk '{print $1}')
 
-	        if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
-				echo "-- SysUpdate is NOT patched"
-				echo "!! Restore original AppProxy"
+            if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
+                echo "-- SysUpdate is NOT patched"
+                echo "!! Restore original AppProxy"
                 echo "!! Probably this firmware is not 2008+"
-				cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
-			else
+                cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
+            else
             echo "++ SysUpdate is patched"
-			fi
+            fi
         fi
     fi
 
-	rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
-	rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi"
+    rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
+    rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/SysUpdate.xiaomi"
 }
