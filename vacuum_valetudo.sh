@@ -22,6 +22,7 @@ fi
                         --disable-logs \
                         --enable-ramdisk \
                         --replace-adbd \
+                        --enable-appproxy-patcher \
                         --valetudo-path=../Valetudo \
                         --replace-miio \
                         --enable-dns-catcher \
