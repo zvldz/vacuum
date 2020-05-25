@@ -22,6 +22,7 @@ fi
                         --disable-logs \
                         --enable-ramdisk \
                         --replace-adbd \
+                        --enable-appproxy-patcher \
                         --valetudo-re-path=../Valetudo_RE \
                         --valetudo-re-nodeps \
                         --replace-miio \
