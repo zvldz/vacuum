@@ -124,6 +124,11 @@ EOF
 
     if [ $ENABLE_RANDOM_PHRASES -eq 1 ]; then
         echo "++ Added script for init 'random phrases'"
+        VOLUME_OVERRIDE=''
+        if [ -n "${RANDOM_PHRASES_VOLUME_OVERRIDE}" ]; then
+            echo "++ Set 'random phrases' volume to ${RANDOM_PHRASES_VOLUME_OVERRIDE}"
+            VOLUME_OVERRIDE="${RANDOM_PHRASES_VOLUME_OVERRIDE};"
+        fi
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
 #!/bin/bash
@@ -131,7 +136,7 @@ EOF
 mkdir -p /mnt/data/random_phrases/phrases
 rm -f /mnt/data/random_phrases/phrases.sh
 ln -s /usr/local/bin/phrases.sh /mnt/data/random_phrases/phrases.sh
-crontab -l | { sed '/phrases.sh/d'; echo "* * * * * /mnt/data/random_phrases/phrases.sh"; } | crontab -
+crontab -l | { sed '/phrases.sh/d'; echo "${RANDOM_PHRASES_CRON} ${VOLUME_OVERRIDE}/mnt/data/random_phrases/phrases.sh"; } | crontab -
 EOF
     fi
 
