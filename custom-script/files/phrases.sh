@@ -60,7 +60,9 @@ if [ -n "$STATUS" ]; then
     STATE=$(echo -n $DECRYPTED | sed 's/.*"state"\s*:\s*\([0-9]\+\).*/\1/')
     DND=$(echo -n $DECRYPTED | sed 's/.*"dnd_enabled"\s*:\s*\([0-9]\+\).*/\1/')
     if [[ "$DND" -eq 0 && ("$STATE" -eq 5 || "$STATE" -eq 11 || "$STATE" -eq 17 || "$STATE" -eq 18) ]]; then
-        if [ -z "$VOLUME" ]; then
+        if [ -n "${VOLUME_OVERRIDE}" ]; then
+            VOLUME="${VOLUME_OVERRIDE}"
+        elif [ -z "$VOLUME" ]; then
             VOLUME='0.5'
         else
             VOLUME=$(echo -n ${VOLUME:64} | xxd -r -p | openssl aes-128-cbc -d -K $KEY -iv $IV | sed 's/.*"result"\s*:\s*\[\s*\([0-9]\+\).*/\1/')
