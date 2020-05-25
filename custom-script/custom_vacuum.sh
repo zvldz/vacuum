@@ -131,7 +131,7 @@ EOF
 mkdir -p /mnt/data/random_phrases/phrases
 rm -f /mnt/data/random_phrases/phrases.sh
 ln -s /usr/local/bin/phrases.sh /mnt/data/random_phrases/phrases.sh
-crontab -l | { sed '/phrases.sh/d'; echo "* * * * * /mnt/data/random_phrases/phrases.sh"; } | crontab -
+crontab -l | { sed '/phrases.sh/d'; echo "${RANDOM_PHRASES_CRON} /mnt/data/random_phrases/phrases.sh"; } | crontab -
 EOF
     fi
 
