@@ -250,10 +250,12 @@ Custom options for './custom-script/custom_dns_catcher.sh':
 ### History of stock firmware
 [Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
 
-### Already builded firmwares
+### Already build firmware
 [GEN1](https://vacuumz.info/download/gen1/)
 
 [GEN2](https://vacuumz.info/download/gen2/)
+
+**Please note:** If you use one of the prebuild images, the root password is 'cleaner'.
 
 ### Thanks
 * **https://github.com/dgiese/dustcloud**
