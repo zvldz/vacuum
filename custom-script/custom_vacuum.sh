@@ -127,7 +127,7 @@ EOF
         VOLUME_OVERRIDE=''
         if [ -n "${RANDOM_PHRASES_VOLUME_OVERRIDE}" ]; then
             echo "++ Set 'random phrases' volume to ${RANDOM_PHRASES_VOLUME_OVERRIDE}"
-            VOLUME_OVERRIDE="${RANDOM_PHRASES_VOLUME_OVERRIDE};"
+            VOLUME_OVERRIDE="VOLUME_OVERRIDE=${RANDOM_PHRASES_VOLUME_OVERRIDE} "
         fi
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
