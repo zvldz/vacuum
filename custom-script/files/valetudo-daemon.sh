@@ -11,8 +11,8 @@ while :; do
     fi
     echo '|/bin/false' > /proc/sys/kernel/core_pattern
     if [ -f "/root/bin/busybox" ]; then
-        /root/bin/busybox ionice -c3 nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log
+        /root/bin/busybox ionice -c3 nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
     else
-        nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log
+        nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
     fi
 done
