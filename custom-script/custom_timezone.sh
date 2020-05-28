@@ -38,4 +38,8 @@ function custom_function_timezone() {
     TIMEZONE=${TIMEZONE:-"Europe/Berlin"}
     echo "+ Replacing timezone"
     echo "$TIMEZONE" > "${IMG_DIR}/etc/timezone"
+
+    if [ -f "${IMG_DIR}/etc/inittab" -a "${IMG_DIR}/usr/share/zoneinfo/${TIMEZONE}" ]; then
+		ln -sr "${IMG_DIR}/usr/share/zoneinfo/${TIMEZONE}" "${IMG_DIR}/etc/localtime"
+	fi
 }
