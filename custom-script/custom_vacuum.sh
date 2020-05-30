@@ -147,7 +147,7 @@ EOF
         cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
 #!/bin/bash
 
-echo "  Init random_phrases"
+echo "  - Init random_phrases"
 mkdir -p /mnt/data/random_phrases/phrases
 rm -f /mnt/data/random_phrases/phrases.sh
 ln -s /usr/local/bin/phrases.sh /mnt/data/random_phrases/phrases.sh
