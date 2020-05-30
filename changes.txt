@@ -13,7 +13,7 @@
 - Added a patch to disable region checking on new revisions (02.2019) of the second generation of robots.
 - Update from official servers is disabled (MiHome will display a firmware update error).
 - Replaced the miio client with the version 3.3.9, which allows to update the firmware not through the servers (local ota).
-- Firmware adaption 2008
+- Firmware adaption 2008+
 - Captures all dns requests (to external dns servers including) to domains *.mi.com and *.xiaomi.com and returns the ip address 203.0.113.1. (dns catcher)
 - ramdisk & rrlogclean for rrlogd from https://github.com/rand256/vacuum/
 - Added sox (SoX console audio player)
@@ -23,3 +23,4 @@
 - Enabled local ota update on 2008+ firmware(Thanks @JohnRev)
 - Resize root fs (for fw 2008+)
 - Update dropbear to v2016.72 (for fw 2008+)
+- Added custom dropbear v2019.78 with support Ed25519 (for fw 2008+)

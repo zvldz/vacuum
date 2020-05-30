@@ -80,7 +80,7 @@ Custom parameters for './custom-script/custom_ramdisk.sh':
 [--enable-ramdisk]
 
 Custom parameters for './custom-script/custom_random_phrases.sh':
-[--enable-random-phrases]
+[--enable-random-phrases|--random-phrases-cron=CRON|--random-phrases-volume=VOLUME]
 
 Custom parameters for './custom-script/custom_replace_miio.sh':
 [--replace-miio]
@@ -113,6 +113,7 @@ Custom parameters for './custom-script/custom_valetudo_re.sh':
 
 Custom parameters for './custom-script/custom_valetudo_wo_dummycloud.sh':
 [--valetudo-path-wod=PATH]
+./builder_vacuum.sh: line 47: custom_print_usage_x_custom_dropbear: command not found
 
 Custom parameters for './custom-script/custom_dns_catcher.sh':
 [--enable-dns-catcher]
@@ -195,7 +196,9 @@ Custom options for './custom-script/custom_ramdisk.sh':
   --enable-ramdisk           Put rrlog directory to RAM-disk to prevent wearing out FLASH memory
 
 Custom options for './custom-script/custom_random_phrases.sh':
-  --enable-random-phrases    Adding random phrases when cleaning
+  --enable-random-phrases           Adding random phrases when cleaning
+  --random-phrases-cron=CRON        Set own cron schedule for random phrases (default: * * * * *)
+  --random-phrases-volume=VOLUME    Set volume of random phrases (0.0 - 1.0). If not set it will be the volume of the robot.
 
 Custom options for './custom-script/custom_replace_miio.sh':
   --replace-miio             Replaces miio to version 3.3.9
@@ -236,6 +239,9 @@ Custom options for './custom-script/custom_valetudo_re.sh':
 
 Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
   --valetudo-path-wod=PATH   The path to valetudo(without dummycloud) to include it into the image
+
+Custom options for './custom-script/custom_dropbear.sh':
+  --custom-dropbear          Extract dropbear_v2019.78.tgz to firmware (Dropbear v2019.78 with Ed25519 support)
 
 Custom options for './custom-script/custom_dns_catcher.sh':
   --enable-dns-catcher       Redirect and spoof outgoing dns requests(for xiaomi servers)
