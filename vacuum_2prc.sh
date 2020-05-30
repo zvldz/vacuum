@@ -29,6 +29,8 @@ fi
                         --replace-miio \
                         --enable-addon-sox \
                         --enable-random-phrases \
+                        --random-phrases-cron="*/2 * * * *" \
                         --enable-local-ota \
                         --resize-root-fs=522240 \
+                        --custom-dropbear \
                         -f "$1"
