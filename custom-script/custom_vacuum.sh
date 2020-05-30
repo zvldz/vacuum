@@ -84,7 +84,7 @@ if [ -d /root/run.d ]; then
     for FILE in /root/run.d/*.sh; do
         if [ -r \$FILE ]; then
             echo "RUN - \$FILE" >> /root/vacuum.txt
-            . \$FILE
+            . \$FILE >> /root/vacuum.txt 2>&1
         fi
     done
     unset FILE
@@ -101,7 +101,7 @@ EOF
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/change_root_pass.sh"
 #!/bin/sh
-echo "  - Set a password for root" >> /root/vacuum.txt
+echo "  - Set a password for root"
 echo "root:$ROOT_PASSWORD" | chpasswd
 EOF
     fi
@@ -111,7 +111,7 @@ EOF
         mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
-echo "  - Create custom user" >> /root/vacuum.txt
+echo "  - Create custom user"
 if [ -f /usr/sbin/newusers ]; then
     echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD::::/home/$CUSTOM_USER:/bin/bash" | newusers
     usermod -G sudo $CUSTOM_USER
@@ -119,6 +119,20 @@ else
     adduser $CUSTOM_USER -s /bin/sh -D -G sudo -g "custom user"
     echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD" | chpasswd
 fi
+EOF
+    fi
+
+    if [ -f "${IMG_DIR}/etc/inittab" ]; then
+        echo "++ Added script to convert openssh host key to dropbear"
+        cat << EOF > "${IMG_DIR}/root/run.d/openssh2dropbear.sh"
+#!/bin/bash
+
+echo "  - Convert openssh host keys to dropbear"
+mkdir -p /etc/dropbear
+/usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_rsa_key /etc/dropbear/dropbear_rsa_host_key
+/usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_dsa_key /etc/dropbear/dropbear_dss_host_key
+/usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_ecdsa_key /etc/dropbear/dropbear_ecdsa_host_key
+/usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_ed25519_key /etc/dropbear/dropbear_ed25519_host_key
 EOF
     fi
 
@@ -133,6 +147,7 @@ EOF
         cat << EOF > "${IMG_DIR}/root/run.d/init_phrases.sh"
 #!/bin/bash
 
+echo "  Init random_phrases"
 mkdir -p /mnt/data/random_phrases/phrases
 rm -f /mnt/data/random_phrases/phrases.sh
 ln -s /usr/local/bin/phrases.sh /mnt/data/random_phrases/phrases.sh
@@ -151,7 +166,7 @@ if [ -f /mnt/default/roborock.conf ]; then
     if [ "\$?" -ne 0 ]; then
         mount -o remount,rw /mnt/default
         if [ -w /mnt/default/roborock.conf ]; then
-            echo "  - Change region to Mainland China" >> /root/vacuum.txt
+            echo "  - Change region to Mainland China"
             cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\$(date "+%Y-%m-%d_%H-%M")
             sed -i 's/location.*/location=prc/' /mnt/default/roborock.conf
         fi
@@ -170,7 +185,7 @@ if [ -f /mnt/default/roborock.conf ]; then
     if [ "\$?" -ne 0 ]; then
         mount -o remount,rw /mnt/default
         if [ -w /mnt/default/roborock.conf ]; then
-            echo "  - Change region to EU" >> /root/vacuum.txt
+            echo "  - Change region to EU"
             cp /mnt/default/roborock.conf /mnt/default/roborock.conf.\$(date "+%Y-%m-%d_%H-%M")
             sed -i 's/location.*/location=de/' /mnt/default/roborock.conf
         fi

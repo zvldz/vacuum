@@ -198,22 +198,6 @@ FIRMWARE_PATH=$(readlink -f "$FIRMWARE_PATH")
 FIRMWARE_BASENAME=$(basename "$FIRMWARE_PATH")
 FIRMWARE_FILENAME="${FIRMWARE_BASENAME%.*}"
 
-# Generate SSH Host Keys
-echo "Generate SSH Host Keys if necessary"
-
-if [ ! -r ssh_host_rsa_key ]; then
-    ssh-keygen -N "" -t rsa -f ssh_host_rsa_key
-fi
-if [ ! -r ssh_host_dsa_key ]; then
-    ssh-keygen -N "" -t dsa -f ssh_host_dsa_key
-fi
-if [ ! -r ssh_host_ecdsa_key ]; then
-    ssh-keygen -N "" -t ecdsa -f ssh_host_ecdsa_key
-fi
-if [ ! -r ssh_host_ed25519_key ]; then
-    ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
-fi
-
 FW_TMPDIR="$(pwd)/$(mktemp -d fw.XXXXXX)"
 
 echo "Decrypt firmware"
@@ -246,17 +230,30 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     exit 0
 fi
 
-if [ -d "${IMG_DIR}/etc/ssh" ]; then
-    echo "+ Replace ssh host keys"
-    cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
-    cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
-    cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
-    cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
-    cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
-    cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
-    cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
-    cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
+echo "+ Generate SSH Host Keys if necessary"
+if [ ! -r ssh_host_rsa_key ]; then
+    ssh-keygen -N "" -t rsa -f ssh_host_rsa_key
 fi
+if [ ! -r ssh_host_dsa_key ]; then
+    ssh-keygen -N "" -t dsa -f ssh_host_dsa_key
+fi
+if [ ! -r ssh_host_ecdsa_key ]; then
+    ssh-keygen -N "" -t ecdsa -f ssh_host_ecdsa_key
+fi
+if [ ! -r ssh_host_ed25519_key ]; then
+    ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
+fi
+
+echo "+ Replace ssh host keys"
+mkdir -p "${IMG_DIR}/etc/ssh"
+cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
+cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
+cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
+cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
+cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
+cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
+cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
+cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
 
 echo "+ Disable SSH firewall rule"
 sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
