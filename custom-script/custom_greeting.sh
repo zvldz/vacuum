@@ -41,8 +41,12 @@ function custom_function_greeting() {
         cat << EOF > "${IMG_DIR}/etc/profile.d/greeting.sh"
 #!/bin/sh
 
+if [ -r /opt/rockrobo/rr-release ]; then
+    FIRMWARE=\$(cat /opt/rockrobo/rr-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
+else
+    FIRMWARE=\$(cat /etc/os-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
+fi
 SERIAL=\$(cat /dev/shm/sn | grep -ao '[[:alnum:]]*')
-FIRMWARE=\$(cat /opt/rockrobo/rr-release | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d=)
 IP=\$(ip -4 addr show dev wlan0 | grep inet | tr -s " " | cut -d" " -f3 | cut -f1 -d'/' | head -n 1)
 TOKEN=\$(cat /mnt/data/miio/device.token | tr -d '\n' | xxd -p)
 DID=\$(cat /mnt/default/device.conf | grep '^did' | cut -f2 -d=)
