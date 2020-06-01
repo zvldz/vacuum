@@ -251,7 +251,6 @@ EOF
         else
             FIRMWARE_BASENAME="vacuum_${FW_VER}_valetudo_re_${VALETUDO_VER}.pkg"
         fi
-
     else
         if [ -z "$FW_VER" ]; then
             FIRMWARE_BASENAME="${FIRMWARE_FILENAME}_vacuum_${VERSION}.pkg"
