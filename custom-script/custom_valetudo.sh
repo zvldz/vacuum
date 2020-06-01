@@ -32,7 +32,7 @@ function custom_parse_args_valetudo() {
             else
                 echo "The Valetudo binary hasn't been found in $VALETUDO_PATH"
                 echo "Please download it from https://github.com/Hypfer/Valetudo"
-                echo "(example: git clone https://github.com/Hypfer/Valetudo ../Valetudo && wget https://github.com/Hypfer/Valetudo/releases/download/0.4.0/valetudo -O ../Valetudo/valetudo)"
+                echo "(example: git clone https://github.com/Hypfer/Valetudo ../Valetudo && wget https://github.com/Hypfer/Valetudo/releases/latest/download/valetudo -O ../Valetudo/valetudo)"
                 echo
                 cleanup_and_exit 1
             fi

@@ -41,7 +41,7 @@ function custom_parse_args_valetudo_re() {
                         wget https://raw.githubusercontent.com/rand256/valetudo/testing/deployment/valetudo.conf
                         wget https://raw.githubusercontent.com/rand256/valetudo/testing/deployment/etc/rc.local
                         wget https://raw.githubusercontent.com/rand256/valetudo/testing/deployment/etc/hosts
-                        wget https://github.com/rand256/valetudo/releases/download/0.4.0-RE7/valetudo.tar.gz -O- | tar xzf -
+                        wget https://github.com/rand256/valetudo/releases/latest/download/valetudo.tar.gz | tar xzf -
                 "
                 echo
                 cleanup_and_exit 1
