@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # https://dustbuilder.xvm.mit.edu/resetfix_maybe/
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_fixreset")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_fixreset")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_fixreset")
-LIST_CUSTOM_FUNCTION+=("custom_function_fixreset")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_fixreset")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_fixreset")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_fixreset")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_fixreset")
 FIX_RESET=${FIX_RESET:-"0"}
 
-function custom_print_usage_fixreset() {
+function custom_print_usage_01_fixreset() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_fixreset() {
+function custom_print_help_01_fixreset() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_fixreset() {
+function custom_parse_args_01_fixreset() {
     case ${PARAM} in
         *-fix-reset)
             FIX_RESET=1
@@ -34,7 +34,7 @@ function custom_parse_args_fixreset() {
     esac
 }
 
-function custom_function_fixreset() {
+function custom_function_01_fixreset() {
     if [ $FIX_RESET -eq 1 ]; then
         echo "+ Running reset fix"
         if [ -f "${IMG_DIR}/etc/inittab" ]; then

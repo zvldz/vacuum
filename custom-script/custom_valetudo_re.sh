@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Install Valetudo RE (https://github.com/rand256/valetudo)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_re")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_re")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo_re")
-LIST_CUSTOM_FUNCTION+=("custom_function_valetudo_re")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_05_valetudo_re")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_05_valetudo_re")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_05_valetudo_re")
+LIST_CUSTOM_FUNCTION+=("custom_function_05_valetudo_re")
 ENABLE_VALETUDO_RE=${ENABLE_VALETUDO_RE:-"0"}
 VALETUDO_RE_NODEPS=${VALETUDO_RE_NODEPS:-"0"}
 
-function custom_print_usage_valetudo_re() {
+function custom_print_usage_05_valetudo_re() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -17,7 +17,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_valetudo_re() {
+function custom_print_help_05_valetudo_re() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -26,7 +26,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_valetudo_re() {
+function custom_parse_args_05_valetudo_re() {
     case ${PARAM} in
         *-valetudo-re-path)
             VALETUDO_RE_PATH="$ARG"
@@ -57,7 +57,7 @@ function custom_parse_args_valetudo_re() {
     esac
 }
 
-function custom_function_valetudo_re() {
+function custom_function_05_valetudo_re() {
     if [ $ENABLE_VALETUDO_RE -eq 1 ] && [ $ENABLE_DUMMYCLOUD -eq 1 ]; then
         echo "You can't install Valetudo RE and Dummycloud at the same time, "
         echo "because Valetudo RE has implemented Dummycloud fuctionality and map upload support now."

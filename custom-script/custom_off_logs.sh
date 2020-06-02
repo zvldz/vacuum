@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Disables most log files creations and log uploads on the vacuum
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_off_logs")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_off_logs")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_off_logs")
-LIST_CUSTOM_FUNCTION+=("custom_function_off_logs")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_off_logs")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_off_logs")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_off_logs")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_off_logs")
 DISABLE_LOGS=${DISABLE_LOGS:-"0"}
 
-function custom_print_usage_off_logs() {
+function custom_print_usage_01_off_logs() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_off_logs() {
+function custom_print_help_01_off_logs() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_off_logs() {
+function custom_parse_args_01_off_logs() {
     case ${PARAM} in
         *-disable-logs)
             DISABLE_LOGS=1
@@ -34,7 +34,7 @@ function custom_parse_args_off_logs() {
     esac
 }
 
-function custom_function_off_logs() {
+function custom_function_01_off_logs() {
     if [ $DISABLE_LOGS -eq 1 ]; then
         echo "+ Disabling logging"
         # Set LOG_LEVEL=3

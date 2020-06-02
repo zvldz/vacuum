@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Add greeting to ssh
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_greeting")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_greeting")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_greeting")
-LIST_CUSTOM_FUNCTION+=("custom_function_greeting")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_greeting")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_greeting")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_greeting")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_greeting")
 ENABLE_GREETING=${ENABLE_GREETING:-"0"}
 
-function custom_print_usage_greeting() {
+function custom_print_usage_01_greeting() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_greeting() {
+function custom_print_help_01_greeting() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_greeting() {
+function custom_parse_args_01_greeting() {
     case ${PARAM} in
         *-enable-greeting)
             ENABLE_GREETING=1
@@ -34,7 +34,7 @@ function custom_parse_args_greeting() {
     esac
 }
 
-function custom_function_greeting() {
+function custom_function_01_greeting() {
     if [ $ENABLE_GREETING -eq 1 ]; then
         echo "+ Adding Greetings"
         VERSION=$(date "+%Y%m%d")

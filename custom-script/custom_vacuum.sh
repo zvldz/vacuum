@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Region conversion. Edit users.
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_vacuum")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_vacuum")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_vacuum")
-LIST_CUSTOM_FUNCTION+=("custom_function_vacuum")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_08_vacuum")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_08_vacuum")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_08_vacuum")
+LIST_CUSTOM_FUNCTION+=("custom_function_08_vacuum")
 ROOT_PASSWORD=${ROOT_PASSWORD:-""}
 CUSTOM_USER=${CUSTOM_USER:-""}
 CUSTOM_USER_PASSWORD=${CUSTOM_USER_PASSWORD:-""}
@@ -12,7 +12,7 @@ CONVERT_2_PRC=${CONVERT_2_PRC:-"0"}
 CONVERT_2_EU=${CONVERT_2_EU:-"0"}
 ROOT_ONLY=${ROOT_ONLY:-"0"}
 
-function custom_print_usage_vacuum() {
+function custom_print_usage_08_vacuum() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -21,7 +21,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_vacuum() {
+function custom_print_help_08_vacuum() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -33,7 +33,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_vacuum() {
+function custom_parse_args_08_vacuum() {
     case ${PARAM} in
         *-convert2prc)
             CONVERT_2_PRC=1
@@ -59,7 +59,7 @@ function custom_parse_args_vacuum() {
     esac
 }
 
-function custom_function_vacuum() {
+function custom_function_08_vacuum() {
     VERSION=$(date "+%Y%m%d")
     FW_VER=$(echo "$FIRMWARE_FILENAME" | grep -oE "v11_[0-9]+" | sed 's/v11_00//')
 

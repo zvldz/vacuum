@@ -2,13 +2,13 @@
 # Put rrlog directory to RAM-disk
 # From https://github.com/rand256/vacuum
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_ramdisk")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_ramdisk")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_ramdisk")
-LIST_CUSTOM_FUNCTION+=("custom_function_ramdisk")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_ramdisk")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_ramdisk")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_ramdisk")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_ramdisk")
 ENABLE_RAMDISK=${ENABLE_RAMDISK:-"0"}
 
-function custom_print_usage_ramdisk() {
+function custom_print_usage_01_ramdisk() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -16,7 +16,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_ramdisk() {
+function custom_print_help_01_ramdisk() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,7 +24,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_ramdisk() {
+function custom_parse_args_01_ramdisk() {
     case ${PARAM} in
         *-enable-ramdisk)
             ENABLE_RAMDISK=1
@@ -35,7 +35,7 @@ function custom_parse_args_ramdisk() {
     esac
 }
 
-function custom_function_ramdisk() {
+function custom_function_01_ramdisk() {
     if [ $ENABLE_RAMDISK -eq 1 ]; then
         if [ -r "${FILES_PATH}/ramdisk-cleaner.sh" ]; then
             echo "+ Adding ramdisk & rrlogclean.sh"

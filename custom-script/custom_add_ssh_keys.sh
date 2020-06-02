@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Adding keys for ssh authentication
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_ssh_keys")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_ssh_keys")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_ssh_keys")
-LIST_CUSTOM_FUNCTION+=("custom_function_ssh_keys")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_ssh_keys")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_ssh_keys")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_ssh_keys")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_ssh_keys")
 
-function custom_print_usage_ssh_keys() {
+function custom_print_usage_01_ssh_keys() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -14,7 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_ssh_keys() {
+function custom_print_help_01_ssh_keys() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,7 +24,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_ssh_keys() {
+function custom_parse_args_01_ssh_keys() {
     case ${PARAM} in
         *-public-key|-k)
             # check if the key file exists
@@ -42,7 +42,7 @@ function custom_parse_args_ssh_keys() {
     esac
 }
 
-function custom_function_ssh_keys() {
+function custom_function_01_ssh_keys() {
     if [ -r "${IMG_DIR}/root/.ssh/authorized_keys" ]; then
         echo "+ Removing obsolete authorized_keys from Xiaomi image"
         rm "${IMG_DIR}/root/.ssh/authorized_keys"
