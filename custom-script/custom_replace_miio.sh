@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Replaces miio to version 3.3.9
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_replace_miio")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_replace_miio")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_replace_miio")
-LIST_CUSTOM_FUNCTION+=("custom_function_replace_miio")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_replace_miio")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_replace_miio")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_replace_miio")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_replace_miio")
 PATCH_MIIO=${PATCH_MIIO:-"0"}
 
-function custom_print_usage_replace_miio() {
+function custom_print_usage_01_replace_miio() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_replace_miio() {
+function custom_print_help_01_replace_miio() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_replace_miio() {
+function custom_parse_args_01_replace_miio() {
     case ${PARAM} in
         *-replace-miio)
             PATCH_MIIO=1
@@ -34,7 +34,7 @@ function custom_parse_args_replace_miio() {
     esac
 }
 
-function custom_function_replace_miio() {
+function custom_function_01_replace_miio() {
     if [ $PATCH_MIIO -eq 1 ]; then
         if [ -r "${FILES_PATH}/miio_3_3_9.tgz" ]; then
             echo "+ Unpacking miio 3.3.9"

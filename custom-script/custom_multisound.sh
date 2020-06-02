@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Make robot use different sounds at the same event
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_multisound")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_multisound")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_multisound")
-LIST_CUSTOM_FUNCTION+=("custom_function_multisound")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_multisound")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_multisound")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_multisound")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_multisound")
 ENABLE_MULTISOUND=${ENABLE_MULTISOUND:-"0"}
 
-function custom_print_usage_multisound() {
+function custom_print_usage_01_multisound() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_multisound() {
+function custom_print_help_01_multisound() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_multisound() {
+function custom_parse_args_01_multisound() {
     case ${PARAM} in
         *-enable-multisound)
             ENABLE_MULTISOUND=1
@@ -34,7 +34,7 @@ function custom_parse_args_multisound() {
     esac
 }
 
-function custom_function_multisound() {
+function custom_function_01_multisound() {
     if [ $ENABLE_MULTISOUND -eq 1 ]; then
         if [ -r "${FILES_PATH}/multisound.tgz" ]; then
             echo "+ Unpacking multisound files"

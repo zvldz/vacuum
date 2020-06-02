@@ -2,13 +2,13 @@
 # Enable local ota on 2008+ firmware
 # Author: @JohnRev
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_enable_local_ota")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_enable_local_ota")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_enable_local_ota")
-LIST_CUSTOM_FUNCTION+=("custom_function_enable_local_ota")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_enable_local_ota")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_enable_local_ota")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_enable_local_ota")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_enable_local_ota")
 ENABLE_LOCAL_OTA=${ENABLE_LOCAL_OTA:-"0"}
 
-function custom_print_usage_enable_local_ota() {
+function custom_print_usage_01_enable_local_ota() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -16,7 +16,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_enable_local_ota() {
+function custom_print_help_01_enable_local_ota() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,7 +24,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_enable_local_ota() {
+function custom_parse_args_01_enable_local_ota() {
     case ${PARAM} in
         *-enable-local-ota)
             ENABLE_LOCAL_OTA=1
@@ -35,7 +35,7 @@ function custom_parse_args_enable_local_ota() {
     esac
 }
 
-function custom_function_enable_local_ota() {
+function custom_function_01_enable_local_ota() {
     if [ $ENABLE_LOCAL_OTA -eq 1 ]; then
         echo "+ Enable local ota"
         echo "++ Trying to patch AppProxy"

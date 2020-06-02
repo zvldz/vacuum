@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Installing valetudo without dummycloud (deprecated)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_valetudo_wo_dummycloud")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_valetudo_wo_dummycloud")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_valetudo_wo_dummycloud")
-LIST_CUSTOM_FUNCTION+=("custom_function_valetudo_wo_dummycloud")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_05_valetudo_wo_dummycloud")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_05_valetudo_wo_dummycloud")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_05_valetudo_wo_dummycloud")
+LIST_CUSTOM_FUNCTION+=("custom_function_05_valetudo_wo_dummycloud")
 ENABLE_VALETUDO_WOD=${ENABLE_VALETUDO_WOD:-"0"}
 
-function custom_print_usage_valetudo_wo_dummycloud() {
+function custom_print_usage_05_valetudo_wo_dummycloud() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_valetudo_wo_dummycloud() {
+function custom_print_help_05_valetudo_wo_dummycloud() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_valetudo_wo_dummycloud() {
+function custom_parse_args_05_valetudo_wo_dummycloud() {
     case ${PARAM} in
         *-valetudo-path-wod)
             VALETUDO_PATH_WOD="$ARG"
@@ -41,7 +41,7 @@ function custom_parse_args_valetudo_wo_dummycloud() {
     esac
 }
 
-function custom_function_valetudo_wo_dummycloud() {
+function custom_function_05_valetudo_wo_dummycloud() {
     if [ $ENABLE_VALETUDO_WOD -eq 1 ]; then
         echo "+ Installing valetudo without dummycloud"
         install -m 0755 "${VALETUDO_PATH_WOD}/valetudo" "${IMG_DIR}/usr/local/bin/valetudo"

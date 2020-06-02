@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Access your network in unprovisioned mode (currently only wpa2psk is supported)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_unprovisioned")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_unprovisioned")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_unprovisioned")
-LIST_CUSTOM_FUNCTION+=("custom_function_unprovisioned")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_unprovisioned")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_unprovisioned")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_unprovisioned")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_unprovisioned")
 UNPROVISIONED=${UNPROVISIONED:-"0"}
 
-function custom_print_usage_unprovisioned() {
+function custom_print_usage_01_unprovisioned() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_unprovisioned() {
+function custom_print_help_01_unprovisioned() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -26,7 +26,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_unprovisioned() {
+function custom_parse_args_01_unprovisioned() {
     case ${PARAM} in
         *-unprovisioned)
             UNPROVISIONED=1
@@ -47,7 +47,7 @@ function custom_parse_args_unprovisioned() {
     esac
 }
 
-function custom_function_unprovisioned() {
+function custom_function_01_unprovisioned() {
     if [ $UNPROVISIONED -eq 1 ]; then
         echo "+ Implementing unprovisioned mode"
 

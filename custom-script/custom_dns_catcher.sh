@@ -2,13 +2,13 @@
 # Redirect and spoof outgoing dns requests(for xiaomi servers)
 # dnsmasq and drill for tests
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_xiaomi_dns_catcher")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_xiaomi_dns_catcher")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_xiaomi_dns_catcher")
-LIST_CUSTOM_FUNCTION+=("custom_function_xiaomi_dns_catcher")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_07_dns_catcher")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_07_dns_catcher")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_07_dns_catcher")
+LIST_CUSTOM_FUNCTION+=("custom_function_07_dns_catcher")
 ENABLE_DNS_CATCHER=${ENABLE_DNS_CATCHER:-"0"}
 
-function custom_print_usage_xiaomi_dns_catcher() {
+function custom_print_usage_07_dns_catcher() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -16,7 +16,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_xiaomi_dns_catcher() {
+function custom_print_help_07_dns_catcher() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -24,7 +24,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_xiaomi_dns_catcher() {
+function custom_parse_args_07_dns_catcher() {
     case ${PARAM} in
         *-enable-dns-catcher)
             ENABLE_DNS_CATCHER=1
@@ -35,7 +35,7 @@ function custom_parse_args_xiaomi_dns_catcher() {
     esac
 }
 
-function custom_function_xiaomi_dns_catcher() {
+function custom_function_07_dns_catcher() {
     if [ $ENABLE_DNS_CATCHER -eq 1 ]; then
         if [ -r "${FILES_PATH}/dns.tgz" ]; then
             echo "+ Installing dns-catcher"

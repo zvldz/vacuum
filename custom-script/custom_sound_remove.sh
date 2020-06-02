@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Removes extra sound files to gain space (prc, tw and testing samples)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_cleanup_sound")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_cleanup_sound")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_cleanup_sound")
-LIST_CUSTOM_FUNCTION+=("custom_function_cleanup_sound")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_cleanup_sound")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_00_cleanup_sound")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_00_cleanup_sound")
+LIST_CUSTOM_FUNCTION+=("custom_function_00_cleanup_sound")
 CLEANUP_SOUNDFILES=${CLEANUP_SOUNDFILES:-"0"}
 
-function custom_print_usage_cleanup_sound() {
+function custom_print_usage_00_cleanup_sound() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_cleanup_sound() {
+function custom_print_help_00_cleanup_sound() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_cleanup_sound() {
+function custom_parse_args_00_cleanup_sound() {
     case ${PARAM} in
         *-remove-extra-sounds)
             CLEANUP_SOUNDFILES=1
@@ -34,7 +34,7 @@ function custom_parse_args_cleanup_sound() {
     esac
 }
 
-function custom_function_cleanup_sound() {
+function custom_function_00_cleanup_sound() {
     TO_REMOVE=('sounds/mtest' 'sounds/prc' 'sounds/tw' 'sounds/Facsounds/prc')
     SOUNDS_FOLDER="${IMG_DIR}/opt/rockrobo/resources"
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Patch rrlogd to disable log encryption (based on https://github.com/JohnRev/rrlogd-patcher)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_rrlogd_patcher")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_rrlogd_patcher")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_rrlogd_patcher")
-LIST_CUSTOM_FUNCTION+=("custom_function_rrlogd_patcher")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_rrlogd_patcher")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_rrlogd_patcher")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_rrlogd_patcher")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_rrlogd_patcher")
 PATCH_RRLOGD=${PATCH_RRLOGD:-"0"}
 
-function custom_print_usage_rrlogd_patcher() {
+function custom_print_usage_01_rrlogd_patcher() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -15,7 +15,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_rrlogd_patcher() {
+function custom_print_help_01_rrlogd_patcher() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -23,7 +23,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_rrlogd_patcher() {
+function custom_parse_args_01_rrlogd_patcher() {
     case ${PARAM} in
         *-enable-rrlogd-patcher)
             PATCH_RRLOGD=1
@@ -34,7 +34,7 @@ function custom_parse_args_rrlogd_patcher() {
     esac
 }
 
-function custom_function_rrlogd_patcher() {
+function custom_function_01_rrlogd_patcher() {
     if [ $PATCH_RRLOGD -eq 1 ]; then
         echo "++ Trying to patch rrlogd"
         cp "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd" "${IMG_DIR}/opt/rockrobo/rrlog/rrlogd.xiaomi"
