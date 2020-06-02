@@ -1,0 +1,15 @@
+sox                 | http://ports.ubuntu.com/pool/universe/s/sox/sox_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-alsa     | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-alsa_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-ao       | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-ao_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-base     | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-base_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-oss      | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-oss_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-pulse    | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-pulse_14.4.1-3ubuntu1.1_armhf.deb
+libsox2             | http://ports.ubuntu.com/pool/universe/s/sox/libsox2_14.4.1-3ubuntu1.1_armhf.deb
+libsox-fmt-mp3      | http://ports.ubuntu.com/pool/universe/s/sox/libsox-fmt-mp3_14.4.1-3ubuntu1.1_armhf.deb
+libgsm1             | http://ports.ubuntu.com/pool/universe/libg/libgsm/libgsm1_1.0.13-4_armhf.deb
+libid3tag0          | http://ports.ubuntu.com/pool/main/libi/libid3tag/libid3tag0_0.15.1b-10ubuntu1_armhf.deb
+libltdl7            | http://ports.ubuntu.com/pool/main/libt/libtool/libltdl7_2.4.2-1.7ubuntu1_armhf.deb
+libmad0             | http://ports.ubuntu.com/pool/universe/libm/libmad/libmad0_0.15.1b-9ubuntu14.04.1_armhf.deb
+libmp3lame0         | http://ports.ubuntu.com/pool/universe/l/lame/libmp3lame0_3.99.5+repack1-3ubuntu1_armhf.deb
+libpng12            | http://ports.ubuntu.com/pool/main/libp/libpng/libpng12-0_1.2.50-1ubuntu2.14.04.3_armhf.deb
+libtwolame0         | http://ports.ubuntu.com/pool/universe/t/twolame/libtwolame0_0.3.13-1ubuntu1_armhf.deb

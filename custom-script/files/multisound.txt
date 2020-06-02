@@ -1,0 +1,6 @@
+bbfs    | manually compiled
+        | https://www.cs.nmsu.edu/~pfeiffer/fuse-tutorial/src/bbfs.c
+        | https://github.com/mgarciaisaia/escribiendo-un-filesystem-fuse/blob/master/src/bbfs.c
+fuse    | http://ports.ubuntu.com/pool/main/f/fuse/fuse_2.9.2-4ubuntu4.14.04.1_armhf.deb
+libfuse | http://ports.ubuntu.com/pool/main/f/fuse/libfuse2_2.9.2-4ubuntu4.14.04.1_armhf.deb
+

@@ -1,0 +1,2 @@
+dropbear    | manually compiled for Ed25519
+            | CFLAGS=' -DSFTPSERVER_PATH=\""/usr/lib/sftp-server"\"' ./configure  --disable-utmp --disable-wtmp --disable-utmpx --prefix=/usr

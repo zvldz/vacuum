@@ -1,0 +1,1 @@
+miio_client | from fw 3.3.9_001898

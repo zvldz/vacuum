@@ -1,0 +1,5 @@
+nano    | http://ports.ubuntu.com/pool/main/n/nano/nano_2.2.6-1ubuntu1_armhf.deb
+wget    | http://ports.ubuntu.com/pool/main/w/wget/wget_1.15-1ubuntu1_armhf.deb
+bbe     | http://ports.ubuntu.com/pool/universe/b/bbe/bbe_0.2.2-2ubuntu1_armhf.deb
+htop    | http://ports.ubuntu.com/pool/universe/h/htop/htop_1.0.2-3_armhf.deb
+snmpd   | manually compiled for static
