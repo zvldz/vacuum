@@ -1,0 +1,1 @@
+libstdc++6_6.2.0-2ubuntu11_armhf.deb    | unknown source (is not used if valetudo_re is compiled static

@@ -1,0 +1,1 @@
+adbd    | http://ports.ubuntu.com/pool/universe/a/android-tools/android-tools-adbd_4.2.2+git20130218-3ubuntu23_armhf.deb

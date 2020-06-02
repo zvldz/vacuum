@@ -1,0 +1,3 @@
+drill       | http://ports.ubuntu.com/pool/universe/l/ldns/ldnsutils_1.6.17-1_armhf.deb
+libldns     | http://ports.ubuntu.com/pool/main/l/ldns/libldns1_1.6.17-1_armhf.deb
+xdnmasq     | https://ftp.igh.cnrs.fr/pub/ubuntu-ports/pool/main/d/dnsmasq/dnsmasq-base_2.68-1ubuntu0.1_armhf.deb
