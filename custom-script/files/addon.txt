@@ -3,3 +3,4 @@ wget    | http://ports.ubuntu.com/pool/main/w/wget/wget_1.15-1ubuntu1_armhf.deb
 bbe     | http://ports.ubuntu.com/pool/universe/b/bbe/bbe_0.2.2-2ubuntu1_armhf.deb
 htop    | http://ports.ubuntu.com/pool/universe/h/htop/htop_1.0.2-3_armhf.deb
 snmpd   | manually compiled for static
+        | --prefix=/usr' '--disable-applications' '--disable-manuals' '--disable-mib-loading' '--disable-privacy' '--disable-ipv6' '--disable-debugging' '--disable-embedded-perl' '--disable-perl-cc-checks' '--enable-static' '--without-openssl' '--without-pkcs' '--without-krb5' '--without-pcre' '--without-mysql' '--disable-shared' '--sysconfdir=/etc' '--with-default-snmp-version=2' '--with-mib-modules=snmpv3mibs
