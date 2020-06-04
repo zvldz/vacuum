@@ -4,7 +4,7 @@ LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_protect_ap")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_protect_ap")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_protect_ap")
 LIST_CUSTOM_FUNCTION+=("custom_function_01_protect_ap")
-PSK=${PSK:-"0"}
+PSK=${PSK:-""}
 
 function custom_print_usage_01_protect_ap() {
     cat << EOF
