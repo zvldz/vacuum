@@ -230,6 +230,14 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     exit 0
 fi
 
+if [ -r "${IMG_DIR}/opt/rockrobo/rr-release" ]; then
+    FW_VER=$(cat "${IMG_DIR}/opt/rockrobo/rr-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
+elif [ -r "${IMG_DIR}/etc/os-release" ]; then
+    FW_VER=$(cat "${IMG_DIR}/etc/os-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
+else
+    FW_VER=0
+fi
+
 echo "+ Generate SSH Host Keys if necessary"
 if [ ! -r ssh_host_rsa_key ]; then
     ssh-keygen -N "" -t rsa -f ssh_host_rsa_key
@@ -291,6 +299,7 @@ install -d -m 0755 output
 install -m 0644 "${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
 
 md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
+sed -i -r "s/ .*\/(.+)/  \1/g" "output/${FIRMWARE_BASENAME}.md5"
 chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
 
 cat "output/${FIRMWARE_BASENAME}.md5"

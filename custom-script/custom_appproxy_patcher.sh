@@ -36,18 +36,21 @@ function custom_parse_args_01_appproxy_patcher() {
 
 function custom_function_01_appproxy_patcher() {
     if [ $PATCH_APPPROXY -eq 1 ]; then
-        echo "+ Trying to patch AppProxy to disable timezone check"
-        cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
-        sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
-        MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" | awk '{print $1}')
-        MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" | awk '{print $1}')
+        if [ $FW_VER -ge 1748 -a $FW_VER -lt 3000 ]; then
+            echo "+ Disable timezone check for AppProxy"
+            echo "++ Trying to patch AppProxy"
+            cp "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
+            sed -i 's/\x0B\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/\x3C\x28\x02\x90\xD8\xBF\x00\x24\x0C\xB9\x06\x2F\x14\xD8/g' "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy"
+            MD5_ORG=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi" | awk '{print $1}')
+            MD5_PATCHED=$(md5sum "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy" | awk '{print $1}')
 
-        if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
-            echo "-- AppProxy is NOT patched."
-        else
-            echo "++ AppProxy is patched."
+            if [ "$MD5_ORG" = "$MD5_PATCHED" ]; then
+                echo "-- AppProxy is NOT patched."
+            else
+                echo "++ AppProxy is patched."
+            fi
+
+            rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
         fi
     fi
-
-    rm -f "${IMG_DIR}/opt/rockrobo/cleaner/bin/AppProxy.xiaomi"
 }

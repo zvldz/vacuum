@@ -61,7 +61,6 @@ function custom_parse_args_08_vacuum() {
 
 function custom_function_08_vacuum() {
     VERSION=$(date "+%Y%m%d")
-    FW_VER=$(echo "$FIRMWARE_FILENAME" | grep -oE "v11_[0-9]+" | sed 's/v11_00//')
 
     if [ $CONVERT_2_PRC -eq 1 -a $CONVERT_2_EU  -eq 1 ]; then
         echo "! Only one region is possible"
