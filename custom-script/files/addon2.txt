@@ -19,3 +19,4 @@ libncurses  | http://ports.ubuntu.com/pool/main/n/ncurses/libncurses5_5.9+201401
 libncursesw | http://ports.ubuntu.com/pool/main/n/ncurses/libncursesw5_5.9+20140118-1ubuntu1_armhf.deb
 libpopt0    | http://ports.ubuntu.com/pool/main/p/popt/libpopt0_1.16-8ubuntu1_armhf.deb
 xtables     | http://ports.ubuntu.com/pool/main/i/iptables/iptables_1.4.21-1ubuntu1_armhf.deb
+busybox     | http://tardis.tiny-vps.com/aarm/packages/b/busybox/busybox-1.31.1-1.1-arm.pkg.tar.xz
