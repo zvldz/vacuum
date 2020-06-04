@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_protect_ap")
-LIST_CUSTOM_PRINT_HELP+=("custom_print_help_protect_ap")
-LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_protect_ap")
-LIST_CUSTOM_FUNCTION+=("custom_function_protect_ap")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_protect_ap")
+LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_protect_ap")
+LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_protect_ap")
+LIST_CUSTOM_FUNCTION+=("custom_function_01_protect_ap")
 PSK=${PSK:-"0"}
 
-function custom_print_usage_protect_ap() {
+function custom_print_usage_01_protect_ap() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
@@ -14,7 +14,7 @@ Custom parameters for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_print_help_protect_ap() {
+function custom_print_help_01_protect_ap() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
@@ -22,7 +22,7 @@ Custom options for '${BASH_SOURCE[0]}':
 EOF
 }
 
-function custom_parse_args_protect_ap() {
+function custom_parse_args_01_protect_ap() {
     case ${PARAM} in
         *-protect-ap)
             PSK="$ARG"
@@ -34,10 +34,14 @@ function custom_parse_args_protect_ap() {
     esac
 }
 
-function custom_function_protect_ap() {
+function custom_function_01_protect_ap() {
     if [ -n "$PSK" ]; then
-        echo "+ Setting password for AP"
-        sed -i "s/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap --daemon/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap $PSK --daemon/g" \
-            "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
+        if [ ! -f "${IMG_DIR}/etc/inittab" ]; then
+            echo "+ Setting password for AP"
+            sed -i "s/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap --daemon/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap $PSK --daemon/g" \
+                "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
+        else
+            echo "! Setting password for AP is not currently implemented for this firmware"
+        fi
     fi
 }
