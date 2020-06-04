@@ -59,10 +59,11 @@ MIIO_VERSION=\$(/opt/rockrobo/miio/miio_client --help 2>&1 | grep miio-client | 
 if echo \$SERIAL | grep -E "^R" >/dev/null 2>&1; then
     P_YEAR="201"\$(echo \$SERIAL | cut -c 7)
     P_WEEK=\$(echo \$SERIAL | cut -c 8-9)
-    if [ -f /root/bin/date ]; then
-        P_DATE=\$(/root/bin/date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(/root/bin/date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
-    else
+    if [ ! -L /bin/date ]; then
         P_DATE=\$(date -d "\$P_YEAR-01-01 +\$(( \$P_WEEK * 7 + 1 - \$(date -d "\$P_YEAR-01-04" +%w ) - 3 )) days -2 days" +"%B %Y")
+    else
+        F_MONDAY=\$(/root/bin/busybox cal 1 \$P_YEAR | awk 'NR>2{sf=7-NF; if (sf == 1 ) {print \$1;exit} if ( sf == 0) { print \$2;exit}}')
+        P_DATE=\$(echo \$P_YEAR \$P_WEEK \$F_MONDAY | awk '{print strftime("%B %Y", mktime(\$1" 01 "\$2" 00 00 00")+(\$3*7*24*60*60*10))}')
     fi
 else
     P_DATE="UNKNOWN"
