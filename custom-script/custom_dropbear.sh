@@ -7,7 +7,7 @@ LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_09_custom_dropbear")
 LIST_CUSTOM_FUNCTION+=("custom_function_09_custom_dropbear")
 ENABLE_CUSTOM_DROPBEAR=${ENABLE_CUSTOM_DROPBEAR:-"0"}
 
-function custom_print_usage_01_custom_dropbear() {
+function custom_print_usage_09_custom_dropbear() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
