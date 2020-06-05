@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Removes extra sound files to gain space (prc, tw and testing samples)
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_cleanup_sound")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_00_cleanup_sound")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_00_cleanup_sound")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_00_cleanup_sound")
 LIST_CUSTOM_FUNCTION+=("custom_function_00_cleanup_sound")
