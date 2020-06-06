@@ -16,6 +16,9 @@ Added functionality through custom scripts.
 ```
 Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--run-custom-script=SCRIPT|--help]
 
+Custom parameters for './custom-script/custom_sound_remove.sh':
+[--remove-extra-sounds]
+
 Custom parameters for './custom-script/custom_adbd.sh':
 [--replace-adbd]
 
@@ -30,9 +33,6 @@ Custom parameters for './custom-script/custom_bin_addon_sox.sh':
 
 Custom parameters for './custom-script/custom_binding.sh':
 [--enable-binding]
-
-Custom parameters for './custom-script/custom_sound_remove.sh':
-[--remove-extra-sounds]
 
 Custom parameters for './custom-script/custom_dns.sh':
 [--dnsserver=ADDRESS]
@@ -76,6 +76,9 @@ Custom parameters for './custom-script/custom_off_logs.sh':
 Custom parameters for './custom-script/custom_off_updates.sh':
 [--disable-firmware-updates]
 
+Custom parameters for './custom-script/custom_protect_ap.sh':
+[--protect-ap=PASSWORD]
+
 Custom parameters for './custom-script/custom_ramdisk.sh':
 [--enable-ramdisk]
 
@@ -100,10 +103,6 @@ Custom parameters for './custom-script/custom_timezone.sh':
 Custom parameters for './custom-script/custom_unprovisioned.sh':
 [--unprovisioned|--ssid YOUR_SSID|--psk YOUR_WIRELESS_PASSWORD]
 
-Custom parameters for './custom-script/custom_vacuum.sh':
-[--root-password=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
---convert2prc|--convert2eu]
-
 Custom parameters for './custom-script/custom_valetudo.sh':
 [--valetudo-path=PATH]
 
@@ -113,10 +112,16 @@ Custom parameters for './custom-script/custom_valetudo_re.sh':
 
 Custom parameters for './custom-script/custom_valetudo_wo_dummycloud.sh':
 [--valetudo-path-wod=PATH]
-./builder_vacuum.sh: line 47: custom_print_usage_x_custom_dropbear: command not found
 
 Custom parameters for './custom-script/custom_dns_catcher.sh':
 [--enable-dns-catcher]
+
+Custom parameters for './custom-script/custom_vacuum.sh':
+[--root-password=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
+--convert2prc|--convert2eu]
+
+Custom parameters for './custom-script/custom_dropbear.sh':
+[--custom-dropbear]
 
 Options:
   -h, --help                 Prints this message
@@ -129,6 +134,9 @@ Each parameter that takes a file as an argument accepts path in any form
 
 Report bugs to: https://github.com/zvldz/vacuum/issues
 Original Author: Dennis Giese [dgiese@dontvacuum.me], https://github.com/dgiese/dustcloud
+
+Custom options for './custom-script/custom_sound_remove.sh':
+  --remove-extra-sounds      Removes extra sound files to gain space (prc, tw and testing samples).
 
 Custom options for './custom-script/custom_adbd.sh':
   --replace-adbd             Replace xiaomis custom adbd with generic adbd version
@@ -144,9 +152,6 @@ Custom options for './custom-script/custom_bin_addon_sox.sh':
 
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
-
-Custom options for './custom-script/custom_sound_remove.sh':
-  --remove-extra-sounds      Removes extra sound files to gain space (prc, tw and testing samples).
 
 Custom options for './custom-script/custom_dns.sh':
   --dnsserver=ADDRESS        Set your DNS server (ex: "8.8.8.8, 1.1.1.1")
@@ -192,6 +197,9 @@ Custom options for './custom-script/custom_off_logs.sh':
 Custom options for './custom-script/custom_off_updates.sh':
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
 
+Custom options for './custom-script/custom_protect_ap.sh':
+  --protect-ap=PASSWORD      Protect the AP with a password
+
 Custom options for './custom-script/custom_ramdisk.sh':
   --enable-ramdisk           Put rrlog directory to RAM-disk to prevent wearing out FLASH memory
 
@@ -223,13 +231,6 @@ Custom options for './custom-script/custom_unprovisioned.sh':
                              --ssid YOUR_SSID
                              --psk YOUR_WIRELESS_PASSWORD
 
-Custom options for './custom-script/custom_vacuum.sh':
-  --root-pass=PASSWORD         Set password for root and custom user
-  --custom-user=USER           Add custom user
-  --custom-user-pass=PASSWORD  Set password for custom user
-  --convert2prc                Convert to Mainland China region
-  --convert2eu                 Convert to EU region
-
 Custom options for './custom-script/custom_valetudo.sh':
   --valetudo-path=PATH       The path to Valetudo(https://github.com/Hypfer/Valetudo) to include it into the image
 
@@ -240,11 +241,18 @@ Custom options for './custom-script/custom_valetudo_re.sh':
 Custom options for './custom-script/custom_valetudo_wo_dummycloud.sh':
   --valetudo-path-wod=PATH   The path to valetudo(without dummycloud) to include it into the image
 
-Custom options for './custom-script/custom_dropbear.sh':
-  --custom-dropbear          Extract dropbear_v2019.78.tgz to firmware (Dropbear v2019.78 with Ed25519 support)
-
 Custom options for './custom-script/custom_dns_catcher.sh':
   --enable-dns-catcher       Redirect and spoof outgoing dns requests(for xiaomi servers)
+
+Custom options for './custom-script/custom_vacuum.sh':
+  --root-pass=PASSWORD         Set password for root and custom user
+  --custom-user=USER           Add custom user
+  --custom-user-pass=PASSWORD  Set password for custom user
+  --convert2prc                Convert to Mainland China region
+  --convert2eu                 Convert to EU region
+
+Custom options for './custom-script/custom_dropbear.sh':
+  --custom-dropbear          Extract dropbear_v2019.78.tgz to firmware (Dropbear v2019.78 with Ed25519 support)
 ```
 
 </p>
@@ -262,6 +270,7 @@ Custom options for './custom-script/custom_dns_catcher.sh':
 [GEN2](https://vacuumz.info/download/gen2/)
 
 **Please note:** If you use one of the prebuild images, the root password is 'cleaner'.
+                 And it's better to change your password after that.
 
 ### Thanks
 * **https://github.com/dgiese/dustcloud**
