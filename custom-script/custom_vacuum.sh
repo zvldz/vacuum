@@ -69,6 +69,8 @@ function custom_function_08_vacuum() {
 
     echo "+ Prepare startup scripts"
 
+    mkdir -p "${IMG_DIR}/root/run.d"
+
     cat << EOF > "${IMG_DIR}/root/run_once.sh"
 #!/bin/sh
 date >> /root/vacuum.txt
@@ -97,7 +99,6 @@ EOF
 
     if [ -n "$ROOT_PASSWORD" ]; then
         echo "++ Added script to change password for root"
-        mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/change_root_pass.sh"
 #!/bin/sh
 echo "  - Set a password for root"
@@ -107,7 +108,6 @@ EOF
 
     if [ -n "$CUSTOM_USER" -a -n "$CUSTOM_USER_PASSWORD" -a ! -f "${IMG_DIR}/etc/inittab" ]; then
         echo "++ Added script to create custom user"
-        mkdir -p "${IMG_DIR}/root/run.d"
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
 echo "  - Create custom user"
