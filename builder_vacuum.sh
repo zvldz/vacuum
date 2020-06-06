@@ -231,9 +231,9 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
 fi
 
 if [ -r "${IMG_DIR}/opt/rockrobo/rr-release" ]; then
-    FW_VER=$(cat "${IMG_DIR}/opt/rockrobo/rr-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
+    FW_VER=$(cat "${IMG_DIR}/opt/rockrobo/rr-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
 elif [ -r "${IMG_DIR}/etc/os-release" ]; then
-    FW_VER=$(cat "${IMG_DIR}/etc/os-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)'| cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
+    FW_VER=$(cat "${IMG_DIR}/etc/os-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
 else
     FW_VER=0
 fi
