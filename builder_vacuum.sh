@@ -103,6 +103,7 @@ EOF
 
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$0")
+OUTDIR="${BASEDIR}/output"
 CUSTOM_PATH="${BASEDIR}/custom-script"
 FILES_PATH="${CUSTOM_PATH}/files"
 UNPACK_AND_MOUNT=0
@@ -255,29 +256,29 @@ else
 fi
 
 echo "+ Generate SSH Host Keys if necessary"
-if [ ! -r ssh_host_rsa_key ]; then
-    ssh-keygen -N "" -t rsa -f ssh_host_rsa_key
+if [ ! -r "${BASEDIR}/ssh_host_rsa_key" ]; then
+    ssh-keygen -N "" -t rsa -f "${BASEDIR}/ssh_host_rsa_key"
 fi
-if [ ! -r ssh_host_dsa_key ]; then
-    ssh-keygen -N "" -t dsa -f ssh_host_dsa_key
+if [ ! -r "${BASEDIR}/ssh_host_dsa_key" ]; then
+    ssh-keygen -N "" -t dsa -f "${BASEDIR}/ssh_host_dsa_key"
 fi
-if [ ! -r ssh_host_ecdsa_key ]; then
-    ssh-keygen -N "" -t ecdsa -f ssh_host_ecdsa_key
+if [ ! -r "${BASEDIR}/ssh_host_ecdsa_key" ]; then
+    ssh-keygen -N "" -t ecdsa -f "${BASEDIR}/ssh_host_ecdsa_key"
 fi
-if [ ! -r ssh_host_ed25519_key ]; then
-    ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
+if [ ! -r "${BASEDIR}/ssh_host_ed25519_key" ]; then
+    ssh-keygen -N "" -t ed25519 -f "${BASEDIR}/ssh_host_ed25519_key"
 fi
 
 echo "+ Replace ssh host keys"
 mkdir -p "${IMG_DIR}/etc/ssh"
-cat ssh_host_rsa_key > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
-cat ssh_host_rsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
-cat ssh_host_dsa_key > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
-cat ssh_host_dsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
-cat ssh_host_ecdsa_key > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
-cat ssh_host_ecdsa_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
-cat ssh_host_ed25519_key > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
-cat ssh_host_ed25519_key.pub > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
+cat "${BASEDIR}/ssh_host_rsa_key" > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key"
+cat "${BASEDIR}/ssh_host_rsa_key.pub" > "${IMG_DIR}/etc/ssh/ssh_host_rsa_key.pub"
+cat "${BASEDIR}/ssh_host_dsa_key" > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key"
+cat "${BASEDIR}/ssh_host_dsa_key.pub" > "${IMG_DIR}/etc/ssh/ssh_host_dsa_key.pub"
+cat "${BASEDIR}/ssh_host_ecdsa_key" > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key"
+cat "${BASEDIR}/ssh_host_ecdsa_key.pub" > "${IMG_DIR}/etc/ssh/ssh_host_ecdsa_key.pub"
+cat "${BASEDIR}/ssh_host_ed25519_key" > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key"
+cat "${BASEDIR}/ssh_host_ed25519_key.pub" > "${IMG_DIR}/etc/ssh/ssh_host_ed25519_key.pub"
 
 echo "+ Disable SSH firewall rule"
 sed -i -E '/    iptables -I INPUT -j DROP -p tcp --dport 22/s/^/#/g' "${IMG_DIR}/opt/rockrobo/watchdog/rrwatchdoge.conf"
@@ -289,11 +290,13 @@ custom_function
 echo "+ Discard unused blocks"
 fstrim "$IMG_DIR"
 
+install -d -m 0755 "$OUTDIR"
+
 if [ $ENABLE_DIFF -eq 1 ]; then
     echo "+ Create diff"
     mkdir -p "${IMG_DIR}.org"
     mount -o loop "${FW_DIR}/disk.img.org" ${IMG_DIR}.org
-    diff -ruN "${IMG_DIR}.org" "${IMG_DIR}" 2>/dev/null | sed "s@${FW_TMPDIR}@@g" > output/${FIRMWARE_BASENAME}.diff
+    diff -ruN "${IMG_DIR}.org" "${IMG_DIR}" 2>/dev/null | sed "s@${FW_TMPDIR}@@g" > ${OUTDIR}/${FIRMWARE_BASENAME}.diff
 fi
 
 umount_image
@@ -317,15 +320,14 @@ fi
 echo "Encrypt firmware"
 $CCRYPT -e -K "$PASSWORD_FW" "$PATCHED"
 
-echo "Copy firmware to output/${FIRMWARE_BASENAME} and creating checksums"
-install -d -m 0755 output
-install -m 0644 "${PATCHED}.cpt" "output/${FIRMWARE_BASENAME}"
+echo "Copy firmware to ${OUTDIR}/${FIRMWARE_BASENAME} and creating checksums"
+install -m 0644 "${PATCHED}.cpt" "${OUTDIR}/${FIRMWARE_BASENAME}"
 
-md5sum "output/${FIRMWARE_BASENAME}" > "output/${FIRMWARE_BASENAME}.md5"
-sed -i -r "s/ .*\/(.+)/  \1/g" "output/${FIRMWARE_BASENAME}.md5"
-chmod 0644 "output/${FIRMWARE_BASENAME}.md5"
+md5sum "${OUTDIR}/${FIRMWARE_BASENAME}" > "${OUTDIR}/${FIRMWARE_BASENAME}.md5"
+sed -i -r "s/ .*\/(.+)/  \1/g" "${OUTDIR}/${FIRMWARE_BASENAME}.md5"
+chmod 0644 "${OUTDIR}/${FIRMWARE_BASENAME}.md5"
 
-cat "output/${FIRMWARE_BASENAME}.md5"
+cat "${OUTDIR}/${FIRMWARE_BASENAME}.md5"
 echo "FINISHED"
 
 cleanup_and_exit
