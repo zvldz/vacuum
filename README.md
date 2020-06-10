@@ -14,7 +14,7 @@ Added functionality through custom scripts.
 
 
 ```
-Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--run-custom-script=SCRIPT|--help]
+Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]
 
 Custom parameters for './custom-script/custom_sound_remove.sh':
 [--remove-extra-sounds]
@@ -128,6 +128,8 @@ Options:
   -f, --firmware=PATH        Path to firmware file
   --unpack-and-mount         Only unpack and mount image
   --resize-root-fs=FS_SIZE   Resize root fs to FS_SIZE.
+  --diff                     Create diff between original and modified image.
+                             This will temporarily take up more disk space.
   --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
 
 Each parameter that takes a file as an argument accepts path in any form
