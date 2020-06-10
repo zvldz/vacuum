@@ -23,6 +23,13 @@ function umount_image() {
        echo "waiting for unmount..."
        sleep 2
     done
+
+    if [ -d "${IMG_DIR}.org" ]; then
+        while [ $(umount "${IMG_DIR}.org"; echo $?) -ne 0 ]; do
+           echo "waiting for unmount..."
+           sleep 2
+       done
+    fi
 }
 
 function cleanup_and_exit() {
@@ -70,7 +77,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--run-custom-script=SCRIPT|--help]"
+    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
@@ -82,6 +89,8 @@ Options:
   -f, --firmware=PATH        Path to firmware file
   --unpack-and-mount         Only unpack and mount image
   --resize-root-fs=FS_SIZE   Resize root fs to FS_SIZE.
+  --diff                     Create diff between original and modified image.
+                             This will temporarily take up more disk space.
   --run-custom-script=SCRIPT Run custom script (if 'ALL' run all scripts from custom-script)
 
 Each parameter that takes a file as an argument accepts path in any form
@@ -133,6 +142,9 @@ while [ -n "$1" ]; do
                 cleanup_and_exit 1
             fi
             shift
+            ;;
+        *-diff)
+            ENABLE_DIFF=1
             ;;
         *-run-custom-script)
             CUSTOM_SCRIPT="$ARG"
@@ -230,6 +242,10 @@ if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     exit 0
 fi
 
+if [ $ENABLE_DIFF -eq 1 ]; then
+    cp "${FW_DIR}/disk.img" "${FW_DIR}/disk.img.org"
+fi
+
 if [ -r "${IMG_DIR}/opt/rockrobo/rr-release" ]; then
     FW_VER=$(cat "${IMG_DIR}/opt/rockrobo/rr-release" | grep -E '^(ROBOROCK_VERSION|ROCKROBO_VERSION)' | cut -f2 -d= | cut -f2 -d_ | sed -E 's/^0+//')
 elif [ -r "${IMG_DIR}/etc/os-release" ]; then
@@ -272,6 +288,13 @@ custom_function
 
 echo "+ Discard unused blocks"
 fstrim "$IMG_DIR"
+
+if [ $ENABLE_DIFF -eq 1 ]; then
+    echo "+ Create diff"
+    mkdir -p "${IMG_DIR}.org"
+    mount -o loop "${FW_DIR}/disk.img.org" ${IMG_DIR}.org
+    diff -ruN "${IMG_DIR}.org" "${IMG_DIR}" 2>/dev/null | sed "s@${FW_TMPDIR}@@g" > output/${FIRMWARE_BASENAME}.diff
+fi
 
 umount_image
 
