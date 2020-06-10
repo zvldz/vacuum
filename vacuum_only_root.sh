@@ -11,4 +11,5 @@ export ROOT_ONLY=1
                         --root-pass=cleaner \
                         --custom-user=cleaner \
                         --custom-user-pass=cleaner \
+                        --diff \
                         -f "$1"
