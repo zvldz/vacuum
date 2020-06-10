@@ -6,7 +6,6 @@ e2fsck      | http://ports.ubuntu.com/pool/main/e/e2fsprogs/e2fsprogs_1.42.9-3ub
 e2undo      | http://ports.ubuntu.com/pool/main/e/e2fsprogs/e2fsprogs_1.42.9-3ubuntu1.2_armhf.deb
 resize2fs   | http://ports.ubuntu.com/pool/main/e/e2fsprogs/e2fsprogs_1.42.9-3ubuntu1.2_armhf.deb
 tune2fs     | http://ports.ubuntu.com/pool/main/e/e2fsprogs/e2fsprogs_1.42.9-3ubuntu1.2_armhf.deb
-curl        | http://ports.ubuntu.com/pool/main/c/curl/curl_7.22.0-3ubuntu4.17_armhf.deb
 dropbear    | http://ports.ubuntu.com/ubuntu-ports/pool/universe/d/dropbear/dropbear-bin_2016.72-1_armhf.deb
 file        | https://ftp.igh.cnrs.fr/pub/ubuntu-ports/pool/main/f/file/file_5.14-2ubuntu3.3_armhf.deb
 libmagic    | https://ftp.igh.cnrs.fr/pub/ubuntu-ports/pool/main/f/file/libmagic1_5.14-2ubuntu3.3_armhf.deb
