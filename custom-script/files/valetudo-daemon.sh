@@ -9,10 +9,17 @@ while :; do
         sleep 20
         echo " done."
     fi
-    echo '|/bin/false' > /proc/sys/kernel/core_pattern
-    if [ -f "/root/bin/busybox" ]; then
-        /root/bin/busybox ionice -c3 nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+
+    pidof SysUpdate > /dev/null  2>&1
+    if [ $? -ne 0 ]; then
+    echo "Running Valetudo"
+        echo '|/bin/false' > /proc/sys/kernel/core_pattern
+        if [ -f "/root/bin/busybox" ]; then
+            /root/bin/busybox ionice -c3 nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+        else
+            nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+        fi
     else
-        nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+    echo "Waiting for SysUpdate to finish..."
     fi
 done
