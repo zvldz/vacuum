@@ -60,8 +60,8 @@ function custom_function_01_unprovisioned() {
 
         if [ "$WIFIMODE" = "wpa2psk" ]; then
             if [ -z "$SSID" ]; then
-            echo "-- No SSID given, please use --ssid YOURSSID"
-            cleanup_and_exit 1
+                echo "-- No SSID given, please use --ssid YOURSSID"
+                cleanup_and_exit 1
             fi
 
             if [ -z "$PSK" ]; then
@@ -69,17 +69,23 @@ function custom_function_01_unprovisioned() {
                 cleanup_and_exit 1
             fi
 
-            mkdir "${IMG_DIR}/opt/unprovisioned"
-            install -m 0755 "${FILES_PATH}/unprovisioned/start_wifi.sh" "${IMG_DIR}/opt/unprovisioned"
+            if [ ! -f "${IMG_DIR}/etc/inittab" ]; then
+                echo "++ Ubuntu mode"
+                mkdir "${IMG_DIR}/opt/unprovisioned"
+                install -m 0755 "${FILES_PATH}/unprovisioned/start_wifi.sh" "${IMG_DIR}/opt/unprovisioned"
 
-            sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
-            cat "${FILES_PATH}/unprovisioned/rc.local" >> "${IMG_DIR}/etc/rc.local"
-            echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
+                sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+                cat "${FILES_PATH}/unprovisioned/rc.local" >> "${IMG_DIR}/etc/rc.local"
+                echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
 
-            install -m 0644 "${FILES_PATH}/unprovisioned/wpa_supplicant.conf.wpa2psk" "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
+                install -m 0644 "${FILES_PATH}/unprovisioned/wpa_supplicant.conf.wpa2psk" "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
 
-            sed -i 's/#SSID#/'"$SSID"'/g' "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
-            sed -i 's/#PSK#/'"$PSK"'/g'   "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
+                sed -i 's/#SSID#/'"$SSID"'/g' "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
+                sed -i 's/#PSK#/'"$PSK"'/g'   "${IMG_DIR}/opt/unprovisioned/wpa_supplicant.conf"
+            else
+                echo "++ OpenWRT mode"
+                echo "== Script will be added"
+            fi
         fi
     fi
 }

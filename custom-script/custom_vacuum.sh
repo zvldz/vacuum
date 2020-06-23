@@ -73,6 +73,7 @@ function custom_function_08_vacuum() {
 
     cat << EOF > "${IMG_DIR}/root/run_once.sh"
 #!/bin/sh
+
 date >> /root/vacuum.txt
 
 mkdir -p /mnt/data/root
@@ -101,6 +102,7 @@ EOF
         echo "++ Added script to change password for root"
         cat << EOF > "${IMG_DIR}/root/run.d/change_root_pass.sh"
 #!/bin/sh
+
 echo "  - Set a password for root"
 echo "root:$ROOT_PASSWORD" | chpasswd
 EOF
@@ -110,6 +112,7 @@ EOF
         echo "++ Added script to create custom user"
         cat << EOF > "${IMG_DIR}/root/run.d/create_custom_user.sh"
 #!/bin/sh
+
 echo "  - Create custom user"
 if [ -f /usr/sbin/newusers ]; then
     echo "$CUSTOM_USER:$CUSTOM_USER_PASSWORD::::/home/$CUSTOM_USER:/bin/bash" | newusers
@@ -124,7 +127,7 @@ EOF
     if [ -f "${IMG_DIR}/etc/inittab" ]; then
         echo "++ Added script to convert openssh host key to dropbear"
         cat << EOF > "${IMG_DIR}/root/run.d/openssh2dropbear.sh"
-#!/bin/bash
+#!/bin/sh
 
 echo "  - Convert openssh host keys to dropbear"
 mkdir -p /etc/dropbear
@@ -133,6 +136,35 @@ mkdir -p /etc/dropbear
 /usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_ecdsa_key /etc/dropbear/dropbear_ecdsa_host_key
 /usr/lib/dropbear/dropbearconvert openssh dropbear /etc/ssh/ssh_host_ed25519_key /etc/dropbear/dropbear_ed25519_host_key
 EOF
+
+        if [ $UNPROVISIONED -eq 1 ]; then
+            echo "++ Added script for unprovisioned mode(OpenWRT)"
+            cat << EOF > "${IMG_DIR}/root/run.d/0_unprovisioned.sh"
+#!/bin/sh
+WIFI_CONF="/mnt/data/miio/wifi.conf"
+UID=""
+
+if [ -f \$WIFI_CONF ]; then
+    echo "  - Get uid from \$WIFI_CONF"
+    UID=\`cat \$WIFI_CONF | grep uid | cut -f2 -d=\`
+fi
+
+if [ -z "\$UID" ]; then
+    echo "  - Get uid from /mnt/data/miio/device.uid"
+    UID=\`cat /mnt/data/miio/device.uid 2>/dev/null | grep -E "[0-9]+"\`
+fi
+
+if [ -z "\$UID" ]; then
+    echo "  - Random uid generation"
+    UID=\`head -c 1024 /dev/urandom | tr -d -c '0-9' | cut -c1-10\`
+fi
+
+echo "ssid=\"$SSID\"" > \$WIFI_CONF
+echo "psk=\"$PSK\"" >> \$WIFI_CONF
+echo "key_mgmt=WPA" >> \$WIFI_CONF
+echo "uid=\$UID" >> \$WIFI_CONF
+EOF
+        fi
     fi
 
     if [ $ENABLE_RANDOM_PHRASES -eq 1 ]; then
