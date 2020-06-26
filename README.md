@@ -280,3 +280,5 @@ Custom options for './custom-script/custom_dropbear.sh':
 * _https://github.com/Hypfer/Valetudo_
 * https://github.com/rand256/valetudo
 * https://github.com/LazyT/rrcc
+* https://github.com/TheLastProject/lovelace-valetudo-map-card
+* https://github.com/denysdovhan/vacuum-card
