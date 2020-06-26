@@ -237,6 +237,9 @@ if [ -n "$RESIZE_ROOT_FS" ]; then
 fi
 
 mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
+if [ $? -ne 0 ]; then
+    cleanup_and_exit 1
+fi
 
 if [ $UNPACK_AND_MOUNT -eq 1 ]; then
     echo "Image mounted to $IMG_DIR"
