@@ -238,6 +238,7 @@ fi
 
 mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
 if [ $? -ne 0 ]; then
+    echo "Can't mount image"
     cleanup_and_exit 1
 fi
 

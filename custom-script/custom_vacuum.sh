@@ -248,13 +248,16 @@ if [ -d /etc/profile.d ]; then
     unset i
 fi
 EOF
+
+        echo "+ Setting hostname in dhcp request(fw 2008+)"
+        sed -i -E 's/udhcpc -b -i wlan0/udhcpc -b -i wlan0 -x hostname:\$\(cat \/etc\/hostname) -F \$\(cat \/etc\/hostname\)/g' "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
     fi
 
     if [ $ENABLE_VALETUDO_RE -eq 1 ]; then
         VALETUDO_VER=`fgrep  -a -m1 -A1 '"name": "valetudo' "${VALETUDO_RE_PATH}/valetudo" | tail -n1 | sed -E 's/.*version": "(.*)".*/\1/' | tr "." "_" 2>/dev/null`
     elif [ $ENABLE_VALETUDO -eq 1 ]; then
         VALETUDO_VER=`fgrep  -a -m1 -A1 '"name": "valetudo' "${VALETUDO_PATH}/valetudo" | tail -n1 | sed -E 's/.*version": "(.*)".*/\1/' | tr "." "_" 2>/dev/null`
-	fi
+    fi
 
     [ -z "$VALETUDO_VER" ] && VALETUDO_VER="UNK"
 
