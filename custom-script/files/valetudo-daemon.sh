@@ -12,7 +12,7 @@ while :; do
 
     pidof SysUpdate > /dev/null  2>&1
     if [ $? -ne 0 ]; then
-    echo "Running Valetudo"
+        echo "Running Valetudo"
         echo '|/bin/false' > /proc/sys/kernel/core_pattern
         if [ -f "/root/bin/busybox" ]; then
             /root/bin/busybox ionice -c3 nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
