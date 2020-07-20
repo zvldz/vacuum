@@ -20,6 +20,6 @@ while :; do
             nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
         fi
     else
-    echo "Waiting for SysUpdate to finish..."
+        echo "Waiting for SysUpdate to finish..."
     fi
 done
