@@ -16,7 +16,7 @@ function custom_print_usage_08_vacuum() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
-[--root-password=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
+[--root-password=PASSWORD|--custom-user=USER|--custom-user-password=PASSWORD|
 --convert2prc|--convert2eu]
 EOF
 }
@@ -25,11 +25,11 @@ function custom_print_help_08_vacuum() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --root-pass=PASSWORD         Set password for root and custom user
-  --custom-user=USER           Add custom user
-  --custom-user-pass=PASSWORD  Set password for custom user
-  --convert2prc                Convert to Mainland China region
-  --convert2eu                 Convert to EU region
+  --root-password=PASSWORD         Set password for root and custom user
+  --custom-user=USER               Add custom user
+  --custom-user-password=PASSWORD  Set password for custom user
+  --convert2prc                    Convert to Mainland China region
+  --convert2eu                     Convert to EU region
 EOF
 }
 
