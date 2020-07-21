@@ -16,7 +16,7 @@ function custom_print_usage_08_vacuum() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
-[--root-password=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
+[--root-pass=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
 --convert2prc|--convert2eu]
 EOF
 }

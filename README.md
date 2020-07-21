@@ -117,7 +117,7 @@ Custom parameters for './custom-script/custom_dns_catcher.sh':
 [--enable-dns-catcher]
 
 Custom parameters for './custom-script/custom_vacuum.sh':
-[--root-password=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
+[--root-pass=PASSWORD|--custom-user=USER|--custom-user-pass=PASSWORD|
 --convert2prc|--convert2eu]
 
 Custom parameters for './custom-script/custom_dropbear.sh':
