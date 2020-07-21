@@ -247,11 +247,11 @@ Custom options for './custom-script/custom_dns_catcher.sh':
   --enable-dns-catcher       Redirect and spoof outgoing dns requests(for xiaomi servers)
 
 Custom options for './custom-script/custom_vacuum.sh':
-  --root-password=PASSWORD     Set password for root and custom user
-  --custom-user=USER           Add custom user
-  --custom-user-pass=PASSWORD  Set password for custom user
-  --convert2prc                Convert to Mainland China region
-  --convert2eu                 Convert to EU region
+  --root-password=PASSWORD         Set password for root and custom user
+  --custom-user=USER               Add custom user
+  --custom-user-password=PASSWORD  Set password for custom user
+  --convert2prc                    Convert to Mainland China region
+  --convert2eu                     Convert to EU region
 
 Custom options for './custom-script/custom_dropbear.sh':
   --custom-dropbear          Extract dropbear_v2019.78.tgz to firmware (Dropbear v2019.78 with Ed25519 support)
