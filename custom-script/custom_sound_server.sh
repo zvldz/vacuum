@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Install sound server
+# Based on the article https://habr.com/ru/post/435064/
 
 LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_sound_server")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_sound_server")
