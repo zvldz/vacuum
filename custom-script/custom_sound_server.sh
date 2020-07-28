@@ -48,6 +48,8 @@ function custom_function_01_sound_server() {
 
         install -D -m 0755 "${FILES_PATH}/sound_server/sound_server.pl" "${IMG_DIR}/usr/local/bin/sound_server.pl"
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
+            echo "!! not working for fw 2008+(maybe temporarily)"
+            cleanup_and_exit 2
             install -m 0755  "${FILES_PATH}/sound_server/S12soundserver" "${IMG_DIR}/etc/init/S12soundserver"
         else
             install -m 0644 "${FILES_PATH}/sound_server/soundserver.conf" "${IMG_DIR}/etc/init/soundserver.conf"
