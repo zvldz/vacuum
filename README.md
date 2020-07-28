@@ -152,6 +152,9 @@ Custom options for './custom-script/custom_bin_addon.sh':
 Custom options for './custom-script/custom_bin_addon_sox.sh':
   --enable-addon-sox         Extract sox.tgz to firmware (SoX console audio player)
 
+Custom options for './custom-script/custom_sound_server.sh':
+  --enable-sound-server      Enable playing sounds over network (via SoX)
+
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
 
