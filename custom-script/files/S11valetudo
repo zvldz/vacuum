@@ -9,7 +9,7 @@ load() {
 unload() {
     echo "stopping valetudo" >/dev/kmsg
     start-stop-daemon -K -q -p /var/run/valetudo-daemon.pid
-    while killall valetudo; do sleep 1; done
+    while killall valetudo 2>/dev/null; do sleep 1; done
 }
 
 status() {
