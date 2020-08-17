@@ -153,7 +153,8 @@ Custom options for './custom-script/custom_bin_addon_sox.sh':
   --enable-addon-sox         Extract sox.tgz to firmware (SoX console audio player)
 
 Custom options for './custom-script/custom_sound_server.sh':
-  --enable-sound-server      Enable playing sounds over network (via SoX)
+  --enable-sound-server      Enable playing sounds over network (via SoX).
+                             Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant.
 
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
