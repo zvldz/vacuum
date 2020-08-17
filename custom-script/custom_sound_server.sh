@@ -20,14 +20,14 @@ function custom_print_help_01_sound_server() {
     cat << EOF
 
 Custom options for '${BASH_SOURCE[0]}':
-  --enable-sound-server  Enable playing sounds over network
-
-Example of usage (python3):
-  import socket
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  s.connect((%ip%, 7777))
-  s.sendall(b'http://%local_ip%:%local_port%/test.mp3;')
-  s.close()
+  --enable-sound-server  Enable playing sounds over network (via SoX)
+                         Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant
+                         Example of usage (python3):
+                         import socket
+                         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                         s.connect((%ip%, 7777))
+                         s.sendall(b'http://%local_ip%:%local_port%/test.mp3;')
+                         s.close()
 EOF
 }
 
