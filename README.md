@@ -76,6 +76,9 @@ Custom parameters for './custom-script/custom_off_logs.sh':
 Custom parameters for './custom-script/custom_off_updates.sh':
 [--disable-firmware-updates]
 
+Custom parameters for './custom-script/custom_oucher.sh':
+[--enable-oucher]
+
 Custom parameters for './custom-script/custom_protect_ap.sh':
 [--protect-ap=PASSWORD]
 
@@ -93,6 +96,9 @@ Custom parameters for './custom-script/custom_rrlogd_patcher.sh':
 
 Custom parameters for './custom-script/custom_sound.sh':
 [--soundfile=english.pkg]
+
+Custom parameters for './custom-script/custom_sound_server.sh':
+[--enable-sound-server]
 
 Custom parameters for './custom-script/custom_add_ssh_keys.sh':
 [--public-key=id_rsa.pub]
@@ -152,10 +158,6 @@ Custom options for './custom-script/custom_bin_addon.sh':
 Custom options for './custom-script/custom_bin_addon_sox.sh':
   --enable-addon-sox         Extract sox.tgz to firmware (SoX console audio player)
 
-Custom options for './custom-script/custom_sound_server.sh':
-  --enable-sound-server      Enable playing sounds over network (via SoX).
-                             Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant.
-
 Custom options for './custom-script/custom_binding.sh':
   --enable-binding           Adding keybinding for bash
 
@@ -203,6 +205,9 @@ Custom options for './custom-script/custom_off_logs.sh':
 Custom options for './custom-script/custom_off_updates.sh':
   --disable-firmware-updates Disable xiaomi servers using hosts file for firmware updates
 
+Custom options for './custom-script/custom_oucher.sh':
+  --enable-oucher            Enable 'oucher' (https://github.com/porech/roborock-oucher)
+
 Custom options for './custom-script/custom_protect_ap.sh':
   --protect-ap=PASSWORD      Protect the AP with a password
 
@@ -222,6 +227,16 @@ Custom options for './custom-script/custom_rrlogd_patcher.sh':
 
 Custom options for './custom-script/custom_sound.sh':
   -s, --soundfile=PATH       Path to sound file
+
+Custom options for './custom-script/custom_sound_server.sh':
+  --enable-sound-server      Enable playing sounds over network (via SoX)
+                             Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant
+                             Example of usage (python3):
+                             import socket
+                             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                             s.connect((%ip%, 7777))
+                             s.sendall(b'http://%local_ip%:%local_port%/test.mp3;')
+                             s.close()
 
 Custom options for './custom-script/custom_add_ssh_keys.sh':
   -k, --public-key=PATH      Path to ssh public key to be added to authorized_keys file

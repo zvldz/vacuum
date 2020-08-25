@@ -186,6 +186,22 @@ crontab -l | { sed '/phrases.sh/d'; echo "${RANDOM_PHRASES_CRON} ${VOLUME_OVERRI
 EOF
     fi
 
+    if [ $ENABLE_OUCHER -eq 1 ]; then
+        echo "++ Added script for init 'oucher'"
+        mkdir -p "${IMG_DIR}/root/run.d"
+        cat << EOF > "${IMG_DIR}/root/run.d/init_oucher.sh"
+#!/bin/bash
+
+mkdir -p /mnt/data/oucher/sounds
+
+if [ -f "/mnt/data/oucher/oucher.yml" ]; then
+    rm /root/oucher.yml
+else
+    mv /root/oucher.yml /mnt/data/oucher/
+fi
+EOF
+    fi
+
     if [ $CONVERT_2_PRC -eq 1 ]; then
         echo "++ Added script for change region to Mainland China"
         mkdir -p "${IMG_DIR}/root/run.d"

@@ -25,3 +25,5 @@
 - Update dropbear to v2016.72 (for fw 2008+)
 - Added custom dropbear v2019.78 with support Ed25519 (for fw 2008+)
 - Added --diff. Create diff between original and modified image.
+- Added sound server. Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant
+- Added 'oucher' (https://github.com/porech/roborock-oucher).

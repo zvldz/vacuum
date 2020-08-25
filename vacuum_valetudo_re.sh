@@ -33,5 +33,6 @@ fi
                         --enable-local-ota \
                         --resize-root-fs=522240 \
                         --custom-dropbear \
+                        --enable-sound-server \
                         --diff \
                         -f "$1"
