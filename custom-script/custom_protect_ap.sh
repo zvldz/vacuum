@@ -41,8 +41,9 @@ function custom_function_01_protect_ap() {
             sed -i "s/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap --daemon/create_ap -c \$channel -n wlan0 -g 192.168.8.1 \$ssid_ap $AP_PSK --daemon/g" \
                 "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
         else
-            echo "+ Setting password for AP(fw 2008+) (Not tested !!!)"
-            sed -i -E "s/(.*hw_mode=b.*)/\1\n        echo \"wpa_passphrase=$AP_PSK\" >> \${HOSTAPD_CONF}/" "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
+            echo "+ Setting password for AP(fw 2008+)"
+            # See https://wiki.gentoo.org/wiki/Hostapd for configuration options
+            sed -i -E "s/(.*hw_mode=b.*)/\1\n        echo \"auth_algs=1\" >> \${HOSTAPD_CONF}\n        echo \"wpa=2\" >> \${HOSTAPD_CONF}\n        echo \"wpa_key_mgmt=WPA-PSK\" >> \${HOSTAPD_CONF}\n        echo \"rsn_pairwise=CCMP\" >> \${HOSTAPD_CONF}\n        echo \"wpa_passphrase=$AP_PSK\" >> \${HOSTAPD_CONF}/" "${IMG_DIR}/opt/rockrobo/wlan/wifi_start.sh"
         fi
     fi
 }
