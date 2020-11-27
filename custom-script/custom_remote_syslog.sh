@@ -40,7 +40,7 @@ function custom_function_01_remote_syslog() {
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
             sed -i "s/SYSLOGD_ARGS=-n/SYSLOGD_ARGS=\"-n -R $SYSLOG_SERVER -L -O \/var\/log\/messages\"/" "${IMG_DIR}/etc/init/S01logging"
         else
-            echo "*.* $SYSLOG_SERVER" >> "${IMG_DIR}/etc/rsyslog.conf"
+            echo "*.* @$SYSLOG_SERVER" >> "${IMG_DIR}/etc/rsyslog.conf"
         fi
     fi
 }
