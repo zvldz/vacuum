@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Install custom sound files
 
-LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01sound")
+LIST_CUSTOM_PRINT_USAGE+=("custom_print_usage_01_sound")
 LIST_CUSTOM_PRINT_HELP+=("custom_print_help_01_sound")
 LIST_CUSTOM_PARSE_ARGS+=("custom_parse_args_01_sound")
 LIST_CUSTOM_FUNCTION+=("custom_function_01_sound")
 
-function custom_print_usage_01sound() {
+function custom_print_usage_01_sound() {
     cat << EOF
 
 Custom parameters for '${BASH_SOURCE[0]}':
