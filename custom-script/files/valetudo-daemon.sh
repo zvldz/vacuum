@@ -2,6 +2,8 @@
 
 mkdir -p /var/log/upstart
 
+export VALETUDO_CONFIG_PATH=/mnt/data/valetudo/valetudo_config.json
+
 while :; do
     sleep 5
     if [ `cut -d. -f1 /proc/uptime` -lt 300 ]; then
@@ -19,10 +21,10 @@ while :; do
                 # Make valetudo very likely to get killed when out of memory
                 echo 1000 > /proc/self/oom_score_adj
                 # Also run it with absolutely lowest CPU and I/O priority to not disturb anything critical on robot
-                exec VALETUDO_CONFIG_PATH=/mnt/data/valetudo/valetudo_config.json /root/bin/busybox ionice -c3 nice -n19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+                /root/bin/busybox ionice -c3 nice -n19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
             )
         else
-            VALETUDO_CONFIG_PATH=/mnt/data/valetudo/valetudo_config.json nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
+            nice -n 19 /usr/local/bin/valetudo >> /var/log/upstart/valetudo.log 2>&1
         fi
     else
         echo "Waiting for SysUpdate to finish..."
