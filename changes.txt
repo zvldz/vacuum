@@ -27,3 +27,4 @@
 - Added --diff. Create diff between original and modified image.
 - Added sound server. Can be used with [ha-sox](https://github.com/definitio/ha-sox) component for Home Assistant
 - Added 'oucher' (https://github.com/porech/roborock-oucher).
+- Allow non-root use of script (Thanks @alex-sever-h).

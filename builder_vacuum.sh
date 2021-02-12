@@ -19,16 +19,38 @@
 #
 
 function umount_image() {
-    while [ $(umount "$IMG_DIR"; echo $?) -ne 0 ]; do
+    if [ $EUID -ne 0 ]; then
+        UMOUNT="guestunmount"
+        pid="$(cat guestmount.pid)"
+    else
+        UMOUNT="umount"
+    fi
+
+    while [ $($UMOUNT "$IMG_DIR"; echo $?) -ne 0 ]; do
        echo "waiting for unmount..."
        sleep 2
     done
 
     if [ -d "${IMG_DIR}.org" ]; then
-        while [ $(umount "${IMG_DIR}.org"; echo $?) -ne 0 ]; do
+        while [ $($UMOUNT "${IMG_DIR}.org"; echo $?) -ne 0 ]; do
            echo "waiting for unmount..."
            sleep 2
-       done
+        done
+    fi
+
+    if [ $EUID -ne 0 ]; then
+        timeout=10
+
+        count=$timeout
+        while kill -0 "$pid" 2>/dev/null && [ $count -gt 0 ]; do
+            sleep 1
+            ((count--))
+        done
+        if [ $count -eq 0 ]; then
+            echo "$0: wait for guestmount to exit failed after $timeout seconds"
+            exit 1
+        fi
+        rm guestmount.pid
     fi
 }
 
@@ -77,7 +99,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]"
+    echo "Usage: ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
@@ -186,8 +208,14 @@ while [ -n "$1" ]; do
 done
 
 if [ $EUID -ne 0 ]; then
-    echo "You need root privileges to execute this script"
-    cleanup_and_exit 1
+    echo "You don't have root privileges, so using guestmount in script."
+    command -v guestmount > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "guestmount not found! Please install it (e.g. by (apt|dnf|zypper) install libguestfs-tools)"
+        cleanup_and_exit 1
+    fi
+else
+    echo "You have root privileges, so using normal mount in script"
 fi
 
 if [[ $OSTYPE == darwin* ]]; then
@@ -236,9 +264,21 @@ if [ -n "$RESIZE_ROOT_FS" ]; then
     resize2fs "${FW_DIR}/disk.img" $RESIZE_ROOT_FS
 fi
 
-mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
+if [ $EUID -ne 0 ]; then
+    guestmount -a "${FW_DIR}/disk.img" -m /dev/sda --pid-file guestmount.pid "$IMG_DIR"
+else
+    mount -o loop "${FW_DIR}/disk.img" "$IMG_DIR"
+fi
+
 if [ $? -ne 0 ]; then
+    echo
     echo "Can't mount image"
+    if [ $EUID -ne 0 ]; then
+        echo "If you are using Ubuntu, try the command:"
+        echo "sudo chmod +r /boot/vmlinuz*"
+        echo "The kernel must be readable for 'guestmount' to work."
+        echo "If that doesn't work, run it as root"
+    fi
     cleanup_and_exit 1
 fi
 
@@ -292,17 +332,24 @@ sed -i -E 's/iptables/true    /' "${IMG_DIR}/opt/rockrobo/watchdog/WatchDoge"
 # Run custom scripts
 custom_function
 
-echo "+ Discard unused blocks"
-fstrim "$IMG_DIR"
+if [ $EUID -eq 0 ]; then
+    echo "+ Discard unused blocks"
+    fstrim "$IMG_DIR"
+fi
 
 install -d -m 0755 "$OUTDIR"
 
 if [ $ENABLE_DIFF -eq 1 ]; then
     echo "+ Create diff"
     mkdir -p "${IMG_DIR}.org"
-    mount -o loop "${FW_DIR}/disk.img.org" ${IMG_DIR}.org
+    if [ $EUID -ne 0 ]; then
+        guestmount -a "${FW_DIR}/disk.img.org" -m /dev/sda "$IMG_DIR.org"
+    else
+        mount -o loop "${FW_DIR}/disk.img.org" ${IMG_DIR}.org
+    fi
     diff -ruN "${IMG_DIR}.org" "${IMG_DIR}" 2>/dev/null | sed "s@${FW_TMPDIR}@@g" > ${OUTDIR}/${FIRMWARE_BASENAME}.diff
 fi
+
 
 umount_image
 
