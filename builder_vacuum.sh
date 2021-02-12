@@ -209,9 +209,11 @@ done
 
 if [ $EUID -ne 0 ]; then
     echo "You don't have root privileges, so using guestmount in script."
-    command -v guestmount > /dev/null ||
-        (echo "guestmount not found! Please install it (e.g. by (apt|dnf|zypper) install libguestfs-tools)" &&
-             cleanup_and_exit 1)
+    command -v guestmount > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "guestmount not found! Please install it (e.g. by (apt|dnf|zypper) install libguestfs-tools)"
+        cleanup_and_exit 1
+    fi
 else
     echo "You have root privileges, so using normal mount in script"
 fi
@@ -269,7 +271,14 @@ else
 fi
 
 if [ $? -ne 0 ]; then
+    echo
     echo "Can't mount image"
+    if [ $EUID -ne 0 ]; then
+        echo "If you are using Ubuntu, try the command:"
+        echo "sudo chmod +r /boot/vmlinuz*"
+        echo "The kernel must be readable for 'guestmount' to work."
+        echo "If that doesn't work, run it as root"
+    fi
     cleanup_and_exit 1
 fi
 
