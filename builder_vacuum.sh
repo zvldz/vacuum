@@ -99,7 +99,7 @@ function custom_function() {
 }
 
 function print_usage() {
-    echo "Usage: sudo ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]"
+    echo "Usage: ./$(basename $0) --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]"
     custom_print_usage
 }
 
