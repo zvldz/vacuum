@@ -14,7 +14,7 @@ Added functionality through custom scripts.
 
 
 ```
-Usage: sudo ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]
+Usage: ./builder_vacuum.sh --firmware=v11_003194.pkg [--unpack-and-mount|--resize-root-fs=FS_SIZE|--diff|--run-custom-script=SCRIPT|--help]
 
 Custom parameters for './custom-script/custom_sound_remove.sh':
 [--remove-extra-sounds]
