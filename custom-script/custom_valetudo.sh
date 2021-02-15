@@ -60,14 +60,13 @@ function custom_function_05_valetudo() {
         echo "+ Installing Valetudo"
 
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
-            install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
-            install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+            install -m 0755  "${FILES_PATH}/valetudo/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+            install -D -m 0755  "${FILES_PATH}/valetudo/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
         else
             if [ -f "${VALETUDO_PATH}/deployment/valetudo.conf" ]; then
                 install -m 0644 "${VALETUDO_PATH}/deployment/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
             else
-                echo "!! ${VALETUDO_PATH}/deployment/valetudo.conf not found. Please download it."
-                cleanup_and_exit 2
+                install -m 0644 "${FILES_PATH}/valetudo/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
             fi
         fi
 
@@ -77,8 +76,7 @@ function custom_function_05_valetudo() {
             if [ -f "${VALETUDO_PATH}/deployment/etc/hosts" ]; then
                 cat "${VALETUDO_PATH}/deployment/etc/hosts" >> "${IMG_DIR}/etc/hosts"
             else
-                echo "!! ${VALETUDO_PATH}/deployment/etc/hosts not found. Please download it."
-                cleanup_and_exit 2
+                cat "${FILES_PATH}/valetudo/etc/hosts" >> "${IMG_DIR}/etc/hosts"
             fi
         fi
 
@@ -88,8 +86,10 @@ function custom_function_05_valetudo() {
             echo >> "${IMG_DIR}/etc/rc.local"
             echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
         else
-            echo "!! ${VALETUDO_PATH}/deployment/etc/rc.local not found. Please download it."
-            cleanup_and_exit 2
+            sed -i 's/exit 0//' "${IMG_DIR}/etc/rc.local"
+            cat "${FILES_PATH}/valetudo/etc/rc.local" >> "${IMG_DIR}/etc/rc.local"
+            echo >> "${IMG_DIR}/etc/rc.local"
+            echo "exit 0" >> "${IMG_DIR}/etc/rc.local"
         fi
     fi
 }

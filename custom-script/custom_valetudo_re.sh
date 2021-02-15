@@ -81,8 +81,8 @@ function custom_function_05_valetudo_re() {
         fi
 
         if [ -f "${IMG_DIR}/etc/inittab" ]; then
-            install -m 0755  "${FILES_PATH}/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
-            install -D -m 0755  "${FILES_PATH}/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
+            install -m 0755  "${FILES_PATH}/valetudo/S11valetudo" "${IMG_DIR}/etc/init/S11valetudo"
+            install -D -m 0755  "${FILES_PATH}/valetudo/valetudo-daemon.sh" "${IMG_DIR}/usr/local/bin/valetudo-daemon.sh"
         else
             if [ -f "${VALETUDO_RE_PATH}/valetudo.conf" ]; then
                 install -m 0644 "${VALETUDO_RE_PATH}/valetudo.conf" "${IMG_DIR}/etc/init/valetudo.conf"
