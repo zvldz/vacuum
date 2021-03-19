@@ -47,9 +47,10 @@ while(1)
         close FILE;
     }
     if ($urls[0] ne '' && $urls[0] ne 'None') {
-        my $real_volume = $volume * 2;
         system("killall -s 9 play > /dev/null 2>&1");
-        system("play -q -v $real_volume " . $urls[0] . " &");
+        if ($urls[0] ne 'stop') {
+            system("play -q -v " . $volume * 2 . " " . $urls[0] . " &");
+        }
     }
     $playing = system("ps aux | grep -e '[ ]play ' >/dev/null") == 0 ? 'True' : 'False';
     $client_socket->send("playing=$playing;volume=$volume");
