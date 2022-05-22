@@ -49,7 +49,7 @@ while(1)
     if ($urls[0] ne '' && $urls[0] ne 'None') {
         system("killall -s 9 play > /dev/null 2>&1");
         if ($urls[0] ne 'stop') {
-            system("play -q -v " . $volume * 2 . " " . $urls[0] . " &");
+            system("play -q -v " . $volume * 2 . " \"$urls[0]\" &");
         }
     }
     $playing = system("ps aux | grep -e '[ ]play ' >/dev/null") == 0 ? 'True' : 'False';
