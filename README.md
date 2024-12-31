@@ -292,9 +292,9 @@ Custom options for './custom-script/custom_dropbear.sh':
 [Link](http://htmlpreview.github.io/?https://raw.githubusercontent.com/zvldz/vacuum/master/history.html)
 
 ### Already build firmware
-[GEN1](https://vacuumz.info/download/gen1/)
+[GEN1](https://vacuumz.net/download/gen1/)
 
-[GEN2](https://vacuumz.info/download/gen2/)
+[GEN2](https://vacuumz.net/download/gen2/)
 
 **Please note:** If you use one of the prebuild images, the root password is 'cleaner'.
                  And it's better to change your password after that.
