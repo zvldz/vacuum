@@ -32,29 +32,37 @@ print "server waiting for client connection on port 7777\n";
 while(1)
 {
     my $client_socket = $socket->accept();
-    my $client_address = $client_socket->peerhost();
-    my $client_port = $client_socket->peerport();
-    # print "connection from $client_address:$client_port\n";
-    my $data = '';
-    my $playing = 'False';
-    $client_socket->recv($data, 256);
-    # print "received data: $data\n";
-    my @urls = split /;/, $data;
-    if (scalar(@urls) > 1 && not grep(/^$urls[1]$/, ('', 'None', $volume))) {
-        $volume = $urls[1];
-        open FILE, ">$volume_file";
-        print FILE $volume, "\n";
-        close FILE;
-    }
-    if ($urls[0] ne '' && $urls[0] ne 'None') {
-        system("killall -s 9 play > /dev/null 2>&1");
-        if ($urls[0] ne 'stop') {
-            system("play -q -v " . $volume * 2 . " \"$urls[0]\" &");
+    next unless $client_socket;
+    # Time out a client that connects but never sends, so it cannot block the server forever
+    eval {
+        local $SIG{ALRM} = sub { die "timeout\n" };
+        alarm 5;
+        my $client_address = $client_socket->peerhost();
+        my $client_port = $client_socket->peerport();
+        # print "connection from $client_address:$client_port\n";
+        my $data = '';
+        my $playing = 'False';
+        $client_socket->recv($data, 256);
+        # print "received data: $data\n";
+        my @urls = split /;/, $data;
+        if (scalar(@urls) > 1 && not grep(/^$urls[1]$/, ('', 'None', $volume))) {
+            $volume = $urls[1];
+            open FILE, ">$volume_file";
+            print FILE $volume, "\n";
+            close FILE;
         }
-    }
-    $playing = system("ps aux | grep -e '[ ]play ' >/dev/null") == 0 ? 'True' : 'False';
-    $client_socket->send("playing=$playing;volume=$volume");
-    shutdown($client_socket, 1);
+        if ($urls[0] ne '' && $urls[0] ne 'None') {
+            system("killall -s 9 play > /dev/null 2>&1");
+            if ($urls[0] ne 'stop') {
+                system("play -q -v " . $volume * 2 . " \"$urls[0]\" &");
+            }
+        }
+        $playing = system("ps aux | grep -e '[ ]play ' >/dev/null") == 0 ? 'True' : 'False';
+        $client_socket->send("playing=$playing;volume=$volume");
+        alarm 0;
+    };
+    eval { shutdown($client_socket, 1); };
+    eval { close($client_socket); };
 }
 
 $socket->close();
