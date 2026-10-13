@@ -36,6 +36,7 @@ while(1)
     # Time out a client that connects but never sends, so it cannot block the server forever
     eval {
         local $SIG{ALRM} = sub { die "timeout\n" };
+        local $SIG{PIPE} = 'IGNORE';
         alarm 5;
         my $client_address = $client_socket->peerhost();
         my $client_port = $client_socket->peerport();
